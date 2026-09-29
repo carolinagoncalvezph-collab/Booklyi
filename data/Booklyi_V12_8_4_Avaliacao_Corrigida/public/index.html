@@ -1,0 +1,1262 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#e85d8e">
+<link rel="manifest" href="manifest.json?v=20260929-v12-8-4-rating">
+<title>Booklyi — seu cantinho literário</title>
+<style>
+:root{--accent:#e85d8e;--accent2:#f7b2c9;--bg:#fff8fb;--card:#fff;--text:#342a30;--muted:#8a7c83;--line:#f0dfe6;--soft:#fdeaf1}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+button,input,textarea{font:inherit}button{cursor:pointer;border:0}.app{min-height:100vh;max-width:1150px;margin:auto;padding-bottom:90px}
+header{padding:22px 22px 8px;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:900;font-size:25px;letter-spacing:-1px}.brand span{color:var(--accent)}.header-actions{display:flex;gap:8px}
+.icon-btn{width:42px;height:42px;border-radius:14px;background:var(--card);border:1px solid var(--line);font-size:18px}
+main{padding:10px 18px}.page{display:none}.page.active{display:block}
+.hero{background:linear-gradient(135deg,var(--soft),var(--card));border:1px solid var(--line);border-radius:26px;padding:24px;margin:8px 0 18px}
+.eyebrow{text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);font-size:11px;font-weight:800}.hero h1{font-size:31px;line-height:1.05;margin:7px 0}.hero p{color:var(--muted);margin:8px 0 0}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin:20px 2px 10px}.section-title h2{font-size:18px;margin:0}.section-title button{background:none;color:var(--accent);font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.book{min-width:0;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:10px;box-shadow:0 5px 18px #5d27400b}.cover{height:175px;border-radius:12px;display:flex;align-items:flex-end;padding:12px;color:white;font-weight:900;font-size:17px;background:linear-gradient(145deg,var(--accent),#3e2330);overflow:hidden}.book b{display:block;min-width:0;overflow-wrap:anywhere;line-height:1.15}.book small{display:block;min-width:0;color:var(--muted);margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stars{color:#d7b05b;letter-spacing:1px;font-size:13px;margin-top:5px;display:inline-flex;align-items:center}.star-glyph{font-family:Arial,sans-serif;display:inline-block;line-height:1;color:#d7b05b}.star-glyph.full{color:#e7a529}.star-glyph.half{background:linear-gradient(90deg,#e7a529 50%,#d7b05b 50%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}.star-glyph.empty{color:#c7b8bf}
+.feed{display:grid;gap:12px}.post,.club,.profile-card,.form-card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:17px}.post-head{display:flex;gap:11px;align-items:center}.avatar{width:42px;height:42px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:900;color:var(--accent)}.post h3{margin:0;font-size:15px}.post .meta{font-size:12px;color:var(--muted)}.post p{line-height:1.55}.post-book{display:flex;gap:12px;padding:10px;background:var(--bg);border-radius:15px}.home-reading-list{display:grid;gap:10px}.home-reading-cover{width:52px;height:72px;flex:none;border-radius:8px;overflow:hidden;background:var(--soft);display:grid;place-items:center}.home-reading-cover img{width:100%;height:100%;object-fit:cover}.home-reading-cover .fallback-cover{font-size:9px;padding:6px;text-align:center;line-height:1.15}.mini-cover{width:52px;height:72px;border-radius:8px;background:linear-gradient(145deg,var(--accent),#4b2939);color:white;padding:7px;font-size:10px;font-weight:800;display:flex;align-items:flex-end}.actions{display:flex;gap:18px;color:var(--muted);font-size:13px;margin-top:12px}.spoiler-box{position:relative;overflow:hidden;border-radius:14px}.spoiler-text{filter:blur(8px);cursor:pointer}.spoiler-box.revealed .spoiler-text{filter:none}.spoiler-warning{position:absolute;inset:0;display:grid;place-items:center;background:rgba(255,255,255,.18);backdrop-filter:blur(2px);font-weight:800;color:var(--text);cursor:pointer}.spoiler-box.revealed .spoiler-warning{display:none}.book-suggestion{display:flex;gap:10px;align-items:center;padding:9px;border:1px solid var(--line);border-radius:13px;background:var(--card);cursor:pointer}.book-suggestion img{width:34px;height:50px;object-fit:cover;border-radius:5px}.post-book-search{display:grid;gap:7px}.rating-picker{display:flex;gap:4px;align-items:center;flex-wrap:wrap}.rating-star-control{position:relative;width:30px;height:32px;display:inline-flex;align-items:center;justify-content:center}.rating-star-control .star-display{position:absolute;inset:0;display:grid;place-items:center;font-family:Arial,sans-serif;font-size:28px;line-height:1;color:#d7b05b;pointer-events:none}.rating-star-control .star-display.half{background:linear-gradient(90deg,#e7a529 50%,#d7b05b 50%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}.rating-hit{position:absolute;top:0;bottom:0;width:50%;z-index:2;background:transparent!important;border:0!important;padding:0!important;margin:0!important;cursor:pointer}.rating-hit.left{left:0}.rating-hit.right{right:0}
+.progress{height:8px;background:var(--line);border-radius:20px;overflow:hidden;margin-top:10px}.progress i{display:block;height:100%;width:53%;background:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:14px;text-align:center}.stat b{display:block;font-size:22px}.stat span{font-size:11px;color:var(--muted)}
+.tabs{display:flex;gap:8px;overflow:auto;padding-bottom:8px}.tab{padding:9px 13px;border-radius:999px;background:var(--card);border:1px solid var(--line);white-space:nowrap;color:var(--muted)}.tab.active{background:var(--accent);color:white;border-color:var(--accent)}
+.clubs{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.club h3{margin:5px 0}.club p{color:var(--muted);font-size:13px}.club .members{font-size:12px;color:var(--accent);font-weight:800}
+.form-card{display:grid;gap:12px;margin-bottom:14px}.input,.textarea{width:100%;padding:12px 13px;border-radius:13px;border:1px solid var(--line);background:var(--bg);outline:none;color:var(--text)}.textarea{min-height:90px;resize:vertical}.primary{background:var(--accent);color:#fff;padding:12px 16px;border-radius:13px;font-weight:800}.secondary{background:var(--soft);color:var(--accent);padding:11px 15px;border-radius:13px;font-weight:800}
+.modal{position:fixed;inset:0;background:#1f142099;display:none;align-items:flex-end;z-index:20}.modal.show{display:flex}.sheet{background:var(--card);width:100%;max-width:620px;margin:auto;border-radius:28px 28px 0 0;padding:22px;max-height:90vh;overflow:auto}.sheet h2{margin-top:0}.close{float:right;background:var(--bg);border-radius:10px;width:34px;height:34px}
+.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.theme{padding:15px;border-radius:16px;border:2px solid transparent;background:var(--bg);text-align:left}.theme.active{border-color:var(--accent)}.dot{width:26px;height:26px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:8px}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#ffffffee;backdrop-filter:blur(16px);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:10}.nav{max-width:620px;width:100%;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom))}.nav button{background:none;color:var(--muted);padding:7px 2px;border-radius:12px;font-size:10px}.nav button b{display:block;font-size:20px;margin-bottom:2px}.nav button.active{color:var(--accent);font-weight:800}
+.empty{text-align:center;padding:28px;color:var(--muted)}
+@media(min-width:800px){main{padding:15px 28px}.hero{padding:32px}.bottom{position:fixed}.sheet{border-radius:28px}.grid{grid-template-columns:repeat(5,1fr)}}@media(max-width:600px){.grid{grid-template-columns:repeat(2,1fr)}.cover{height:190px}.clubs{grid-template-columns:1fr}.hero h1{font-size:27px}}
+
+
+/* BOOKLYI V5 — catálogo real */
+.real-search{
+  padding:14px;
+  border-radius:24px;
+  background:rgba(255,255,255,.30);
+  border:1px solid rgba(255,255,255,.72);
+  box-shadow:var(--glass-shadow);
+  backdrop-filter:blur(22px) saturate(150%);
+  -webkit-backdrop-filter:blur(22px) saturate(150%);
+}
+.real-search-row{display:flex;gap:9px;align-items:center}
+.real-search-row svg{width:21px;min-width:21px;color:var(--accent);stroke:currentColor}
+.real-search-row .input{margin:0}
+.real-search-row .primary{white-space:nowrap}
+#realSearchStatus{font-size:12px;color:var(--muted);padding:9px 3px 1px}
+.cover.cover-failed{background:linear-gradient(145deg,var(--accent),#3e2330)}.real-book-cover{width:100%;height:100%;aspect-ratio:2/3;object-fit:cover;object-position:center;border-radius:12px;display:block;background:rgba(255,255,255,.2)}
+.generated-cover{height:100%;width:100%;min-height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:14px;border-radius:12px;color:#fff;background:linear-gradient(145deg,hsl(var(--cover-hue) 58% 50%),hsl(calc(var(--cover-hue) + 48) 42% 24%));overflow:hidden;position:relative;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.generated-cover::before{content:"";position:absolute;inset:10px;border:1px solid rgba(255,255,255,.28);border-radius:8px;pointer-events:none}.generated-cover-title{position:relative;font-size:clamp(13px,2vw,19px);line-height:1.08;font-weight:900;text-transform:none;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}.generated-cover-author{position:relative;font-size:10px;line-height:1.2;opacity:.86;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.generated-cover-mark{position:relative;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;opacity:.72;font-weight:800}.real-detail .generated-cover{min-height:260px;width:min(100%,330px);aspect-ratio:2/3}
+.real-book-card{cursor:pointer}
+.real-book-card .cover{position:relative;padding:0;height:auto;aspect-ratio:2/3;min-width:0}
+.real-book-card .cover .fallback-cover{height:100%;width:100%;display:flex;align-items:flex-end;padding:12px;color:#fff;font-weight:900;font-size:15px;background:linear-gradient(145deg,var(--accent),#3e2330);border-radius:12px}
+.book-detail-modal .sheet{max-width:760px}
+.real-detail{display:grid;grid-template-columns:180px 1fr;gap:22px}
+.real-detail-cover{width:100%;aspect-ratio:2/3;object-fit:cover;object-position:center;border-radius:18px;display:block;background:rgba(255,255,255,.2)}
+.real-detail h2{margin:0 0 7px;line-height:1.1}
+.real-detail-meta{color:var(--muted);line-height:1.55;font-size:13px}
+.real-detail-description{line-height:1.55}
+.status-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.status-row button{padding:10px 12px;border-radius:13px;background:rgba(255,255,255,.48);border:1px solid rgba(255,255,255,.72);color:var(--text);font-weight:700}
+.status-row button:hover{background:rgba(255,255,255,.72)}
+@media(max-width:600px){
+ .real-search-row{align-items:stretch}
+ .real-search-row svg{display:none}
+ .real-search-row{flex-direction:column}
+ .real-search-row .input,.real-search-row .primary{width:100%}
+ .real-detail{grid-template-columns:105px 1fr;gap:14px}
+ .real-book-cover{height:100%}.real-book-card .cover{height:auto}
+}
+
+/* BOOKLYI · LIQUID GLASS */
+:root{
+ --glass:rgba(255,255,255,.58);
+ --glass-strong:rgba(255,255,255,.72);
+ --glass-line:rgba(255,255,255,.78);
+ --glass-shadow:0 18px 45px rgba(64,30,48,.10), inset 0 1px 0 rgba(255,255,255,.85);
+}
+body{
+ background:
+ radial-gradient(circle at 8% 0%, color-mix(in srgb,var(--accent2) 32%,transparent), transparent 34%),
+ radial-gradient(circle at 92% 12%, color-mix(in srgb,var(--accent) 13%,transparent), transparent 31%),
+ var(--bg);
+}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:linear-gradient(135deg,rgba(255,255,255,.26),transparent 45%,rgba(255,255,255,.18))}
+.brand{font-size:26px;letter-spacing:-1.4px}
+.brand span{display:inline-block;font-size:16px;margin-left:2px}
+.icon-btn{
+ display:grid;place-items:center;
+ background:rgba(255,255,255,.48);
+ border:1px solid var(--glass-line);
+ box-shadow:var(--glass-shadow);
+ backdrop-filter:blur(18px) saturate(140%);
+ -webkit-backdrop-filter:blur(18px) saturate(140%);
+ transition:transform .2s ease,background .2s ease;
+}
+.icon-btn:hover{transform:translateY(-1px);background:var(--glass-strong)}
+svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.hero,.book,.post,.club,.profile-card,.form-card,.stat,.tab,.theme,.sheet{
+ background:var(--glass);
+ border:1px solid var(--glass-line);
+ box-shadow:var(--glass-shadow);
+ backdrop-filter:blur(20px) saturate(145%);
+ -webkit-backdrop-filter:blur(20px) saturate(145%);
+}
+.hero{
+ position:relative;overflow:hidden;
+ background:linear-gradient(135deg,rgba(255,255,255,.62),color-mix(in srgb,var(--soft) 55%,rgba(255,255,255,.5)));
+}
+.hero:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-70px;top:-80px;background:rgba(255,255,255,.28);filter:blur(2px)}
+.book{transition:transform .22s ease,box-shadow .22s ease}
+.book:hover{transform:translateY(-3px);box-shadow:0 22px 42px rgba(64,30,48,.13),inset 0 1px 0 rgba(255,255,255,.9)}
+.cover,.mini-cover{box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 10px 22px rgba(45,20,30,.12)}
+.post-book{background:rgba(255,255,255,.30);border:1px solid rgba(255,255,255,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
+.input,.textarea{
+ background:rgba(255,255,255,.44);
+ border:1px solid rgba(255,255,255,.78);
+ box-shadow:inset 0 1px 3px rgba(70,30,50,.035);
+ backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.input:focus,.textarea:focus{border-color:color-mix(in srgb,var(--accent) 45%,white);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 10%,transparent)}
+.primary,.secondary{box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 18%,transparent)}
+.primary{background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 78%,#fff));}
+.secondary{background:rgba(255,255,255,.46);border:1px solid rgba(255,255,255,.7)}
+.bottom{
+ background:rgba(255,255,255,.52);
+ border-top:1px solid rgba(255,255,255,.82);
+ box-shadow:0 -14px 40px rgba(65,30,48,.07);
+ backdrop-filter:blur(24px) saturate(160%);
+ -webkit-backdrop-filter:blur(24px) saturate(160%);
+}
+.nav button{position:relative;transition:transform .2s ease,color .2s ease}
+.nav button b{height:23px;display:grid;place-items:center;margin-bottom:3px}
+.nav button b svg{width:21px;height:21px;stroke-width:1.7}
+.nav button.active:before{content:"";position:absolute;inset:1px 8px 25px;border-radius:14px;background:color-mix(in srgb,var(--accent) 12%,transparent);z-index:-1}
+.nav button.active b svg{stroke-width:2.1}
+.modal{background:rgba(22,14,22,.32);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.sheet{background:rgba(255,255,255,.72);border-color:rgba(255,255,255,.85)}
+.close{background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.7)}
+.theme.active{background:rgba(255,255,255,.72)}
+@media(max-width:600px){
+ header{padding:18px 17px 7px}
+ main{padding:10px 14px 24px}
+ .hero{border-radius:28px;padding:22px}
+ .grid{gap:10px}
+ .book{border-radius:20px;padding:9px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+
+/* BOOKLYI V8 — página do livro + compartilhamento aesthetic */
+.booklyi-detail-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}
+.booklyi-detail-actions button{padding:11px 14px;border-radius:14px;font-weight:800;border:1px solid var(--glass-line);background:rgba(255,255,255,.52);color:var(--text);box-shadow:0 8px 20px rgba(64,30,48,.06)}
+.booklyi-detail-actions .primary{color:#fff;background:var(--accent);border-color:transparent}
+.rating-picker{display:flex;gap:4px;margin:7px 0 2px;align-items:center;flex-wrap:wrap}
+.reading-progress{margin-top:16px;padding:14px;border-radius:18px;background:rgba(255,255,255,.40);border:1px solid var(--glass-line)}
+.reading-progress .progress{margin:9px 0 5px}.detail-page-edit{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}.detail-page-edit label{font-size:12px;color:var(--muted)}.detail-page-edit .input{margin-top:5px;padding:9px 10px}@media(max-width:600px){.detail-page-edit{grid-template-columns:1fr 1fr}}
+.progress-row{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted)}
+.share-preview{display:flex;justify-content:center;margin:8px 0 14px}
+.share-card{width:min(100%,360px);aspect-ratio:4/5;border-radius:25px;padding:24px;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 20px 45px rgba(64,30,48,.16)}
+.share-card.soft{background:radial-gradient(circle at 15% 10%,#fff 0 8%,transparent 30%),linear-gradient(145deg,#fdeaf1,#fff8fb 55%,#f7d3e0);color:#342a30}
+.share-card.cozy{background:radial-gradient(circle at 80% 15%,#f4dfbf 0 8%,transparent 28%),linear-gradient(145deg,#5a4034,#a77c61);color:#fff9f2}
+.share-card.dark{background:radial-gradient(circle at 85% 10%,#5d496c 0 6%,transparent 24%),linear-gradient(145deg,#18151c,#44354b);color:#fff}
+.share-card.botanical{background:radial-gradient(circle at 15% 10%,#e6f4e9 0 8%,transparent 28%),linear-gradient(145deg,#dcebdd,#f7fbf5 55%,#bdd6bf);color:#263a2b}
+.share-card.dreamy{background:radial-gradient(circle at 20% 15%,#fff 0 5%,transparent 24%),linear-gradient(145deg,#ded4f5,#f8efff 55%,#c9dcf5);color:#3d3553}
+.share-card.minimal{background:#fafafa;color:#222;border:1px solid #e5e5e5}
+.share-brand{position:absolute;top:20px;left:22px;font-size:12px;font-weight:900;letter-spacing:1.2px}
+.share-cover{width:42%;max-height:52%;object-fit:cover;border-radius:10px;box-shadow:0 15px 28px rgba(0,0,0,.20);margin-bottom:15px}
+.share-cover-fallback{width:42%;height:48%;border-radius:10px;background:linear-gradient(145deg,var(--accent),#3e2330);color:#fff;display:grid;place-items:center;padding:15px;font-weight:900;font-size:15px;box-shadow:0 15px 28px rgba(0,0,0,.20);margin-bottom:15px}
+.share-title{font-size:19px;font-weight:900;line-height:1.12;max-width:90%}.share-author{font-size:12px;opacity:.72;margin-top:5px}.share-stars{letter-spacing:2px;margin-top:8px}.share-progress{font-size:11px;margin-top:7px;opacity:.75}
+.share-style-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 14px}.share-style{padding:11px 7px;border-radius:13px;border:1px solid var(--line);background:var(--bg);font-size:11px;font-weight:800}.share-style.active{outline:2px solid var(--accent);border-color:transparent}
+.share-actions{display:flex;gap:8px}.share-actions button{flex:1}
+@media(max-width:600px){.share-card{width:min(100%,330px)}.share-style-grid{grid-template-columns:repeat(2,1fr)}}
+
+
+.social-actions{display:flex;gap:16px;align-items:center;margin-top:12px;flex-wrap:wrap}.social-btn{border:0;background:none;padding:5px 0;color:var(--muted);font:inherit;cursor:pointer}.social-btn.liked{color:#d85d7b;font-weight:800}.comments-box{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:grid;gap:10px}.comment{padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.38);border:1px solid var(--line)}.comment-head{display:flex;gap:8px;align-items:center}.comment-avatar{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--soft);font-size:12px;font-weight:800}.comment-meta{font-size:11px;color:var(--muted)}.comment-text{margin:7px 0 4px;line-height:1.45}.reply-list{margin:8px 0 0 34px;display:grid;gap:7px}.reply{padding:8px 10px;border-radius:11px;background:rgba(255,255,255,.32)}.comment-compose{display:flex;gap:8px}.comment-compose .input{flex:1;min-width:0}.mini-btn{padding:9px 11px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-weight:700;cursor:pointer}.shelf-actions{display:flex;gap:7px;margin-top:8px}.shelf-actions .secondary{flex:1;min-width:0;padding:10px 6px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.danger-inline{margin-top:8px;width:100%;padding:8px;border:1px solid #e7b9c1;background:transparent;color:#b34d5a;border-radius:11px;font-weight:700;cursor:pointer}.catalog-badge{display:inline-flex;align-items:center;gap:5px;margin-top:6px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.55);border:1px solid var(--line);font-size:10px;color:var(--muted)}
+
+/* Booklyi V12.8 — feed social conectado */
+.feed-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:5px;background:rgba(255,255,255,.36);border:1px solid var(--line);border-radius:15px;margin:10px 0 12px}.feed-tab{border:0;background:transparent;color:var(--muted);padding:10px;border-radius:11px;font:inherit;font-weight:800;cursor:pointer}.feed-tab.active{background:var(--card);color:var(--text);box-shadow:0 3px 12px rgba(50,30,45,.06)}.feed-status{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:2px 0 10px;color:var(--muted);font-size:11px}.feed-refresh{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:6px 10px;font:inherit;font-weight:750;cursor:pointer}.feed-loading{padding:18px;text-align:center;color:var(--muted)}.post-book-cover{width:54px;height:78px;border-radius:8px;overflow:hidden;flex:none;background:var(--soft);display:grid;place-items:center}.post-book-cover img{width:100%;height:100%;object-fit:cover}.post-book-cover .generated-cover{width:100%;height:100%;padding:5px;font-size:7px}.post-book-cover .generated-cover-title{font-size:8px}.post-book-cover .generated-cover-author{font-size:6px}.post-book-info{min-width:0;flex:1}.post-book-info b{display:block;line-height:1.25}.post-book-info .meta{margin-top:3px}.post-book-info .progress{margin-top:8px}
+
+
+/* V12.8.4 — avaliação robusta: um botão por estrela, metade esquerda/direita */
+.rating-picker{display:flex!important;gap:3px!important;align-items:center!important;justify-content:flex-start!important;flex-wrap:nowrap!important;width:max-content!important;max-width:100%!important;overflow-x:auto!important;padding:3px 0!important;}
+.rating-star-control{position:relative!important;width:38px!important;height:42px!important;flex:0 0 38px!important;display:grid!important;place-items:center!important;margin:0!important;padding:0!important;border:0!important;border-radius:10px!important;background:transparent!important;cursor:pointer!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;box-shadow:none!important;}
+.rating-star-control:hover,.rating-star-control:focus-visible{background:rgba(232,93,142,.08)!important;outline:none!important;}
+.rating-star-control .star-display{position:relative!important;inset:auto!important;display:block!important;font-family:Arial,sans-serif!important;font-size:36px!important;line-height:1!important;pointer-events:none!important;user-select:none!important;}
+.rating-star-control .star-display.full{color:#e7a529!important;background:none!important;-webkit-text-fill-color:#e7a529!important;}
+.rating-star-control .star-display.empty{color:#c7b8bf!important;background:none!important;-webkit-text-fill-color:#c7b8bf!important;}
+.rating-star-control .star-display.half{background:linear-gradient(90deg,#e7a529 50%,#c7b8bf 50%)!important;-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent!important;color:transparent!important;}
+.rating-hit{display:none!important;}
+</style>
+
+<style>
+.field-label{display:flex;justify-content:space-between;margin:10px 0 6px;color:var(--muted);font-size:13px}.edit-dates,.edit-pages{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.edit-dates label,.edit-pages label{font-size:12px;color:var(--muted)}.shelf-dates{font-size:10px!important;color:var(--muted)}.shelf-book-card{cursor:pointer}.danger-btn{width:100%;margin-top:8px;padding:12px;border:1px solid #e7b9c1;background:transparent;color:#b34d5a;border-radius:14px;font-weight:700}.shelf-tabs{overflow-x:auto;scrollbar-width:none}.shelf-tabs::-webkit-scrollbar{display:none}@media(max-width:600px){.edit-dates,.edit-pages{grid-template-columns:1fr}.shelf-tabs{padding-bottom:4px}}
+
+.profile-hero{position:relative;overflow:hidden;padding:22px;background:linear-gradient(135deg,var(--soft),rgba(255,255,255,.65));border:1px solid var(--glass-line);box-shadow:var(--glass-shadow);border-radius:26px}
+.profile-top{display:flex;gap:16px;align-items:center}
+.profile-avatar{width:82px;height:82px;border-radius:28px;object-fit:cover;display:grid;place-items:center;flex:none;background:var(--soft);color:var(--accent);font-size:28px;font-weight:900;border:3px solid rgba(255,255,255,.8);box-shadow:0 12px 30px rgba(64,30,48,.10)}
+.profile-info{min-width:0;flex:1}.profile-info h2{margin:0 0 3px;font-size:24px}.profile-handle{color:var(--muted);font-size:13px}.profile-bio{margin:10px 0 0;color:var(--muted);line-height:1.45}
+.profile-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.profile-actions button{flex:1;min-width:120px}
+.profile-social{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}
+.profile-social .stat{padding:11px 7px;background:rgba(255,255,255,.45);border-color:var(--glass-line)}
+.profile-social .stat b{font-size:19px}.profile-social .stat span{font-size:10px}
+.profile-section-head{display:flex;justify-content:space-between;align-items:center;margin:20px 2px 10px}.profile-section-head h3{margin:0;font-size:17px}.profile-section-head button{background:none;color:var(--accent);font-weight:800}
+.profile-empty{padding:20px;border-radius:18px;background:var(--card);border:1px solid var(--line);color:var(--muted);text-align:center}
+.profile-post-mini{padding:14px;border-radius:18px;background:var(--card);border:1px solid var(--line)}
+.profile-post-mini .meta{font-size:12px;color:var(--muted);margin-bottom:6px}.profile-post-mini p{margin:7px 0;line-height:1.45}
+.avatar-file{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:var(--bg);border:1px solid var(--line)}
+.avatar-file-preview{width:56px;height:56px;border-radius:18px;object-fit:cover;background:var(--soft);display:grid;place-items:center;font-weight:900;color:var(--accent)}
+@media(max-width:600px){.profile-top{align-items:flex-start}.profile-avatar{width:72px;height:72px;border-radius:23px}.profile-social{grid-template-columns:repeat(2,1fr)}}
+
+.social-actions{display:flex;gap:16px;align-items:center;margin-top:12px;flex-wrap:wrap}.social-btn{border:0;background:none;padding:5px 0;color:var(--muted);font:inherit;cursor:pointer}.social-btn.liked{color:#d85d7b;font-weight:800}.comments-box{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:grid;gap:10px}.comment{padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.38);border:1px solid var(--line)}.comment-head{display:flex;gap:8px;align-items:center}.comment-avatar{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--soft);font-size:12px;font-weight:800}.comment-meta{font-size:11px;color:var(--muted)}.comment-text{margin:7px 0 4px;line-height:1.45}.reply-list{margin:8px 0 0 34px;display:grid;gap:7px}.reply{padding:8px 10px;border-radius:11px;background:rgba(255,255,255,.32)}.comment-compose{display:flex;gap:8px}.comment-compose .input{flex:1;min-width:0}.mini-btn{padding:9px 11px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-weight:700;cursor:pointer}.danger-inline{margin-top:8px;width:100%;padding:8px;border:1px solid #e7b9c1;background:transparent;color:#b34d5a;border-radius:11px;font-weight:700;cursor:pointer}.catalog-badge{display:inline-flex;align-items:center;gap:5px;margin-top:6px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.55);border:1px solid var(--line);font-size:10px;color:var(--muted)}
+
+<style>
+/* Booklyi V10.2 — perfil clean, inspirado em apps sociais */
+.profile-clean{background:transparent;padding:10px 2px 0}.profile-clean-top{display:flex;gap:18px;align-items:flex-start}.profile-clean-avatar-wrap{flex:none}.profile-clean-avatar{width:88px;height:88px;border-radius:50%;object-fit:cover;background:var(--soft);display:grid;place-items:center;color:var(--accent);font-size:30px;font-weight:800;border:1px solid var(--line)}.profile-clean-main{flex:1;min-width:0}.profile-clean-name-row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.profile-clean-name-row h2{margin:2px 0 2px;font-size:22px;letter-spacing:-.5px}.profile-clean-handle{font-size:13px;color:var(--muted)}.profile-more{background:none;color:var(--muted);font-size:18px;letter-spacing:2px;padding:4px 0}.profile-clean-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:17px}.profile-clean-stats div{text-align:left}.profile-clean-stats b{display:block;font-size:16px;line-height:1.1}.profile-clean-stats span{display:block;font-size:10px;color:var(--muted);margin-top:4px}.profile-clean-bio{margin:14px 0 10px;font-size:14px;line-height:1.45;max-width:620px;color:var(--text)}.profile-clean-actions{display:flex;gap:8px}.profile-edit-btn{flex:1;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 14px;font-weight:750;color:var(--text)}.profile-share-btn{width:42px;background:var(--card);border:1px solid var(--line);border-radius:11px;font-size:18px}.profile-reading-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:15px;overflow:hidden;margin:22px 0 12px}.profile-reading-strip button{background:var(--card);padding:11px 5px 10px;display:grid;grid-template-columns:auto auto;column-gap:6px;align-items:center;text-align:left}.profile-reading-strip span{grid-row:span 2;font-size:16px}.profile-reading-strip b{font-size:15px}.profile-reading-strip small{font-size:10px;color:var(--muted)}.profile-tabs-clean{display:grid;grid-template-columns:repeat(2,1fr);border-bottom:1px solid var(--line);margin:4px 0 0}.profile-tab-clean{background:none;padding:12px 6px 11px;color:var(--muted);font-weight:700;border-bottom:2px solid transparent}.profile-tab-clean.active{color:var(--text);border-bottom-color:var(--accent)}.clean-head{margin:14px 0 9px}.clean-head h3{font-size:15px;font-weight:750}.clean-head button{font-size:20px}.profile-feed-clean .profile-post-mini{border-radius:14px;border-left:0;border-right:0;box-shadow:none;padding:14px 2px;background:transparent}.profile-favorites-clean{grid-template-columns:repeat(4,1fr);gap:7px}.profile-favorites-clean .book{border:0;border-radius:0;padding:0;background:transparent;box-shadow:none}.profile-favorites-clean .cover{height:170px;border-radius:8px;padding:7px;font-size:11px}.profile-favorites-clean .book b,.profile-favorites-clean .book small,.profile-favorites-clean .stars{padding-left:2px}.profile-favorites-clean .book b{display:block;margin-top:6px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.profile-favorites-clean .book small{font-size:10px}.profile-favorites-clean .stars{font-size:10px}@media(max-width:600px){.profile-clean-top{gap:14px}.profile-clean-avatar{width:82px;height:82px}.profile-clean-stats{margin-top:14px;gap:5px}.profile-clean-stats span{font-size:9px}.profile-clean-stats b{font-size:15px}.profile-clean-bio{font-size:13px}.profile-favorites-clean{grid-template-columns:repeat(3,1fr)}.profile-favorites-clean .cover{height:155px}}
+</style>
+</style>
+
+<style>
+/* Booklyi V11 — seguidores */
+.follow-stats-btn{background:none;border:0;padding:0;text-align:left;cursor:pointer;color:inherit;font:inherit}
+.follow-stats-btn:hover b{color:var(--accent)}
+.people-grid{display:grid;gap:10px;margin-bottom:18px}
+.person-row{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.48);box-shadow:0 8px 24px rgba(64,30,48,.05)}
+.person-avatar{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--soft);color:var(--accent);font-weight:900;overflow:hidden}
+.person-avatar img{width:100%;height:100%;object-fit:cover}
+.person-info{min-width:0;flex:1}.person-info b{display:block}.person-info small{display:block;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.follow-btn{min-width:94px;padding:9px 13px;border-radius:11px;background:var(--accent);color:#fff;font-weight:800}.follow-btn.following{background:var(--card);color:var(--text);border:1px solid var(--line)}
+.post-head-main{min-width:0;flex:1}.post-follow{margin-left:auto;flex:none}.followers-modal-tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line);margin:0 -22px 14px;padding:0 22px}.followers-modal-tabs button{background:none;padding:12px;color:var(--muted);font-weight:800;border-bottom:2px solid transparent}.followers-modal-tabs button.active{color:var(--text);border-bottom-color:var(--accent)}
+@media(max-width:600px){.person-row{padding:11px}.follow-btn{min-width:84px;padding:8px 10px;font-size:12px}}
+.community-profile{padding:4px 0}.community-profile-head{display:flex;gap:15px;align-items:flex-start}.community-profile-avatar{width:76px;height:76px;border-radius:50%;background:var(--soft);display:grid;place-items:center;color:var(--accent);font-size:27px;font-weight:900;overflow:hidden;flex:none}.community-profile-avatar img{width:100%;height:100%;object-fit:cover}.community-profile-main{flex:1;min-width:0}.community-profile-main h2{margin:0 0 2px;font-size:22px}.community-profile-handle{color:var(--muted);font-size:13px}.community-profile-bio{margin:12px 0;color:var(--text);line-height:1.45}.community-profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:14px 0}.community-profile-stats div{padding:10px 5px;border:1px solid var(--line);border-radius:13px;background:var(--card);text-align:center}.community-profile-stats b{display:block;font-size:16px}.community-profile-stats span{display:block;font-size:10px;color:var(--muted);margin-top:3px}.community-profile-actions{display:flex;gap:8px}.community-profile-actions .follow-btn{flex:1}.community-books-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.community-book-mini{min-width:0}.community-book-cover{height:145px;border-radius:8px;overflow:hidden;background:var(--soft);display:grid;place-items:center}.community-book-cover img{width:100%;height:100%;object-fit:cover}.community-book-mini b{display:block;font-size:10px;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.community-book-mini small{display:block;font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.profile-link{cursor:pointer}.profile-link:hover{color:var(--accent)}.post-head .avatar{cursor:pointer}.post-head h3{cursor:pointer}.post-head h3:hover{color:var(--accent)}
+@media(max-width:600px){.community-profile-avatar{width:68px;height:68px}.community-books-grid{grid-template-columns:repeat(3,1fr)}.community-book-cover{height:135px}}
+
+/* BOOKLYI V12 — autenticação Supabase */
+.auth-gate{position:fixed;inset:0;z-index:999;background:linear-gradient(145deg,rgba(255,248,251,.96),rgba(253,234,241,.96));backdrop-filter:blur(22px);display:none;align-items:center;justify-content:center;padding:20px}
+.auth-gate.show{display:flex}.auth-card{width:min(440px,100%);background:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.9);box-shadow:0 24px 70px rgba(64,30,48,.16);border-radius:28px;padding:26px}.auth-logo{font-size:30px;font-weight:950;letter-spacing:-1.5px;text-align:center}.auth-logo span{color:var(--accent)}.auth-sub{text-align:center;color:var(--muted);margin:6px 0 20px}.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:5px;background:var(--soft);border-radius:14px;margin-bottom:16px}.auth-tabs button{padding:10px;border-radius:10px;background:transparent;color:var(--muted);font-weight:800}.auth-tabs button.active{background:var(--card);color:var(--accent);box-shadow:0 5px 15px rgba(64,30,48,.07)}.auth-form{display:grid;gap:11px}.auth-message{min-height:18px;font-size:12px;color:var(--muted);text-align:center}.auth-message.error{color:#b73546}.auth-message.ok{color:#347859}.auth-loading{position:fixed;inset:0;z-index:998;display:none;place-items:center;background:rgba(255,248,251,.76);backdrop-filter:blur(10px);font-weight:800;color:var(--accent)}.auth-loading.show{display:grid}.account-pill{width:auto;min-width:42px;padding:0 12px;font-size:12px;font-weight:850}.logout-btn{background:var(--card);border:1px solid var(--line);color:var(--muted);padding:10px 14px;border-radius:12px;font-weight:800}.sync-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);margin-top:5px}.sync-dot{width:7px;height:7px;border-radius:50%;background:#4c9a70}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand">booklyi<span>•</span></div><div class="header-actions"><button class="icon-btn account-pill" id="accountBtn" aria-label="Minha conta" onclick="go('profile')">Conta</button><button class="icon-btn" aria-label="Personalizar tema" onclick="openModal('themeModal')"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-1.1-.9-2-2-2h-1.2a2 2 0 0 1-2-2V6.8A3.8 3.8 0 0 0 12 3Z"/><circle cx="7.5" cy="10" r=".8"/><circle cx="10" cy="6.5" r=".8"/><circle cx="6.8" cy="14" r=".8"/></svg></button><button class="icon-btn" aria-label="Nova publicação" onclick="openModal('postModal')"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div></header>
+<main>
+<section id="home" class="page active">
+<div class="hero"><div class="eyebrow">seu cantinho literário</div><h1 id="heroGreeting">Olá!<br>O que você está lendo hoje? 📖</h1><p>Compartilhe sua leitura, descubra histórias e encontre pessoas que amam livros tanto quanto você.</p></div>
+<div class="stats"><div class="stat"><b id="statRead">0</b><span>livros lidos</span></div><div class="stat"><b id="statReading">0</b><span>lendo agora</span></div><div class="stat"><b id="statAverage">—</b><span>média das estrelas</span></div></div>
+<div class="section-title"><h2>📖 Lendo agora</h2><button onclick="go('shelf')">Ver estante</button></div>
+<div id="homeReading" class="home-reading-list"></div>
+<div class="section-title"><h2>✨ O que a comunidade está lendo</h2><button onclick="go('discover')">Descobrir</button></div>
+<div class="feed-tabs"><button id="feedTabAll" class="feed-tab active" onclick="setFeedMode('all',this)">Para você</button><button id="feedTabFollowing" class="feed-tab" onclick="setFeedMode('following',this)">Seguindo</button></div>
+<div class="feed-status"><span id="feedStatus">Feed conectado ao Booklyi</span><button class="feed-refresh" onclick="refreshFeed()">↻ Atualizar</button></div>
+<div class="feed" id="feed"></div>
+</section>
+
+<section id="discover" class="page">
+<div class="section-title"><h2>🔎 Descobrir</h2></div>
+<div class="real-search">
+  <div class="real-search-row">
+    <svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+    <input class="input" id="search" placeholder="Buscar título, autor ou ISBN..." autocomplete="off">
+    <button class="primary" id="realSearchBtn">Buscar</button>
+  </div>
+  <div id="realSearchStatus">Pesquise por um livro, autor ou ISBN para encontrar dados reais.</div>
+</div>
+<div class="section-title" style="margin-top:12px"><h2>🌈 Explore por tema</h2></div>
+<div style="display:flex;gap:8px;overflow:auto;padding-bottom:4px">
+  <button class="tab" type="button" onclick="quickCatalogSearch('LGBTQ+')">🌈 LGBTQIA+</button>
+  <button class="tab" type="button" onclick="quickCatalogSearch('romance sáfico')">💗 Romance sáfico</button>
+  <button class="tab" type="button" onclick="quickCatalogSearch('gay romance')">💙 Romance gay</button>
+  <button class="tab" type="button" onclick="quickCatalogSearch('literatura brasileira')">🇧🇷 Literatura brasileira</button>
+  <button class="tab" type="button" onclick="quickCatalogSearch('autoria negra')">✊🏿 Autoria negra</button>
+</div>
+<div class="section-title"><h2>📚 Resultados</h2></div>
+<div class="grid" id="discoverGrid"></div>
+<div class="section-title"><h2>👤 Pessoas para seguir</h2><button onclick="openFollowersModal('suggested')">Ver todas</button></div>
+<div class="people-grid" id="discoverPeople"></div>
+<div class="section-title"><h2>👥 Clubes para conhecer</h2></div>
+<div class="clubs" id="discoverClubs"></div>
+</section>
+
+<section id="shelf" class="page"><div class="section-title"><h2>📚 Minha estante</h2><button onclick="openModal('bookModal')">+ Livro</button></div><div class="tabs shelf-tabs"><button class="tab active" onclick="setShelfFilter('Todos',this)">Todos</button><button class="tab" onclick="setShelfFilter('Lendo',this)">Lendo</button><button class="tab" onclick="setShelfFilter('Lido',this)">Lidos</button><button class="tab" onclick="setShelfFilter('Quero ler',this)">Quero ler</button><button class="tab" onclick="setShelfFilter('Pausado',this)">Pausados</button><button class="tab" onclick="setShelfFilter('Abandonei',this)">Abandonei</button></div><div class="grid" id="shelfGrid"></div></section>
+
+<section id="clubs" class="page"><div class="section-title"><h2>👥 Clubes de leitura</h2><button onclick="openModal('clubModal')">+ Criar clube</button></div><div class="clubs" id="clubsGrid"></div></section>
+
+<section id="profile" class="page profile-page">
+<div class="profile-clean">
+  <div class="profile-clean-top">
+    <div class="profile-clean-avatar-wrap">
+      <img id="profileAvatar" class="profile-clean-avatar" alt="Foto de perfil" style="display:none">
+      <div id="profileAvatarFallback" class="profile-clean-avatar profile-avatar-fallback">C</div>
+    </div>
+    <div class="profile-clean-main">
+      <div class="profile-clean-name-row">
+        <div>
+          <h2 id="profileName">Carol</h2>
+          <div id="profileHandle" class="profile-clean-handle">@carol.le</div>
+        </div>
+        <button class="profile-more" aria-label="Mais opções">•••</button>
+      </div>
+      <div class="profile-clean-stats">
+        <div><b id="profilePostsCount">0</b><span>publicações</span></div>
+        <button class="follow-stats-btn" onclick="openFollowersModal('followers')"><b id="profileFollowers">0</b><span>seguidores</span></button>
+        <button class="follow-stats-btn" onclick="openFollowersModal('following')"><b id="profileFollowing">0</b><span>seguindo</span></button>
+        <div><b id="profileBooksCount">0</b><span>lidos</span></div>
+      </div>
+    </div>
+  </div>
+  <p id="profileBio" class="profile-clean-bio">Amo histórias que me fazem perder a noção do tempo. ☕📚</p>
+  <div class="profile-clean-actions">
+    <button class="profile-edit-btn" onclick="openEditProfile()">Editar perfil</button>
+    <button class="profile-share-btn" onclick="shareProfile()" aria-label="Compartilhar perfil">↗</button>
+    <button class="logout-btn" onclick="authSignOut()">Sair</button>
+  </div>
+  <div class="sync-badge"><span class="sync-dot"></span><span id="syncStatus">Perfil conectado ao Booklyi</span></div>
+</div>
+
+<div class="profile-reading-strip">
+  <button onclick="go('shelf')"><span>📖</span><b id="profileReading">0</b><small>lendo</small></button>
+  <button onclick="go('shelf')"><span>✓</span><b id="profileRead">0</b><small>lidos</small></button>
+  <button onclick="go('shelf')"><span>♡</span><b id="profileWant">0</b><small>quero ler</small></button>
+</div>
+
+<div class="profile-tabs-clean" role="tablist">
+  <button class="profile-tab-clean active" onclick="showProfileTab('posts',this)">Publicações</button>
+  <button class="profile-tab-clean" onclick="showProfileTab('favorites',this)">Favoritos</button>
+</div>
+
+<div id="profileTabPosts" class="profile-tab-panel">
+  <div class="profile-section-head clean-head"><h3>Minhas publicações</h3><button onclick="openModal('postModal')">＋</button></div>
+  <div class="feed profile-feed-clean" id="profilePosts"></div>
+</div>
+
+<div id="profileTabFavorites" class="profile-tab-panel" style="display:none">
+  <div class="profile-section-head clean-head"><h3>Livros favoritos</h3><button onclick="go('shelf')">Ver estante</button></div>
+  <div class="grid profile-favorites-clean" id="favorites"></div>
+</div>
+</section>
+</main>
+</div>
+
+<div class="bottom"><div class="nav">
+<button class="active" data-page="home" onclick="go('home')"><b><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10Z"/></svg></b>Início</button>
+<button data-page="discover" onclick="go('discover')"><b><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></b>Descobrir</button>
+<button data-page="shelf" onclick="go('shelf')"><b><svg viewBox="0 0 24 24"><path d="M6 4.5A2.5 2.5 0 0 1 8.5 2H19v18H8.5A2.5 2.5 0 0 0 6 22V4.5Z"/><path d="M6 4.5A2.5 2.5 0 0 0 3.5 7V19A2.5 2.5 0 0 0 6 21.5"/></svg></b>Estante</button>
+<button data-page="clubs" onclick="go('clubs')"><b><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.5"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M14.5 16a4.5 4.5 0 0 1 6 3"/></svg></b>Clubes</button>
+<button data-page="profile" onclick="go('profile')"><b><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 21a7 7 0 0 1 14 0"/></svg></b>Perfil</button>
+</div></div>
+
+
+<div class="auth-loading" id="authLoading">Conectando ao Booklyi…</div>
+<div class="auth-gate" id="authGate">
+  <div class="auth-card">
+    <div class="auth-logo">booklyi<span>•</span></div>
+    <p class="auth-sub">Seu cantinho literário, agora com uma conta de verdade. 📚</p>
+    <div class="auth-tabs">
+      <button id="authTabLogin" class="active" onclick="setAuthMode('login')">Entrar</button>
+      <button id="authTabSignup" onclick="setAuthMode('signup')">Criar conta</button>
+    </div>
+    <div class="auth-form">
+      <input class="input" id="authName" placeholder="Seu nome" maxlength="40" style="display:none">
+      <input class="input" id="authEmail" type="email" placeholder="Seu e-mail" autocomplete="email">
+      <input class="input" id="authPassword" type="password" placeholder="Sua senha (mín. 6 caracteres)" autocomplete="current-password">
+      <button class="primary" id="authSubmitBtn" onclick="submitAuth()">Entrar</button>
+      <div class="auth-message" id="authMessage"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal book-detail-modal" id="realBookModal" onclick="if(event.target===this)closeModal('realBookModal')">
+  <div class="sheet">
+    <button class="close" onclick="closeModal('realBookModal')">×</button>
+    <div id="realBookDetail"></div>
+  </div>
+</div>
+
+
+<div class="modal" id="shareModal" onclick="if(event.target===this)closeModal('shareModal')">
+  <div class="sheet">
+    <button class="close" onclick="closeModal('shareModal')">×</button>
+    <h2>✨ Compartilhar leitura</h2>
+    <p style="color:var(--muted);margin-top:-4px">Crie um card aesthetic para postar no Instagram.</p>
+    <div class="share-preview"><div id="shareCard" class="share-card soft"></div></div>
+    <div class="section-title" style="margin-top:4px"><h2>Escolha o estilo</h2></div>
+    <div class="share-style-grid" id="shareStyles"></div>
+    <div class="share-actions"><button class="secondary" onclick="downloadShareCard()">Salvar imagem</button><button class="primary" onclick="shareCard()">Compartilhar</button></div>
+  </div>
+</div>
+
+<div class="modal" id="editBookModal" onclick="if(event.target===this)closeModal('editBookModal')"><div class="sheet"><button class="close" onclick="closeModal('editBookModal')">×</button><h2>✏️ Editar leitura</h2><div class="form-card"><input class="input" id="editBookTitle" placeholder="Título"><input class="input" id="editBookAuthor" placeholder="Autor"><select class="input" id="editBookStatus"><option>Quero ler</option><option>Lendo</option><option>Lido</option><option>Pausado</option><option>Abandonei</option></select><label class="field-label">Progresso <b id="editProgressLabel">0%</b></label><input id="editBookProgress" type="range" min="0" max="100" value="0" style="width:100%;accent-color:var(--accent)" oninput="syncEditReadingFields('progress')"><div class="edit-dates"><label>Comecei<input class="input" id="editStarted" type="date"></label><label>Terminei<input class="input" id="editFinished" type="date"></label></div><div class="edit-pages"><label>Página atual<input class="input" id="editPage" type="number" min="0" placeholder="0"></label><label>Total de páginas<input class="input" id="editPageCount" type="number" min="0" placeholder="0"></label></div><button class="primary" onclick="saveEditedBook()">Salvar alterações</button><button class="danger-btn" onclick="removeEditedBook()">Remover da estante</button></div></div></div>
+
+<div class="modal" id="editProfileModal" onclick="if(event.target===this)closeModal('editProfileModal')"><div class="sheet"><button class="close" onclick="closeModal('editProfileModal')">×</button><h2>✏️ Editar perfil</h2><div class="form-card">
+<label class="field-label">Nome</label><input class="input" id="editProfileName" maxlength="40" placeholder="Seu nome">
+<label class="field-label">@usuário</label><input class="input" id="editProfileHandle" maxlength="30" placeholder="@seuusuario">
+<label class="field-label">Bio</label><textarea class="textarea" id="editProfileBio" maxlength="160" placeholder="Conte um pouquinho sobre você e seus livros…"></textarea>
+<div class="avatar-file"><img id="profilePreview" class="avatar-file-preview" alt="Prévia" style="display:none"><div id="profilePreviewFallback" class="avatar-file-preview">C</div><div style="flex:1"><b>Foto de perfil</b><div style="font-size:12px;color:var(--muted);margin:3px 0 8px">Escolha uma foto do seu celular.</div><input id="profilePhotoInput" type="file" accept="image/*"></div></div>
+<button class="primary" onclick="saveProfile()">Salvar perfil</button>
+</div></div></div>
+<div class="modal" id="followersModal" onclick="if(event.target===this)closeModal('followersModal')"><div class="sheet"><button class="close" onclick="closeModal('followersModal')">×</button><h2>👥 Pessoas</h2><div class="followers-modal-tabs"><button id="followersTabBtn" onclick="renderFollowersModal('followers')">Seguidores</button><button id="followingTabBtn" onclick="renderFollowersModal('following')">Seguindo</button></div><div id="followersModalList" class="people-grid"></div></div></div>
+<div class="modal" id="communityProfileModal" onclick="if(event.target===this)closeModal('communityProfileModal')"><div class="sheet"><button class="close" onclick="closeModal('communityProfileModal')">×</button><div id="communityProfileDetail"></div></div></div>
+<div class="modal" id="themeModal" onclick="if(event.target===this)closeModal('themeModal')"><div class="sheet"><button class="close" onclick="closeModal('themeModal')">×</button><h2>Personalize seu tema</h2><p style="color:var(--muted)">Seu aplicativo, do seu jeitinho.</p><div class="theme-grid" id="themes"></div></div></div>
+
+<div class="modal" id="postModal" onclick="if(event.target===this)closeModal('postModal')"><div class="sheet"><button class="close" onclick="closeModal('postModal')">×</button><h2>✍️ Nova publicação</h2><div class="form-card"><div class="post-book-search"><input class="input" id="postBook" placeholder="Comece a digitar o nome do livro…" autocomplete="off"><div id="postBookSuggestions"></div><small style="color:var(--muted)">O Booklyi procura automaticamente no catálogo real.</small></div><textarea class="textarea" id="postText" placeholder="O que você está achando da leitura?"></textarea><label style="display:flex;gap:9px;align-items:center;color:var(--muted);font-size:13px"><input id="postSpoiler" type="checkbox"> Contém spoiler</label><div><span>Minha avaliação: </span><span id="postStars" class="rating-picker"></span></div><button class="primary" onclick="addPost()">Publicar</button></div></div></div></div>
+
+<div class="modal" id="bookModal" onclick="if(event.target===this)closeModal('bookModal')"><div class="sheet"><button class="close" onclick="closeModal('bookModal')">×</button><h2>📚 Adicionar livro</h2><div class="form-card"><input class="input" id="bookTitle" placeholder="Título"><input class="input" id="bookAuthor" placeholder="Autor"><select class="input" id="bookStatus"><option>Quero ler</option><option>Lendo</option><option>Lido</option><option>Abandonei</option></select><button class="primary" onclick="addBook()">Adicionar à estante</button></div></div></div>
+
+<div class="modal" id="clubModal" onclick="if(event.target===this)closeModal('clubModal')"><div class="sheet"><button class="close" onclick="closeModal('clubModal')">×</button><h2>👥 Criar clube</h2><div class="form-card"><input class="input" id="clubName" placeholder="Nome do clube"><input class="input" id="clubDesc" placeholder="Sobre o clube"><select class="input" id="clubPrivacy"><option>Público</option><option>Privado</option></select><button class="primary" onclick="addClub()">Criar clube</button></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+let supabaseClient=null,authUser=null,authMode='login',authInitialized=false;
+function setAuthMessage(message='',kind=''){const el=document.getElementById('authMessage');if(!el)return;el.textContent=message;el.className='auth-message'+(kind?' '+kind:'');}
+function setAuthMode(mode){authMode=mode;document.getElementById('authTabLogin')?.classList.toggle('active',mode==='login');document.getElementById('authTabSignup')?.classList.toggle('active',mode==='signup');const name=document.getElementById('authName'),btn=document.getElementById('authSubmitBtn'),pass=document.getElementById('authPassword');if(name)name.style.display=mode==='signup'?'block':'none';if(btn)btn.textContent=mode==='signup'?'Criar minha conta':'Entrar';if(pass)pass.autocomplete=mode==='signup'?'new-password':'current-password';setAuthMessage('');}
+function showAuthGate(){document.getElementById('authGate')?.classList.add('show');}
+function hideAuthGate(){document.getElementById('authGate')?.classList.remove('show');}
+function setAuthLoading(on){document.getElementById('authLoading')?.classList.toggle('show',!!on);}
+function slugUsername(value){return String(value||'leitor').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9._]+/g,'.').replace(/^\.+|\.+$/g,'').slice(0,24)||'leitor';}
+async function initSupabase(){
+  try{setAuthLoading(true);const r=await fetch('/api/config',{cache:'no-store'});if(!r.ok)throw new Error('Configuração do Supabase não encontrada no Vercel.');const cfg=await r.json();if(!window.supabase)throw new Error('Biblioteca de conexão não carregou.');supabaseClient=window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});const {data:{session}}=await supabaseClient.auth.getSession();await applyAuthSession(session);supabaseClient.auth.onAuthStateChange((_event,nextSession)=>{setTimeout(()=>applyAuthSession(nextSession),0)});authInitialized=true;}catch(e){console.error(e);showAuthGate();setAuthMessage(e.message||'Não foi possível conectar ao Booklyi.','error');}finally{setAuthLoading(false);}
+}
+async function submitAuth(){if(!supabaseClient)return setAuthMessage('Ainda estou conectando. Tente novamente em instantes.','error');const email=(document.getElementById('authEmail')?.value||'').trim();const password=document.getElementById('authPassword')?.value||'';const name=(document.getElementById('authName')?.value||'').trim();if(!email||!password)return setAuthMessage('Preencha e-mail e senha.','error');if(password.length<6)return setAuthMessage('Use uma senha com pelo menos 6 caracteres.','error');setAuthMessage('Só um instante…');const btn=document.getElementById('authSubmitBtn');if(btn)btn.disabled=true;try{if(authMode==='signup'){if(!name)return setAuthMessage('Digite seu nome para criar a conta.','error');const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{display_name:name}}});if(error)throw error;if(!data.session){setAuthMessage('Conta criada! Confira seu e-mail para confirmar o cadastro e depois volte para entrar.','ok');setAuthMode('login');return;}await applyAuthSession(data.session);}else{const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)throw error;await applyAuthSession(data.session);}}catch(e){console.error(e);const msg=(e.message||'').toLowerCase().includes('invalid login')?'E-mail ou senha incorretos.':(e.message||'Não foi possível entrar.');setAuthMessage(msg,'error');}finally{if(btn)btn.disabled=false;}}
+async function authSignOut(){if(!supabaseClient)return;await supabaseClient.auth.signOut();authUser=null;showAuthGate();setAuthMode('login');setAuthMessage('Você saiu da sua conta.','ok');}
+async function applyAuthSession(session){authUser=session?.user||null;if(!authUser){showAuthGate();return;}hideAuthGate();setAuthLoading(true);try{await loadSupabaseProfile();await loadRealCommunity();await loadSupabaseShelf();await loadSupabaseFeed();renderProfile();renderFeed();renderPeople();renderShelf();const btn=document.getElementById('accountBtn');if(btn)btn.textContent=(profile.name||'Conta').split(' ')[0].slice(0,12);const hero=document.getElementById('heroGreeting');if(hero)hero.innerHTML=`Olá, ${escapeHTML((profile.name||'Leitor').split(' ')[0])}!<br>O que você está lendo hoje? 📖`;}catch(e){console.error(e);}finally{setAuthLoading(false);}}
+async function loadSupabaseProfile(){if(!supabaseClient||!authUser)return;let {data,error}=await supabaseClient.from('profiles').select('id,username,display_name,bio,avatar_url').eq('id',authUser.id).maybeSingle();if(error)throw error;if(!data){const base=slugUsername(authUser.email?.split('@')[0]);const ins=await supabaseClient.from('profiles').insert({id:authUser.id,username:base,display_name:authUser.user_metadata?.display_name||base}).select().single();if(ins.error)throw ins.error;data=ins.data;}const old=profile||{};profile={...old,id:data.id,name:data.display_name||old.name||'Leitor',handle:'@'+(data.username||slugUsername(authUser.email?.split('@')[0])),bio:data.bio||old.bio||'',avatar:data.avatar_url||old.avatar||'',followersUsers:[],followingUsers:[]};saveProfileLocalOnly();}
+function saveProfileLocalOnly(){profile.followers=Array.isArray(profile.followersUsers)?profile.followersUsers.length:0;profile.following=Array.isArray(profile.followingUsers)?profile.followingUsers.length:0;localStorage.setItem('booklyi_profile',JSON.stringify(profile));}
+
+// ===== V12.4 — estante real no Supabase =====
+let shelfDbReady=false;
+function shelfRowToBook(r,meta){const m=meta||{};return {title:m.title||'Livro',author:Array.isArray(m.authors)?(m.authors.join(', ')||'Autor desconhecido'):(m.author||'Autor desconhecido'),status:r.status||'Quero ler',externalId:m.external_id||'',cover:m.cover_url||'',publisher:'',publishedDate:m.published_year?String(m.published_year):'',pageCount:Number(m.page_count||0),isbn:[],rating:r.has_user_rating?Number(r.rating||0):null,hasUserRating:!!r.has_user_rating,progress:Number(r.progress||0),page:Number(r.current_page||0),startedAt:r.started_at?r.started_at.slice(0,10):'',finishedAt:r.finished_at?r.finished_at.slice(0,10):'',categories:[],description:m.description||''};}
+function bookPublishedYear(b){const y=String(b?.publishedDate||'').match(/(19|20)\d{2}/);return y?Number(y[0]):null;}
+async function ensureSupabaseBook(b){if(!supabaseClient||!authUser)return null;const externalId=String(b.externalId||('local-'+Date.now()));const {data:existing,error:findError}=await supabaseClient.from('books').select('id,external_id').eq('external_id',externalId).maybeSingle();if(findError)throw findError;if(existing)return existing.id;const row={external_id:externalId,source:externalId.startsWith('local-')?'booklyi':'openlibrary',title:b.title||'Livro',authors:[b.author||'Autor desconhecido'],cover_url:b.cover||null,description:b.description||null,page_count:Number(b.pageCount||0)||null,published_year:bookPublishedYear(b)};const {data,error}=await supabaseClient.from('books').insert(row).select('id').single();if(error){if(error.code==='23505'){const again=await supabaseClient.from('books').select('id').eq('external_id',externalId).maybeSingle();if(again.error)throw again.error;return again.data?.id||null;}throw error;}return data?.id||null;}
+async function loadSupabaseShelf(){if(!supabaseClient||!authUser)return;try{const {data:rows,error}=await supabaseClient.from('shelf_items').select('id,user_id,book_id,status,progress,current_page,total_pages,rating,has_user_rating,started_at,finished_at,created_at,updated_at').eq('user_id',authUser.id);if(error)throw error;const ids=[...new Set((rows||[]).map(r=>r.book_id).filter(Boolean))];let metas=[];if(ids.length){const {data,error:booksError}=await supabaseClient.from('books').select('id,external_id,title,authors,cover_url,description,page_count,published_year').in('id',ids);if(booksError)throw booksError;metas=books||[];}const byId=new Map(metas.map(m=>[m.id,m]));books=(rows||[]).map(r=>shelfRowToBook(r,byId.get(r.book_id))).filter(b=>b.externalId);localStorage.setItem('booklyi_books',JSON.stringify(books));shelfDbReady=true;}catch(e){shelfDbReady=false;console.error('Booklyi: não foi possível carregar a estante do Supabase',e);}}
+async function saveShelfBookToSupabase(book){if(!supabaseClient||!authUser)return true;try{const bookId=await ensureSupabaseBook(book);if(!bookId)throw new Error('Não foi possível criar/localizar o livro no catálogo.');const row={user_id:authUser.id,book_id:bookId,status:book.status||'Quero ler',progress:Number(book.progress||0),current_page:Number(book.page||0),total_pages:Number(book.pageCount||0)||null,rating:book.hasUserRating&&book.rating?Number(book.rating):null,has_user_rating:!!book.hasUserRating,started_at:book.startedAt||null,finished_at:book.finishedAt||null,updated_at:new Date().toISOString()};const {error}=await supabaseClient.from('shelf_items').upsert(row,{onConflict:'user_id,book_id'});if(error)throw error;shelfDbReady=true;return true;}catch(e){console.error('Booklyi: erro ao salvar livro na estante',e);alert(`Não consegui salvar este livro na estante agora.\n\n${e?.message||'Erro desconhecido'}${e?.code?`\nCódigo: ${e.code}`:''}`);return false;}}
+async function removeShelfBookFromSupabase(book){if(!supabaseClient||!authUser)return true;try{const {data:bookRow,error:findError}=await supabaseClient.from('books').select('id').eq('external_id',String(book.externalId||'')).maybeSingle();if(findError)throw findError;if(bookRow?.id){const {error}=await supabaseClient.from('shelf_items').delete().eq('user_id',authUser.id).eq('book_id',bookRow.id);if(error)throw error;}return true;}catch(e){console.error('Booklyi: erro ao remover livro da estante',e);alert(`Não consegui remover este livro da estante agora.\n\n${e?.message||'Erro desconhecido'}`);return false;}}
+
+async function persistProfileToSupabase(){
+  if(!supabaseClient||!authUser)return true;
+  const username=slugUsername(String(profile.handle||'').replace(/^@/,''));
+  const payload={username,display_name:profile.name||'Leitor',bio:profile.bio||'',avatar_url:profile.avatar||null,updated_at:new Date().toISOString()};
+  try{
+    // O perfil já é criado automaticamente pelo trigger do Supabase quando a conta nasce.
+    // Para editar, verificamos primeiro se o @usuário já pertence a outra conta e então usamos UPDATE.
+    const {data:usernameOwner,error:usernameError}=await supabaseClient.from('profiles').select('id').eq('username',username).neq('id',authUser.id).maybeSingle();
+    if(usernameError)throw usernameError;
+    if(usernameOwner){const duplicate=new Error('Esse @usuário já está sendo usado. Escolha outro.');duplicate.code='23505';throw duplicate;}
+    const {error}=await supabaseClient.from('profiles').update(payload).eq('id',authUser.id);
+    if(error)throw error;
+    profile.handle='@'+username;
+    saveProfileLocalOnly();
+    return true;
+  }catch(error){
+    console.error('Booklyi: erro ao salvar perfil no Supabase',error);
+    alert(error?.code==='23505'?'Esse @usuário já está sendo usado. Escolha outro.':`Não consegui salvar o perfil no banco agora.\n\n${error?.message||'Erro desconhecido'}${error?.code?`\nCódigo: ${error.code}`:''}`);
+    return false;
+  }
+}
+async function loadRealCommunity(){if(!supabaseClient||!authUser)return;const [{data:rows,error},{data:follows,error:ferr}]=await Promise.all([supabaseClient.from('profiles').select('id,username,display_name,bio,avatar_url').neq('id',authUser.id),supabaseClient.from('follows').select('follower_id,following_id')]);if(error)throw error;if(ferr)throw ferr;const real=(rows||[]).map(r=>({id:r.id,name:r.display_name||r.username||'Leitor',handle:'@'+(r.username||String(r.id).slice(0,8)),bio:r.bio||'',avatar:r.avatar_url||'',real:true}));const demos=communityUsers.filter(u=>!u.real);communityUsers=[...real,...demos];const profileById=new Map(real.map(u=>[u.id,u]));profileById.set(authUser.id,profile);const outgoing=(follows||[]).filter(f=>f.follower_id===authUser.id);const incoming=(follows||[]).filter(f=>f.following_id===authUser.id);profile.followingUsers=outgoing.map(f=>profileById.get(f.following_id)).filter(Boolean).map(userKey);profile.followersUsers=incoming.map(f=>profileById.get(f.follower_id)).filter(Boolean).map(userKey);profile.followers=incoming.length;profile.following=outgoing.length;for(const u of real){const key=userKey(u);communityProfiles[key]={followers:(follows||[]).filter(f=>f.following_id===u.id).length,following:(follows||[]).filter(f=>f.follower_id===u.id).length,books:communityProfiles[key]?.books||[]};}saveProfileLocalOnly();}
+const themes={
+rosa:{accent:'#e85d8e',accent2:'#f7b2c9',bg:'#fff8fb',soft:'#fdeaf1'},
+amarelo:{accent:'#d89b22',accent2:'#f2d27b',bg:'#fffcf3',soft:'#fff3c9'},
+verde:{accent:'#4c9a70',accent2:'#a9d8bc',bg:'#f5fbf7',soft:'#e3f4e9'},
+vermelho:{accent:'#c94d59',accent2:'#eea5ac',bg:'#fff7f7',soft:'#fde2e4'},
+azul:{accent:'#4b83c4',accent2:'#a9c9eb',bg:'#f5faff',soft:'#e1effc'},
+roxo:{accent:'#8561b8',accent2:'#c9b6e8',bg:'#faf7ff',soft:'#eee6fb'},
+laranja:{accent:'#db7a32',accent2:'#f3bd91',bg:'#fff9f4',soft:'#fde9da'},
+preto:{accent:'#5b5360',accent2:'#aaa3ad',bg:'#f5f4f6',soft:'#e6e4e8'}
+};
+
+let profile=JSON.parse(localStorage.getItem('booklyi_profile')||'null')||{
+  name:'Carol',handle:'@carol.le',bio:'Amo histórias que me fazem perder a noção do tempo. ☕📚',avatar:'',followers:0,following:0,followersUsers:[],followingUsers:[]
+};
+profile.followersUsers=Array.isArray(profile.followersUsers)?profile.followersUsers:[];
+profile.followingUsers=Array.isArray(profile.followingUsers)?profile.followingUsers:[];
+profile.followers=profile.followersUsers.length;
+profile.following=profile.followingUsers.length;
+function saveProfileData(){saveProfileLocalOnly();if(authUser&&supabaseClient)persistProfileToSupabase();}
+let books=JSON.parse(localStorage.getItem('booklyi_books') || localStorage.getItem('lumi_books')||'null')||[
+{title:'A Hipótese do Amor',author:'Ali Hazelwood',status:'Lendo'},
+{title:'Os Sete Maridos de Evelyn Hugo',author:'Taylor Jenkins Reid',status:'Lido'},
+{title:'Verity',author:'Colleen Hoover',status:'Quero ler'},
+{title:'Teto Para Dois',author:'Beth O’Leary',status:'Lido'}
+];
+// V12.8.3: ratings are explicit user ratings. Legacy book ratings without the flag are ignored as 'my rating'.
+if(!localStorage.getItem('booklyi_rating_user_flag_v1283')){books=books.map(b=>({...b,hasUserRating:b.hasUserRating===true,rating:b.hasUserRating===true?normalizeRating(b.rating||0):null}));localStorage.setItem('booklyi_rating_user_flag_v1283','1');localStorage.setItem('booklyi_books',JSON.stringify(books));}
+let posts=JSON.parse(localStorage.getItem('booklyi_posts') || localStorage.getItem('lumi_posts')||'null')||[
+{user:'Marina',book:'A Biblioteca da Meia-Noite',text:'Esse livro está mexendo muito comigo. Cada capítulo parece uma conversa diferente com a gente mesma.',stars:5},
+{user:'Bia',book:'Verity',text:'Comecei ontem e já estou completamente presa. Preciso de alguém para discutir sem spoiler! 😭',stars:4}
+];
+let clubs=JSON.parse(localStorage.getItem('booklyi_clubs') || localStorage.getItem('lumi_clubs')||'null')||[
+{name:'Romances que destroem nosso psicológico 💔',desc:'Para quem gosta de sofrer por personagens fictícios.',members:128,privacy:'Público'},
+{name:'Café, livros & surtos ☕',desc:'Leituras variadas e muita conversa.',members:74,privacy:'Público'}
+];
+let communityUsers=[
+{name:'Marina',handle:'@marina.livros',bio:'Romance, fantasia e livros que viram a noite.',avatar:''},
+{name:'Bia',handle:'@bia.leitora',bio:'Um capítulo por vez. Café sempre. ☕',avatar:''},
+{name:'Júlia',handle:'@juliacompaginas',bio:'Romances sáficos, clássicos e muita anotação.',avatar:''},
+{name:'Rafa',handle:'@rafa.le',bio:'Literatura brasileira, suspense e surtos literários.',avatar:''},
+{name:'Nicole',handle:'@nicole.lendo',bio:'Fantasia, YA e histórias que ficam na cabeça.',avatar:''},
+{name:'Lívia',handle:'@liviasampaio',bio:'Leituras diversas e conversas sem spoiler.',avatar:''}
+];
+const communityProfiles={
+  '@marina.livros':{followers:428,following:311,books:[['A Biblioteca da Meia-Noite','Matt Haig'],['Teto Para Dois','Beth O’Leary'],['Pessoas Normais','Sally Rooney']]},
+  '@bia.leitora':{followers:276,following:198,books:[['Verity','Colleen Hoover'],['Os Sete Maridos de Evelyn Hugo','Taylor Jenkins Reid'],['A Hipótese do Amor','Ali Hazelwood']]},
+  '@juliacompaginas':{followers:612,following:405,books:[['O amor não é óbvio','Elayne Baeta'],['Conectadas','Clara Alves'],['Heartstopper','Alice Oseman']]},
+  '@rafa.le':{followers:351,following:267,books:[['Torto Arado','Itamar Vieira Junior'],['O Avesso da Pele','Jeferson Tenório'],['Véspera','Carla Madeira']]},
+  '@nicole.lendo':{followers:489,following:530,books:[['Os Dois Morrem no Final','Adam Silvera'],['A Vida Invisível de Addie LaRue','V. E. Schwab'],['Cidade da Lua Crescente','Sarah J. Maas']]},
+  '@liviasampaio':{followers:733,following:389,books:[['Aristóteles e Dante','Benjamin Alire Sáenz'],['Vermelho, Branco e Sangue Azul','Casey McQuiston'],['Torto Arado','Itamar Vieira Junior']] }
+};
+let feedMode=localStorage.getItem('booklyi_feed_mode')||'all';
+let feedDbReady=false,feedLoading=false;
+function setFeedMode(mode,btn){feedMode=mode;localStorage.setItem('booklyi_feed_mode',mode);document.querySelectorAll('.feed-tab').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');renderFeed();}
+function refreshFeed(){if(supabaseClient&&authUser)loadSupabaseFeed(true);else renderFeed();}
+function openCommunityProfile(nameOrHandle){const u=findCommunityUser(nameOrHandle);if(!u)return;const data=communityProfiles[userKey(u)]||{followers:0,following:0,books:[]};const userPosts=posts.filter(p=>{const pu=findCommunityUser(p.user);return pu&&userKey(pu)===userKey(u);});const following=isFollowing(u.handle);const booksHtml=data.books.map(b=>`<div class="community-book-mini"><div class="community-book-cover"><div class="fallback-cover">${escapeHTML(b[0])}</div></div><b>${escapeHTML(b[0])}</b><small>${escapeHTML(b[1])}</small></div>`).join('');document.getElementById('communityProfileDetail').innerHTML=`<div class="community-profile"><div class="community-profile-head"><div class="community-profile-avatar">${personAvatar(u)}</div><div class="community-profile-main"><h2>${escapeHTML(u.name)}</h2><div class="community-profile-handle">${escapeHTML(u.handle)}</div><div class="community-profile-actions"><button class="follow-btn ${following?'following':''}" onclick="toggleFollowFromProfile('${escapeHTML(u.handle)}')">${following?'Seguindo':'Seguir'}</button></div></div></div><p class="community-profile-bio">${escapeHTML(u.bio||'')}</p><div class="community-profile-stats"><div><b>${data.followers}</b><span>seguidores</span></div><div><b>${data.following}</b><span>seguindo</span></div><div><b>${data.books.length}</b><span>livros em destaque</span></div></div><div class="section-title"><h2>📚 Leituras em destaque</h2></div><div class="community-books-grid">${booksHtml||'<div class="profile-empty" style="grid-column:1/-1">Ainda não há livros em destaque.</div>'}</div><div class="section-title" style="margin-top:20px"><h2>✨ Publicações</h2></div><div class="feed">${userPosts.length?userPosts.slice(0,6).map(p=>`<article class="post"><div class="post-head"><div class="avatar">${escapeHTML((p.user||'C')[0])}</div><div class="post-head-main"><h3>${escapeHTML(p.user||u.name)}</h3><div class="meta">está lendo <b>${escapeHTML(p.book||'Livro')}</b></div></div></div>${p.spoiler?`<div class="spoiler-box"><div class="spoiler-warning">⚠️ Contém spoiler · toque para revelar</div><p class="spoiler-text">${escapeHTML(p.text||'')}</p></div>`:`<p>${escapeHTML(p.text||'')}</p>`}<div class="stars">${stars(Number(p.stars||0))}</div></article>`).join(''):'<div class="profile-empty">Este perfil ainda não publicou nada. ✨</div>'}</div></div>`;document.querySelectorAll('#communityProfileDetail [data-profile-spoiler]').forEach(el=>el.addEventListener('click',()=>el.classList.toggle('revealed')));openModal('communityProfileModal');}
+async function toggleFollowFromProfile(handle){await toggleFollow(handle);openCommunityProfile(handle);}
+
+function userKey(user){return (user?.handle||user?.name||'').toLowerCase();}
+function findCommunityUser(nameOrHandle){const key=String(nameOrHandle||'').toLowerCase();return communityUsers.find(u=>userKey(u)===key||String(u.name).toLowerCase()===key||String(u.handle).toLowerCase()===key)||null;}
+function isFollowing(nameOrHandle){const u=findCommunityUser(nameOrHandle);return !!u && profile.followingUsers.includes(userKey(u));}
+function personAvatar(u){if(u?.avatar)return `<img src="${escapeHTML(u.avatar)}" alt="">`;return escapeHTML((u?.name||'C')[0].toUpperCase());}
+function personRow(u,mode='follow'){if(!u)return '';const following=isFollowing(u.handle);const isSelf=userKey(u)===userKey(profile);const button=mode==='followers'&&!isSelf?`<button class="follow-btn ${following?'following':''}" onclick="toggleFollow('${escapeHTML(u.handle)}')">${following?'Seguindo':'Seguir'}</button>`:mode==='following'&&!isSelf?`<button class="follow-btn following" onclick="toggleFollow('${escapeHTML(u.handle)}')">Seguindo</button>`:mode==='suggested'&&!isSelf?`<button class="follow-btn ${following?'following':''}" onclick="toggleFollow('${escapeHTML(u.handle)}')">${following?'Seguindo':'Seguir'}</button>`:'';return `<div class="person-row"><div class="person-avatar profile-link" onclick="openCommunityProfile('${escapeHTML(u.handle)}')">${personAvatar(u)}</div><div class="person-info profile-link" onclick="openCommunityProfile('${escapeHTML(u.handle)}')"><b>${escapeHTML(u.name)}</b><small>${escapeHTML(u.handle)} · ${escapeHTML(u.bio||'')}</small></div>${button}</div>`;}
+function renderPeople(){const box=document.getElementById('discoverPeople');if(!box)return;const people=communityUsers.filter(u=>userKey(u)!==userKey(profile));box.innerHTML=people.slice(0,4).map(u=>personRow(u,'suggested')).join('');}
+async function toggleFollow(nameOrHandle){const u=findCommunityUser(nameOrHandle);if(!u)return;const key=userKey(u),idx=profile.followingUsers.indexOf(key),wasFollowing=idx>=0;if(u.real&&u.id&&authUser&&supabaseClient){const q=wasFollowing?supabaseClient.from('follows').delete().eq('follower_id',authUser.id).eq('following_id',u.id):supabaseClient.from('follows').insert({follower_id:authUser.id,following_id:u.id});const {error}=await q;if(error){console.error(error);return alert('Não consegui atualizar esse follow agora.');}await loadRealCommunity();}else{if(wasFollowing)profile.followingUsers.splice(idx,1);else profile.followingUsers.push(key);saveProfileLocalOnly();}renderProfile();renderFeed();renderPeople();if(document.getElementById('followersModal')?.classList.contains('show'))renderFollowersModal(window.followersModalMode||'following');}
+function openFollowersModal(mode='followers'){openModal('followersModal');renderFollowersModal(mode);}
+function renderFollowersModal(mode='followers'){window.followersModalMode=mode;const fb=document.getElementById('followersTabBtn'),fg=document.getElementById('followingTabBtn');if(fb)fb.classList.toggle('active',mode==='followers');if(fg)fg.classList.toggle('active',mode==='following');const box=document.getElementById('followersModalList');if(!box)return;let users=[];if(mode==='following'){users=profile.followingUsers.map(k=>findCommunityUser(k)).filter(Boolean);}else{users=profile.followersUsers.map(k=>findCommunityUser(k)).filter(Boolean);}box.innerHTML=users.length?users.map(u=>personRow(u,mode)).join(''):`<div class="profile-empty">${mode==='following'?'Você ainda não está seguindo ninguém. Explore a comunidade e encontre seus próximos perfis favoritos. ✨':'Você ainda não tem seguidores. Quando outras pessoas seguirem seu perfil, elas aparecerão aqui. 💗'}</div>`;}
+
+function save(){localStorage.setItem('booklyi_books',JSON.stringify(books));localStorage.setItem('booklyi_posts',JSON.stringify(posts));localStorage.setItem('booklyi_clubs',JSON.stringify(clubs));saveProfileData()}
+function normalizeRating(value){const n=Number(value||0);return Math.max(0,Math.min(5,Math.round(n*2)/2));}
+function stars(n){const value=normalizeRating(n);return Array.from({length:5},(_,i)=>{const slot=i+1;const cls=value>=slot?'full':value>=slot-.5?'half':'empty';const glyph=cls==='empty'?'☆':'★';return `<span class="star-glyph ${cls}" aria-hidden="true">${glyph}</span>`;}).join('')}
+function starsText(n){const value=normalizeRating(n);return Array.from({length:5},(_,i)=>value>=i+1?'★':value>=i+.5?'⯨':'☆').join('')}
+function renderRatingPicker(id,value,onChange){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const current=normalizeRating(value);
+  el.innerHTML=Array.from({length:5},(_,i)=>{
+    const slot=i+1;
+    const cls=current>=slot?'full':current>=slot-.5?'half':'empty';
+    const glyph=cls==='empty'?'☆':'★';
+    return `<button type="button" class="rating-star-control" data-star-slot="${slot}" aria-label="${slot} estrelas; toque na metade esquerda para ${slot-.5} estrelas">
+      <span class="star-display ${cls}">${glyph}</span>
+    </button>`;
+  }).join('');
+  el.querySelectorAll('.rating-star-control').forEach(btn=>{
+    btn.addEventListener('click',event=>{
+      const slot=Number(btn.dataset.starSlot);
+      const rect=btn.getBoundingClientRect();
+      const x=event.clientX-rect.left;
+      const chosen=x<rect.width/2?slot-.5:slot;
+      onChange(normalizeRating(chosen));
+    });
+  });
+}
+function coverHue(title){
+  let h=0; for(const ch of String(title||'')) h=(h*31+ch.charCodeAt(0))%360;
+  return h;
+}
+function generatedCover(title,author='',cls='generated-cover'){
+  const safeTitle=escapeHTML(title||'Sem título');
+  const safeAuthor=escapeHTML(author||'Autor desconhecido');
+  return `<div class="${cls}" style="--cover-hue:${coverHue(title)}" role="img" aria-label="Capa gerada para ${safeTitle}"><span class="generated-cover-mark">BOOKLYI</span><span class="generated-cover-title">${safeTitle}</span><span class="generated-cover-author">${safeAuthor}</span></div>`;
+}
+function coverImg(url,title,cls='real-book-cover',fallbacks=[],author='') {
+  const safeTitle=escapeHTML(title||'Capa do livro');
+  const safeAuthor=escapeHTML(author||'Autor desconhecido');
+  const urls=[url,...(Array.isArray(fallbacks)?fallbacks:[])].filter(Boolean).map(String);
+  if(!urls.length) return generatedCover(title,author);
+  const encoded=urls.map(coverSrc).map(escapeHTML);
+  const src=encoded[0];
+  const next=encoded.slice(1).join('|');
+  return `<img class="${cls}" src="${src}" data-cover-fallbacks="${escapeHTML(next)}" data-cover-title="${safeTitle}" data-cover-author="${safeAuthor}" alt="Capa de ${safeTitle}" loading="lazy" onerror="coverFallback(this)">`;
+}
+function coverFallback(img){
+  const list=(img.dataset.coverFallbacks||'').split('|').filter(Boolean);
+  if(list.length){img.src=list.shift();img.dataset.coverFallbacks=list.join('|');return;}
+  const title=img.dataset.coverTitle||img.alt?.replace(/^Capa de /,'')||'Sem título';
+  const author=img.dataset.coverAuthor||'';
+  img.outerHTML=generatedCover(title,author);
+}
+
+function cover(t){return t.toUpperCase().split(' ').slice(0,4).join('<br>')}
+function go(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));if(id==='shelf')renderShelf();if(id==='clubs')renderClubs();if(id==='discover')renderDiscover();if(id==='profile')renderProfile();if(id==='home')renderFeed();window.scrollTo({top:0,behavior:'smooth'})}
+function openModal(id){document.getElementById(id).classList.add('show');if(id==='themeModal')renderThemes()}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+function ensureSocialData(){
+  posts.forEach(p=>{if(!Array.isArray(p.likes))p.likes=[];if(!Array.isArray(p.comments))p.comments=[];p.comments.forEach(c=>{if(!Array.isArray(c.likes))c.likes=[];if(!Array.isArray(c.replies))c.replies=[];c.replies.forEach(r=>{if(!Array.isArray(r.likes))r.likes=[]})});});
+}
+/* ===== V12.8.1 — Feed social robusto no Supabase ===== */
+function feedProfileForId(id,map){
+  if(!id)return {name:'Leitor',handle:'',avatar:''};
+  if(map?.has(id))return map.get(id);
+  if(authUser&&id===authUser.id)return {name:profile.name||'Leitor',handle:profile.handle||'',avatar:profile.avatar||''};
+  return {name:'Leitor',handle:'',avatar:''};
+}
+function feedBookFromMeta(meta){
+  if(!meta)return null;
+  return {externalId:meta.external_id||'',title:meta.title||'Livro',author:Array.isArray(meta.authors)?(meta.authors.join(', ')||'Autor desconhecido'):(meta.author||'Autor desconhecido'),cover:meta.cover_url||'',pageCount:Number(meta.page_count||0),publishedDate:meta.published_year?String(meta.published_year):'',description:meta.description||''};
+}
+async function loadSupabaseFeed(force=false){
+  if(!supabaseClient||!authUser)return false;
+  if(feedLoading&&!force)return false;
+  feedLoading=true;
+  const status=document.getElementById('feedStatus');
+  if(status)status.textContent='Atualizando o feed…';
+  try{
+    const {data:rows,error}=await supabaseClient.from('posts').select('id,user_id,book_id,book_title,book_author,book_cover_url,book_external_id,content,spoiler,rating,created_at').order('created_at',{ascending:false}).limit(100);
+    if(error)throw error;
+    const postRows=rows||[];
+    const userIds=[...new Set(postRows.map(r=>r.user_id).filter(Boolean))];
+    const bookIds=[...new Set(postRows.map(r=>r.book_id).filter(Boolean))];
+    const [{data:profilesRows,error:profilesError},{data:bookRows,error:booksError}]=await Promise.all([
+      userIds.length?supabaseClient.from('profiles').select('id,username,display_name,bio,avatar_url').in('id',userIds):Promise.resolve({data:[],error:null}),
+      bookIds.length?supabaseClient.from('books').select('id,external_id,title,authors,cover_url,description,page_count,published_year').in('id',bookIds):Promise.resolve({data:[],error:null})
+    ]);
+    if(profilesError)throw profilesError;
+    if(booksError)throw booksError;
+    const profileMap=new Map((profilesRows||[]).map(r=>[r.id,{id:r.id,name:r.display_name||r.username||'Leitor',handle:'@'+(r.username||String(r.id).slice(0,8)),bio:r.bio||'',avatar:r.avatar_url||'',real:true}]));
+    const bookMap=new Map((bookRows||[]).map(r=>[r.id,r]));
+    const postIds=postRows.map(r=>r.id);
+    const [{data:likes,error:likesError},{data:comments,error:commentsError}]=await Promise.all([
+      postIds.length?supabaseClient.from('post_likes').select('post_id,user_id').in('post_id',postIds):Promise.resolve({data:[],error:null}),
+      postIds.length?supabaseClient.from('comments').select('id,post_id,user_id,content,created_at').in('post_id',postIds).order('created_at',{ascending:true}):Promise.resolve({data:[],error:null})
+    ]);
+    if(likesError)throw likesError;
+    if(commentsError)throw commentsError;
+    const commentRows=comments||[];
+    const commentIds=commentRows.map(c=>c.id);
+    const [{data:replies,error:repliesError},{data:commentLikes,error:commentLikesError}]=await Promise.all([
+      commentIds.length?supabaseClient.from('comment_replies').select('id,comment_id,user_id,content,created_at').in('comment_id',commentIds).order('created_at',{ascending:true}):Promise.resolve({data:[],error:null}),
+      commentIds.length?supabaseClient.from('comment_likes').select('comment_id,user_id').in('comment_id',commentIds):Promise.resolve({data:[],error:null})
+    ]);
+    if(repliesError)throw repliesError;
+    if(commentLikesError)throw commentLikesError;
+    const replyRows=replies||[];
+    const replyIds=replyRows.map(r=>r.id);
+    let replyLikes=[];
+    if(replyIds.length){const rr=await supabaseClient.from('reply_likes').select('reply_id,user_id').in('reply_id',replyIds);if(rr.error)throw rr.error;replyLikes=rr.data||[];}
+    const commentUserIds=[...new Set(commentRows.concat(replyRows).map(r=>r.user_id).filter(Boolean))];
+    if(commentUserIds.length){const extra=await supabaseClient.from('profiles').select('id,username,display_name,bio,avatar_url').in('id',commentUserIds);if(extra.error)throw extra.error;for(const r of (extra.data||[]))profileMap.set(r.id,{id:r.id,name:r.display_name||r.username||'Leitor',handle:'@'+(r.username||String(r.id).slice(0,8)),bio:r.bio||'',avatar:r.avatar_url||'',real:true});}
+    const likesByPost=new Map(),likesByComment=new Map(),likesByReply=new Map();
+    for(const l of (likes||[])){if(!likesByPost.has(l.post_id))likesByPost.set(l.post_id,[]);likesByPost.get(l.post_id).push(l.user_id);}
+    for(const l of (commentLikes||[])){if(!likesByComment.has(l.comment_id))likesByComment.set(l.comment_id,[]);likesByComment.get(l.comment_id).push(l.user_id);}
+    for(const l of (replyLikes||[])){if(!likesByReply.has(l.reply_id))likesByReply.set(l.reply_id,[]);likesByReply.get(l.reply_id).push(l.user_id);}
+    const repliesByComment=new Map();
+    for(const r of replyRows){if(!repliesByComment.has(r.comment_id))repliesByComment.set(r.comment_id,[]);const u=feedProfileForId(r.user_id,profileMap);repliesByComment.get(r.comment_id).push({id:r.id,remoteId:r.id,userId:r.user_id,user:u.name,handle:u.handle,avatar:u.avatar,text:r.content||'',likes:likesByReply.get(r.id)||[],createdAt:r.created_at});}
+    const commentsByPost=new Map();
+    for(const c of commentRows){if(!commentsByPost.has(c.post_id))commentsByPost.set(c.post_id,[]);const u=feedProfileForId(c.user_id,profileMap);commentsByPost.get(c.post_id).push({id:c.id,remoteId:c.id,userId:c.user_id,user:u.name,handle:u.handle,avatar:u.avatar,text:c.content||'',likes:likesByComment.get(c.id)||[],replies:repliesByComment.get(c.id)||[],createdAt:c.created_at});}
+    const mapped=postRows.map(r=>{const u=feedProfileForId(r.user_id,profileMap);const meta=bookMap.get(r.book_id);const linked=feedBookFromMeta(meta);const b=(r.book_title||r.book_author||r.book_cover_url||r.book_external_id)?{externalId:r.book_external_id||linked?.externalId||'',title:r.book_title||linked?.title||'Livro',author:r.book_author||linked?.author||'Autor desconhecido',cover:r.book_cover_url||linked?.cover||'',pageCount:linked?.pageCount||0,publishedDate:linked?.publishedDate||'',description:linked?.description||''}:linked;return {id:r.id,remoteId:r.id,userId:r.user_id,user:u.name,handle:u.handle,avatar:u.avatar,book:b?.title||'Livro',bookData:b,text:r.content||'',stars:Number(r.rating||0),spoiler:!!r.spoiler,likes:likesByPost.get(r.id)||[],comments:commentsByPost.get(r.id)||[],createdAt:r.created_at};});
+    if(mapped.length||feedDbReady){posts=mapped;localStorage.setItem('booklyi_posts',JSON.stringify(posts));}
+    feedDbReady=true;
+    if(status)status.textContent=mapped.length?`Feed conectado · ${mapped.length} publicação${mapped.length===1?'':'ões'}`:'Feed conectado · ainda não há publicações';
+    renderFeed();
+    return true;
+  }catch(e){
+    console.error('Booklyi V12.8: erro ao carregar feed',e);
+    feedDbReady=false;
+    if(status)status.textContent='Não foi possível atualizar agora · mostrando o último feed salvo';
+    renderFeed();
+    return false;
+  }finally{feedLoading=false;}
+}
+async function ensureFeedBook(book,title,author){
+  if(book?.externalId)return ensureSupabaseBook(book);
+  return ensureSupabaseBook({externalId:'local-'+Date.now(),title:title||'Livro',author:author||'Autor desconhecido',cover:book?.cover||'',pageCount:Number(book?.pageCount||0),description:book?.description||''});
+}
+function optimisticPostObject(row,book){const snapshot={...book,title:row.book_title||book.title,author:row.book_author||book.author,cover:row.book_cover_url||book.cover||'',externalId:row.book_external_id||book.externalId||book.id||''};return {id:row.id,remoteId:row.id,userId:authUser.id,user:profile.name||'Leitor',handle:profile.handle||'',avatar:profile.avatar||'',book:snapshot.title,bookData:snapshot,text:row.content,stars:Number(row.rating||0),spoiler:!!row.spoiler,likes:[],comments:[],createdAt:row.created_at};}
+async function persistPostToSupabase(post){
+  if(!supabaseClient||!authUser)return false;
+  try{
+    const book=post.bookData||{title:post.book||'Livro',author:'Autor desconhecido',cover:''};
+    let bookId=null;
+    // O vínculo com books é opcional para a publicação: se a tabela de livros estiver temporariamente bloqueada,
+    // o post ainda consegue ser salvo com um retrato do livro diretamente em posts.
+    try{bookId=await ensureFeedBook(book,post.book,book.author||'Autor desconhecido');}catch(bookError){console.warn('Booklyi V12.8.1: não foi possível vincular books; salvando snapshot no post.',bookError);}
+    const payload={
+      user_id:authUser.id,
+      book_id:bookId||null,
+      book_title:book.title||post.book||'Livro',
+      book_author:book.author||'Autor desconhecido',
+      book_cover_url:book.cover||null,
+      book_external_id:book.externalId||book.id||null,
+      content:post.text||'',
+      spoiler:!!post.spoiler,
+      rating:Number(post.stars||0)
+    };
+    const {data,error}=await supabaseClient.from('posts').insert(payload).select('id,user_id,book_id,book_title,book_author,book_cover_url,book_external_id,content,spoiler,rating,created_at').single();
+    if(error)throw error;
+    return data;
+  }catch(e){console.error('Booklyi V12.8.1: erro ao publicar',e);return null;}
+}
+async function toggleRemotePostLike(post){
+  if(!supabaseClient||!authUser||!post.remoteId)return false;
+  const liked=post.likes.includes(authUser.id);
+  const q=liked?supabaseClient.from('post_likes').delete().eq('post_id',post.remoteId).eq('user_id',authUser.id):supabaseClient.from('post_likes').insert({post_id:post.remoteId,user_id:authUser.id});
+  const {error}=await q;if(error){console.error(error);return false;}return true;
+}
+async function addRemoteComment(post,text){
+  if(!supabaseClient||!authUser||!post.remoteId)return null;
+  const {data,error}=await supabaseClient.from('comments').insert({post_id:post.remoteId,user_id:authUser.id,content:text}).select('id,post_id,user_id,content,created_at').single();
+  if(error){console.error(error);return null;}return data;
+}
+async function addRemoteReply(comment,text){
+  if(!supabaseClient||!authUser||!comment.remoteId)return null;
+  const {data,error}=await supabaseClient.from('comment_replies').insert({comment_id:comment.remoteId,user_id:authUser.id,content:text}).select('id,comment_id,user_id,content,created_at').single();
+  if(error){console.error(error);return null;}return data;
+}
+async function toggleRemoteCommentLike(comment){
+  if(!supabaseClient||!authUser||!comment.remoteId)return false;
+  const liked=comment.likes.includes(authUser.id);
+  const q=liked?supabaseClient.from('comment_likes').delete().eq('comment_id',comment.remoteId).eq('user_id',authUser.id):supabaseClient.from('comment_likes').insert({comment_id:comment.remoteId,user_id:authUser.id});
+  const {error}=await q;if(error){console.error(error);return false;}return true;
+}
+async function toggleRemoteReplyLike(reply){
+  if(!supabaseClient||!authUser||!reply.remoteId)return false;
+  const liked=reply.likes.includes(authUser.id);
+  const q=liked?supabaseClient.from('reply_likes').delete().eq('reply_id',reply.remoteId).eq('user_id',authUser.id):supabaseClient.from('reply_likes').insert({reply_id:reply.remoteId,user_id:authUser.id});
+  const {error}=await q;if(error){console.error(error);return false;}return true;
+}
+
+function currentUserKey(){return profile.handle||profile.name||'carol'}
+function renderFeed(){
+  ensureSocialData();
+  const feed=document.getElementById('feed');if(!feed)return;
+  const allTab=document.getElementById('feedTabAll'),followTab=document.getElementById('feedTabFollowing');
+  if(allTab)allTab.classList.toggle('active',feedMode==='all');if(followTab)followTab.classList.toggle('active',feedMode==='following');
+  const followingIds=new Set((profile.followingUsers||[]).map(String));
+  const visiblePosts=feedMode==='following'?posts.filter(p=>String(p.userId||'')===String(authUser?.id||'')||followingIds.has(String(p.handle||'').toLowerCase())||followingIds.has(String(p.userId||''))||isFollowing(p.handle||p.user)):posts;
+  const emptyMessage=feedMode==='following'?'Você ainda não segue ninguém que tenha publicado aqui. Explore a comunidade e siga alguns leitores. ✨':'Ainda não há publicações. Seja a primeira pessoa a compartilhar uma leitura! ✨';
+  feed.innerHTML=visiblePosts.map(p=>{
+    const i=posts.indexOf(p),liked=p.likes.includes(authUser?.id||currentUserKey()),comments=p.comments||[],pu=findCommunityUser(p.handle||p.user||'')||{name:p.user,handle:p.handle||'',avatar:p.avatar||'',id:p.userId};
+    const coverHtml=p.bookData?.cover?coverImg(p.bookData.cover,p.book,'real-book-cover',p.bookData?.coverFallbacks||[],p.bookData?.author||''):generatedCover(p.book,p.bookData?.author||'');
+    return `<article class="post">
+      <div class="post-head"><div class="avatar" ${pu?.handle?`onclick="openCommunityProfile('${escapeHTML(pu.handle)}')"`:''}>${pu?.avatar?`<img src="${escapeHTML(pu.avatar)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:escapeHTML((p.user||'C')[0])}</div><div class="post-head-main"><h3 ${pu?.handle?`onclick="openCommunityProfile('${escapeHTML(pu.handle)}')"`:''}>${escapeHTML(p.user||'Leitor')}</h3><div class="meta">está lendo <b>${escapeHTML(p.book||'Livro')}</b></div></div>${pu?.handle&&userKey(pu)!==userKey(profile)?`<button class="follow-btn post-follow ${isFollowing(pu.handle)?'following':''}" data-follow-user="${escapeHTML(pu.handle)}">${isFollowing(pu.handle)?'Seguindo':'Seguir'}</button>`:''}</div>
+      <div class="post-book"><div class="post-book-cover">${coverHtml}</div><div class="post-book-info"><b>${escapeHTML(p.book||'Livro')}</b><div class="meta">${escapeHTML(p.bookData?.author||'Autor desconhecido')}</div>${p.bookData?.pageCount?`<small style="color:var(--muted)">${Number(p.bookData.pageCount)} páginas</small>`:''}</div></div>
+      ${p.spoiler?`<div class="spoiler-box" data-spoiler="${i}"><div class="spoiler-warning">⚠️ Contém spoiler · toque para revelar</div><p class="spoiler-text">${escapeHTML(p.text||'')}</p></div>`:`<p>${escapeHTML(p.text||'')}</p>`}
+      ${p.stars?`<div class="stars">${stars(Number(p.stars||0))}</div>`:''}
+      <div class="social-actions"><button class="social-btn ${liked?'liked':''}" data-like-post="${i}">${liked?'♥':'♡'} Curtir ${p.likes.length?`· ${p.likes.length}`:''}</button><button class="social-btn" data-toggle-comments="${i}">💬 Comentar ${comments.length?`· ${comments.length}`:''}</button><button class="social-btn" data-share-post="${i}">↗ Compartilhar</button></div>
+      <div class="comments-box" id="comments-${i}" style="display:${comments.length?'grid':'none'}"><div class="comment-compose"><input class="input" id="comment-input-${i}" placeholder="Escreva um comentário…"><button class="mini-btn" data-add-comment="${i}">Enviar</button></div>
+      ${comments.map((c,ci)=>{const cliked=c.likes.includes(authUser?.id||currentUserKey());return `<div class="comment"><div class="comment-head"><div class="comment-avatar">${c.avatar?`<img src="${escapeHTML(c.avatar)}" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`:escapeHTML((c.user||'C')[0])}</div><div><b>${escapeHTML(c.user||'Leitor')}</b><div class="comment-meta">comentário</div></div></div><div class="comment-text">${escapeHTML(c.text||'')}</div><div><button class="social-btn ${cliked?'liked':''}" data-like-comment="${i}" data-comment-index="${ci}">${cliked?'♥':'♡'} ${c.likes.length||0}</button> <button class="social-btn" data-reply="${i}" data-comment-index="${ci}">↩ Responder</button></div><div class="reply-list">${(c.replies||[]).map((r,ri)=>{const rl=r.likes.includes(authUser?.id||currentUserKey());return `<div class="reply"><b>${escapeHTML(r.user||'Leitor')}</b><div class="comment-text">${escapeHTML(r.text||'')}</div><button class="social-btn ${rl?'liked':''}" data-like-reply="${i}" data-comment-index="${ci}" data-reply-index="${ri}">${rl?'♥':'♡'} ${r.likes.length||0}</button></div>`}).join('')}</div><div id="reply-compose-${i}-${ci}" class="comment-compose" style="display:none;margin-top:7px"><input class="input" id="reply-input-${i}-${ci}" placeholder="Responder…"><button class="mini-btn" data-add-reply="${i}" data-comment-index="${ci}">Enviar</button></div></div>`}).join('')}</div>
+    </article>`;
+  }).join('')||`<div class="empty">${emptyMessage}</div>`;
+  document.querySelectorAll('[data-spoiler]').forEach(el=>el.addEventListener('click',()=>el.classList.toggle('revealed')));
+  document.querySelectorAll('[data-like-post]').forEach(el=>el.addEventListener('click',()=>togglePostLike(Number(el.dataset.likePost))));
+  document.querySelectorAll('[data-toggle-comments]').forEach(el=>el.addEventListener('click',()=>toggleComments(Number(el.dataset.toggleComments))));
+  document.querySelectorAll('[data-add-comment]').forEach(el=>el.addEventListener('click',()=>addComment(Number(el.dataset.addComment))));
+  document.querySelectorAll('[data-like-comment]').forEach(el=>el.addEventListener('click',()=>toggleCommentLike(Number(el.dataset.likeComment),Number(el.dataset.commentIndex))));
+  document.querySelectorAll('[data-reply]').forEach(el=>el.addEventListener('click',()=>toggleReply(Number(el.dataset.reply),Number(el.dataset.commentIndex))));
+  document.querySelectorAll('[data-add-reply]').forEach(el=>el.addEventListener('click',()=>addReply(Number(el.dataset.addReply),Number(el.dataset.commentIndex))));
+  document.querySelectorAll('[data-like-reply]').forEach(el=>el.addEventListener('click',()=>toggleReplyLike(Number(el.dataset.likeReply),Number(el.dataset.commentIndex),Number(el.dataset.replyIndex))));
+  document.querySelectorAll('[data-share-post]').forEach(el=>el.addEventListener('click',()=>sharePost(Number(el.dataset.sharePost))));
+  document.querySelectorAll('[data-follow-user]').forEach(el=>el.addEventListener('click',()=>toggleFollow(el.dataset.followUser)));
+}
+async function togglePostLike(i){
+  const p=posts[i];if(!p)return;ensureSocialData();const key=authUser?.id||currentUserKey(),idx=p.likes.indexOf(key),wasLiked=idx>=0;
+  if(wasLiked)p.likes.splice(idx,1);else p.likes.push(key);renderFeed();
+  if(p.remoteId&&supabaseClient&&authUser){const ok=await toggleRemotePostLike(p);if(!ok){if(wasLiked)p.likes.push(key);else p.likes.splice(p.likes.indexOf(key),1);renderFeed();alert('Não consegui atualizar a curtida agora.');}}
+  else{localStorage.setItem('booklyi_posts',JSON.stringify(posts));}
+}
+function toggleComments(i){const box=document.getElementById('comments-'+i);if(!box)return;box.style.display=box.style.display==='none'?'grid':'none';if(box.style.display==='grid'){const input=document.getElementById('comment-input-'+i);if(input)input.focus();}}
+async function addComment(i){
+  const input=document.getElementById('comment-input-'+i),text=(input?.value||'').trim();if(!text)return;const p=posts[i];if(!p)return;ensureSocialData();
+  const optimistic={id:'local-'+Date.now(),remoteId:null,userId:authUser?.id||'',user:profile.name||'Carol',handle:profile.handle||'',avatar:profile.avatar||'',text,likes:[],replies:[],createdAt:new Date().toISOString()};
+  if(p.remoteId&&supabaseClient&&authUser){const row=await addRemoteComment(p,text);if(!row)return alert('Não consegui publicar o comentário agora.');optimistic.id=row.id;optimistic.remoteId=row.id;}
+  p.comments.push(optimistic);input.value='';localStorage.setItem('booklyi_posts',JSON.stringify(posts));renderFeed();const box=document.getElementById('comments-'+i);if(box)box.style.display='grid';
+}
+async function toggleCommentLike(pi,ci){ensureSocialData();const c=posts[pi]?.comments?.[ci];if(!c)return;const key=authUser?.id||currentUserKey(),idx=c.likes.indexOf(key),wasLiked=idx>=0;if(wasLiked)c.likes.splice(idx,1);else c.likes.push(key);renderFeed();if(c.remoteId&&supabaseClient&&authUser){const ok=await toggleRemoteCommentLike(c);if(!ok){if(wasLiked)c.likes.push(key);else c.likes.splice(c.likes.indexOf(key),1);renderFeed();}}else localStorage.setItem('booklyi_posts',JSON.stringify(posts));}
+function toggleReply(pi,ci){const box=document.getElementById(`reply-compose-${pi}-${ci}`);if(box)box.style.display=box.style.display==='none'?'flex':'none';}
+async function addReply(pi,ci){const input=document.getElementById(`reply-input-${pi}-${ci}`),text=(input?.value||'').trim(),c=posts[pi]?.comments?.[ci];if(!text||!c)return;const optimistic={id:'local-'+Date.now(),remoteId:null,userId:authUser?.id||'',user:profile.name||'Carol',handle:profile.handle||'',avatar:profile.avatar||'',text,likes:[],createdAt:new Date().toISOString()};if(c.remoteId&&supabaseClient&&authUser){const row=await addRemoteReply(c,text);if(!row)return alert('Não consegui publicar a resposta agora.');optimistic.id=row.id;optimistic.remoteId=row.id;}c.replies.push(optimistic);input.value='';localStorage.setItem('booklyi_posts',JSON.stringify(posts));renderFeed();const box=document.getElementById(`reply-compose-${pi}-${ci}`);if(box)box.style.display='flex';}
+async function toggleReplyLike(pi,ci,ri){ensureSocialData();const r=posts[pi]?.comments?.[ci]?.replies?.[ri];if(!r)return;const key=authUser?.id||currentUserKey(),idx=r.likes.indexOf(key),wasLiked=idx>=0;if(wasLiked)r.likes.splice(idx,1);else r.likes.push(key);renderFeed();if(r.remoteId&&supabaseClient&&authUser){const ok=await toggleRemoteReplyLike(r);if(!ok){if(wasLiked)r.likes.push(key);else r.likes.splice(r.likes.indexOf(key),1);renderFeed();}}else localStorage.setItem('booklyi_posts',JSON.stringify(posts));}
+function sharePost(i){const p=posts[i];const text=`${p.user||'Leitor'} está lendo ${p.book||'um livro'} no Booklyi 📚✨`;if(navigator.share)navigator.share({title:'Booklyi',text,url:location.href}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>alert('Texto copiado!')).catch(()=>{});}
+
+let shelfFilter='Todos';
+function setShelfFilter(filter,btn){
+  shelfFilter=filter||'Todos';
+  document.querySelectorAll('.shelf-tabs .tab').forEach(x=>x.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderShelf();
+}
+
+function renderHomeReading(){
+  const box=document.getElementById('homeReading'); if(!box)return;
+  const reading=books.filter(b=>b.status==='Lendo');
+  if(!reading.length){
+    box.innerHTML='<div class="empty">Você não está lendo nenhum livro agora. 📚✨</div>';
+    return;
+  }
+  box.innerHTML=reading.map(b=>{
+    const progress=Math.max(0,Math.min(100,Number(b.progress||0)));
+    const page=Number(b.page||0), pageCount=Number(b.pageCount||0);
+    const pageText=pageCount?`${page} de ${pageCount} páginas · ${progress}%`:`${progress}% da leitura`;
+    const coverHtml=b.cover?coverImg(b.cover,b.title,'home-reading-img',b.coverFallbacks||[],b.author):`<div class="fallback-cover">${escapeHTML(cover(b.title))}</div>`;
+    return `<div class="post-book"><div class="home-reading-cover">${coverHtml}</div><div style="flex:1;min-width:0"><b>${escapeHTML(b.title)}</b><div class="meta">${escapeHTML(b.author||'Autor desconhecido')}</div><div class="progress"><i style="width:${progress}%"></i></div><small>${escapeHTML(pageText)}</small></div></div>`;
+  }).join('');
+}
+
+function renderStats(){
+  const read=books.filter(b=>b.status==='Lido').length;
+  const reading=books.filter(b=>b.status==='Lendo').length;
+  const rated=books.filter(b=>b.hasUserRating===true).map(b=>Number(b.rating||0)).filter(r=>r>0);
+  const avg=rated.length?Math.round((rated.reduce((a,b)=>a+b,0)/rated.length)*10)/10:null;
+  const sr=document.getElementById('statReading');if(sr)sr.textContent=reading;
+  const rr=document.getElementById('statRead');if(rr)rr.textContent=read;
+  const ra=document.getElementById('statAverage');if(ra)ra.textContent=avg==null?'—':avg.toFixed(1).replace('.',',');
+}
+
+function renderShelf(){
+  const grid=document.getElementById('shelfGrid'); if(!grid)return;
+  const filtered=shelfFilter==='Todos'?books:books.filter(b=>b.status===shelfFilter);
+  grid.innerHTML=filtered.map((b)=>{
+    const i=books.indexOf(b);
+    const progress=b.status==='Lendo'?Number(b.progress||0):b.status==='Lido'?100:0;
+    const page=Number(b.page||0), pageCount=Number(b.pageCount||0);
+    const dates=[b.startedAt?`início ${formatDate(b.startedAt)}`:'',b.finishedAt?`fim ${formatDate(b.finishedAt)}`:''].filter(Boolean).join(' · ');
+    return `<article class="book shelf-book-card">
+      <div onclick="openShelfBook(${i})" style="cursor:pointer">
+        <div class="cover">${b.cover?coverImg(b.cover,b.title,'real-book-cover',b.coverFallbacks||[],b.author):generatedCover(b.title,b.author)}</div>
+        <b>${escapeHTML(b.title)}</b><small>${escapeHTML(b.author||'')}</small>
+        <small>${escapeHTML(b.status||'Quero ler')}${b.status==='Lendo'?` · ${progress}%`:''}</small>
+        ${b.hasUserRating&&b.rating?`<div class="stars">${stars(Number(b.rating))}</div>`:''}
+        ${b.status==='Lendo'?`<div class="progress"><i style="width:${progress}%"></i></div>`:''}
+        ${pageCount?`<small>📖 ${page} de ${pageCount} páginas</small>`:''}
+        ${dates?`<small class="shelf-dates">${escapeHTML(dates)}</small>`:''}
+      </div>
+      <div class="shelf-actions">
+        <button class="secondary" type="button" onclick="event.stopPropagation();openShelfBook(${i})">📖 Livro</button>
+        <button class="secondary" type="button" onclick="event.stopPropagation();openShelfShare(${i})">📸 Instagram</button>
+      </div>
+      <button class="danger-inline" type="button" onclick="event.stopPropagation();removeBook(${i})">🗑️ Remover da estante</button>
+    </article>`;
+  }).join('')||'<div class="empty">Nenhum livro nesta parte da estante ainda.</div>';
+  renderStats();
+  renderHomeReading();
+}
+
+function openShelfShare(i){
+  const b=books[i]; if(!b)return;
+  const book={id:b.externalId||('local-'+i),title:b.title,author:b.author||'Autor desconhecido',cover:b.cover||'',pageCount:b.pageCount||0};
+  openShareForBook(book);
+}
+
+function formatDate(value){if(!value)return '';const d=new Date(value+'T00:00:00');return isNaN(d)?value:d.toLocaleDateString('pt-BR');}
+function syncEditReadingFields(source){
+  const progressEl=document.getElementById('editBookProgress');
+  const progressLabel=document.getElementById('editProgressLabel');
+  const pageEl=document.getElementById('editPage');
+  const pageCountEl=document.getElementById('editPageCount');
+  if(!progressEl||!pageEl)return;
+  let progress=Math.max(0,Math.min(100,Number(progressEl.value)||0));
+  let page=Math.max(0,Number(pageEl.value)||0);
+  const total=Math.max(0,Number(pageCountEl?.value||0));
+  if(source==='progress' && total){
+    page=Math.round(total*progress/100);
+    pageEl.value=page;
+  }else if(source==='page' && total){
+    page=Math.min(total,page);
+    pageEl.value=page;
+    progress=Math.round(page/total*100);
+    progressEl.value=progress;
+  }
+  if(progressLabel)progressLabel.textContent=progress+'%';
+}
+function openEditBook(i){
+  const b=books[i];if(!b)return;
+  window.editingBookIndex=i;
+  document.getElementById('editBookTitle').value=b.title||'';
+  document.getElementById('editBookAuthor').value=b.author||'';
+  document.getElementById('editBookStatus').value=b.status||'Quero ler';
+  document.getElementById('editBookProgress').value=Number(b.progress||0);
+  document.getElementById('editProgressLabel').textContent=Number(b.progress||0)+'%';
+  document.getElementById('editStarted').value=b.startedAt||'';
+  document.getElementById('editFinished').value=b.finishedAt||'';
+  document.getElementById('editPage').value=Number(b.page||0);
+  document.getElementById('editPageCount').value=Number(b.pageCount||0);
+  const progressEl=document.getElementById('editBookProgress');
+  const pageEl=document.getElementById('editPage');
+  const totalEl=document.getElementById('editPageCount');
+  if(progressEl)progressEl.oninput=()=>syncEditReadingFields('progress');
+  if(pageEl)pageEl.oninput=()=>syncEditReadingFields('page');
+  if(totalEl)totalEl.oninput=()=>syncEditReadingFields('progress');
+  openModal('editBookModal');
+}
+async function saveEditedBook(){
+  const i=window.editingBookIndex,b=books[i];if(!b)return;
+  const status=document.getElementById('editBookStatus').value;
+  b.title=document.getElementById('editBookTitle').value.trim()||b.title;
+  b.author=document.getElementById('editBookAuthor').value.trim()||b.author;
+  b.status=status;
+  b.progress=status==='Lido'?100:Number(document.getElementById('editBookProgress').value||0);
+  b.page=Math.max(0,Number(document.getElementById('editPage').value||0));
+  b.pageCount=Math.max(0,Number(document.getElementById('editPageCount').value||b.pageCount||0));
+  b.startedAt=document.getElementById('editStarted').value||'';
+  b.finishedAt=document.getElementById('editFinished').value||'';
+  if(status==='Lendo'&&!b.startedAt)b.startedAt=new Date().toISOString().slice(0,10);
+  if(status==='Lido'){
+    b.progress=100;
+    if(b.pageCount)b.page=b.pageCount;
+    if(!b.finishedAt)b.finishedAt=new Date().toISOString().slice(0,10);
+  }else if(b.pageCount){
+    b.page=Math.max(0,Math.min(b.pageCount,b.page));
+    b.progress=Math.min(100,Math.round(b.page/b.pageCount*100));
+  }
+  save();
+  const ok=await saveShelfBookToSupabase(b);
+  if(!ok)return;
+  closeModal('editBookModal');
+  renderShelf();
+  if(window.currentDetailBookId===b.externalId){
+    const idx=window.booklyiSearchResults.findIndex(x=>x.id===b.externalId);
+    if(idx>=0)openRealBook(idx);
+  }
+}
+async function removeEditedBook(){
+  const i=window.editingBookIndex;if(i==null||!books[i])return;
+  if(confirm(`Remover "${books[i].title}" da sua estante?`)){const b=books[i];const ok=await removeShelfBookFromSupabase(b);if(!ok)return;books.splice(i,1);save();closeModal('editBookModal');renderShelf();}
+}
+function openShelfBook(i){
+  const b=books[i];if(!b)return;
+  if(!b.externalId){b.externalId='local-'+Date.now()+'-'+i;save();}
+  window.editingBookIndex=i;
+  const idx=window.booklyiSearchResults.findIndex(x=>x.id===b.externalId);
+  if(idx>=0){openRealBook(idx);return;}
+  const pseudo={id:b.externalId,title:b.title,author:b.author,cover:b.cover||'',publisher:b.publisher||'',publishedDate:b.publishedDate||'',pageCount:b.pageCount||0,isbn:b.isbn||[],categories:b.categories||[],description:b.description||''};
+  window.booklyiSearchResults=[pseudo];openRealBook(0);
+}
+
+function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function bookCoverUrl(b){return b.cover||''}
+function renderDiscover(data){
+  const grid=document.getElementById('discoverGrid');
+  if(!grid)return;
+  if(data){
+    if(!data.length){
+      grid.innerHTML='<div class="empty">Nenhum livro encontrado. Tente outro título, autor ou ISBN.</div>';
+      return;
+    }
+    grid.innerHTML=data.map((b,i)=>`<article class="book real-book-card" onclick="openRealBook(${i})">
+      <div class="cover">${b.cover?coverImg(b.cover,b.title,'real-book-cover',b.coverFallbacks||[],b.author):generatedCover(b.title,b.author)}</div>
+      <b>${escapeHTML(b.title)}</b>
+      <small>${escapeHTML(b.author||'Autor desconhecido')}</small>${b.tags?.length?`<div class="catalog-badge">🌈 ${escapeHTML(b.tags[0])}</div>`:''}
+      ${b.rating?`<div class="stars">★ ${Number(b.rating).toFixed(1)}</div>`:''}
+    </article>`).join('');
+    window.booklyiSearchResults=data;
+    return;
+  }
+  const local=[...books].slice(0,6);
+  grid.innerHTML=local.map(b=>`<article class="book"><div class="cover">${generatedCover(b.title,b.author)}</div><b>${escapeHTML(b.title)}</b><small>${escapeHTML(b.author)}</small><small>${escapeHTML(b.status)}</small></article>`).join('');
+  document.getElementById('discoverClubs').innerHTML=clubs.map(c=>`<div class="club"><div class="members">👥 ${c.members} membros</div><h3>${escapeHTML(c.name)}</h3><p>${escapeHTML(c.desc)}</p><button class="secondary">Entrar no clube</button></div>`).join('');
+  renderPeople();
+}
+
+window.booklyiSearchResults=[];
+async function quickCatalogSearch(q){const input=document.getElementById('search');if(input)input.value=q;await searchRealBooks();}
+async function searchRealBooks(){
+  const input=document.getElementById('search');
+  const btn=document.getElementById('realSearchBtn');
+  const status=document.getElementById('realSearchStatus');
+  const q=(input?.value||'').trim();
+  if(!q){status.textContent='Digite um título, autor ou ISBN.';return;}
+  btn.disabled=true;btn.textContent='Buscando…';status.textContent='Buscando livros reais…';
+  try{
+    const url='/api/books?q='+encodeURIComponent(q);
+    const response=await fetch(url,{headers:{Accept:'application/json'},cache:'no-store'});
+    if(!response.ok)throw new Error('books api '+response.status);
+    const data=await response.json();
+    const items=data.items||[];
+    if(data.catalogStatus==='temporarily_unavailable' && !items.length){
+      status.textContent='O catálogo externo está temporariamente indisponível. Tente novamente em instantes.';
+    }else{
+      status.textContent=items.length?`${items.length} livro(s) encontrado(s).`:'Nenhum livro encontrado.';
+    }
+    renderDiscover(items);
+  }catch(err){
+    console.error(err);
+    status.textContent='O catálogo está sendo atualizado. Tente novamente em alguns segundos.';
+    document.getElementById('discoverGrid').innerHTML='<div class="empty">O catálogo real não respondeu neste momento.</div>';
+  }finally{btn.disabled=false;btn.textContent='Buscar';}
+}
+function openRealBook(index){
+  const b=window.booklyiSearchResults[index];
+  if(!b)return;
+  const shelf=books.find(x=>x.externalId===b.id);
+  const coverHtml=b.cover?coverImg(b.cover,b.title,'real-detail-cover',b.coverFallbacks||[],b.author):generatedCover(b.title,b.author);
+  document.getElementById('realBookDetail').innerHTML=`
+    <div class="real-detail">
+      <div>${coverHtml}</div>
+      <div>
+        <h2>${escapeHTML(b.title)}</h2>
+        ${b.subtitle?`<div class="real-detail-meta">${escapeHTML(b.subtitle)}</div>`:''}
+        <div class="real-detail-meta"><strong>${escapeHTML(b.author||'Autor desconhecido')}</strong><br>
+        ${escapeHTML(b.publisher)}${b.publishedDate?' · '+escapeHTML(b.publishedDate):''}${b.pageCount?' · '+escapeHTML(String(b.pageCount))+' páginas':''}<br>
+        ${escapeHTML(b.categories.join(' · '))}</div>
+        ${b.rating?`<div class="stars" style="margin-top:9px">★ ${Number(b.rating).toFixed(1)} · ${b.ratingsCount||0} avaliações</div>`:''}
+        <p class="real-detail-description">${escapeHTML(b.description||'Sinopse não disponível.')}</p>
+        <div style="margin-top:12px"><b>Minha avaliação</b><div class="rating-picker" id="ratingPicker"></div><small style="display:block;color:var(--muted);margin-top:4px">Toque na metade esquerda ou direita da estrela para avaliar de 0,5 em 0,5.</small></div>
+        ${shelf?`<div class="reading-progress"><div style="display:flex;justify-content:space-between;gap:10px"><b>Meu progresso</b><b id="progressValue">${Number(shelf.progress||0)}%</b></div><input id="progressInput" type="range" min="0" max="100" value="${Number(shelf.progress||0)}" style="width:100%;accent-color:var(--accent)"><div class="progress"><i id="detailProgressBar" style="width:${Number(shelf.progress||0)}%"></i></div><div class="progress-row"><span>📖 <b id="detailPageValue">${Number(shelf.page||0)}</b> de ${Number(b.pageCount||0)||'—'} páginas</span><span id="progressSaveStatus">pronto</span></div><div class="detail-page-edit"><label>Página atual<input id="detailPageInput" class="input" type="number" min="0" max="${Number(b.pageCount||0)||''}" value="${Number(shelf.page||0)}" inputmode="numeric" placeholder="0"></label><label>Porcentagem<input id="detailProgressNumber" class="input" type="number" min="0" max="100" value="${Number(shelf.progress||0)}" inputmode="numeric"></label></div></div>`:''}
+        <div class="status-row">
+          ${['Quero ler','Lendo','Lido','Pausado','Abandonei'].map(s=>`<button type="button" data-status="${escapeHTML(s)}">${s}</button>`).join('')}
+        </div>
+        <div class="booklyi-detail-actions"><button class="primary" id="detailAddBtn" type="button">+ Adicionar à estante</button><button id="detailShareBtn" type="button">✨ Compartilhar</button></div>${shelf?`<button class="secondary" style="margin-top:8px" id="detailEditBtn" type="button">✏️ Editar minha leitura</button>`:''}
+        ${shelf?`<div class="book-status">✓ Já está na sua estante como ${escapeHTML(shelf.status)}${shelf.hasUserRating&&shelf.rating?` · ${shelf.rating} estrelas`:''}</div>`:''}
+      </div>
+    </div>`;
+  window.currentDetailBookId=b.id;
+  const detail=document.getElementById('realBookDetail');
+  renderRatingPicker('ratingPicker',shelf?.hasUserRating?shelf.rating:0,(value)=>rateRealBookById(b.id,value));
+  detail.querySelectorAll('[data-status]').forEach(btn=>btn.addEventListener('click',()=>addRealBook(b,btn.dataset.status)));
+  const progressInput=detail.querySelector('#progressInput');
+  if(progressInput)progressInput.addEventListener('input',e=>updateRealProgress(b.id,e.target.value,{source:'percent'}));
+  const progressNumber=detail.querySelector('#detailProgressNumber');
+  if(progressNumber)progressNumber.addEventListener('input',e=>updateRealProgress(b.id,e.target.value,{source:'percent-number'}));
+  const pageInput=detail.querySelector('#detailPageInput');
+  if(pageInput)pageInput.addEventListener('input',e=>updateRealPage(b.id,e.target.value));
+  const addBtn=detail.querySelector('#detailAddBtn'); if(addBtn)addBtn.addEventListener('click',()=>addRealBook(b,shelf?.status||'Quero ler'));
+  const shareBtn=detail.querySelector('#detailShareBtn'); if(shareBtn)shareBtn.addEventListener('click',()=>openShareForBook(b));
+  const editBtn=detail.querySelector('#detailEditBtn'); if(editBtn)editBtn.addEventListener('click',()=>{const idx=books.findIndex(x=>x.externalId===b.id);if(idx>=0)openEditBook(idx)});
+  openModal('realBookModal');
+}
+async function addRealBook(b,status){
+  const existing=books.findIndex(x=>x.externalId===b.id);
+  const previous=existing>=0?books[existing]:{};
+  const item={...previous,title:b.title,author:b.author||'Autor desconhecido',status,externalId:b.id,cover:b.cover||'',publisher:b.publisher,publishedDate:b.publishedDate,pageCount:b.pageCount,isbn:b.isbn||[],categories:b.categories||[],description:b.description||'',rating:previous.hasUserRating?normalizeRating(previous.rating||0):null,hasUserRating:previous.hasUserRating===true,progress:status==='Lido'?100:(status==='Lendo'?(previous.progress||0):0),page:status==='Lendo'?(previous.page||0):0,startedAt:previous.startedAt||'',finishedAt:status==='Lido'?(previous.finishedAt||new Date().toISOString().slice(0,10)):(previous.finishedAt||'')};
+  if(existing>=0)books[existing]=item;else books.unshift(item);
+  save();
+  const ok=await saveShelfBookToSupabase(item);
+  if(!ok)return;
+  renderShelf();closeModal('realBookModal');
+  document.getElementById('realSearchStatus').textContent=`✓ ${b.title} foi adicionado à sua estante como "${status}".`;
+}
+
+
+async function rateRealBookById(id,n){
+  const b=window.booklyiSearchResults.find(x=>x.id===id); if(!b)return;
+  let i=books.findIndex(x=>x.externalId===id);
+  if(i<0){await addRealBook(b,'Quero ler');i=books.findIndex(x=>x.externalId===id);}
+  if(i<0)return;
+  books[i].rating=normalizeRating(n);books[i].hasUserRating=true; save(); renderStats();
+  // Atualização otimista: a estrela muda imediatamente, sem esperar o banco.
+  const detail=document.getElementById('realBookDetail');
+  if(detail){
+    renderRatingPicker('ratingPicker',books[i].rating,(value)=>rateRealBookById(b.id,value));
+    let status=detail.querySelector('#progressSaveStatus');
+    if(status)status.textContent='salvando…';
+  }
+  const ok=await saveShelfBookToSupabase(books[i]);
+  if(detail){const status=detail.querySelector('#progressSaveStatus');if(status)status.textContent=ok?'salvo ✓':'não salvo';}
+  renderShelf();
+}
+let progressSaveTimers={};
+function syncDetailProgressUI(book){
+  const value=Math.max(0,Math.min(100,Number(book.progress||0)));
+  const page=Math.max(0,Number(book.page||0));
+  const v=document.getElementById('progressValue'),bar=document.getElementById('detailProgressBar'),num=document.getElementById('detailProgressNumber'),slider=document.getElementById('progressInput'),pageEl=document.getElementById('detailPageValue'),pageInput=document.getElementById('detailPageInput');
+  if(v)v.textContent=value+'%'; if(bar)bar.style.width=value+'%'; if(num)num.value=value; if(slider)slider.value=value; if(pageEl)pageEl.textContent=page; if(pageInput)pageInput.value=page;
+}
+function queueShelfSave(book,delay=450){
+  clearTimeout(progressSaveTimers[book.externalId]);
+  const status=document.getElementById('progressSaveStatus'); if(status)status.textContent='salvando…';
+  progressSaveTimers[book.externalId]=setTimeout(async()=>{const ok=await saveShelfBookToSupabase(book);const s=document.getElementById('progressSaveStatus');if(s)s.textContent=ok?'salvo ✓':'não salvo';},delay);
+}
+async function updateRealProgress(id,value,opts={}){
+  const i=books.findIndex(x=>x.externalId===id); if(i<0)return;
+  const v=Math.max(0,Math.min(100,Number(value)||0));
+  books[i].progress=v;
+  if(books[i].pageCount && opts.source!=='page')books[i].page=Math.round(books[i].pageCount*v/100);
+  if(!books[i].startedAt)books[i].startedAt=new Date().toISOString().slice(0,10);
+  if(v>=100){
+    books[i].status='Lido';
+    if(books[i].pageCount)books[i].page=books[i].pageCount;
+    books[i].finishedAt=books[i].finishedAt||new Date().toISOString().slice(0,10);
+  }else if(books[i].status==='Lido'){
+    books[i].status='Lendo';
+    books[i].finishedAt='';
+  }
+  syncDetailProgressUI(books[i]);
+  save();
+  renderShelf();
+  queueShelfSave(books[i]);
+}
+async function updateRealPage(id,value){
+  const i=books.findIndex(x=>x.externalId===id); if(i<0)return;
+  const max=Number(books[i].pageCount||0);
+  let page=Math.max(0,Number(value)||0); if(max)page=Math.min(max,page);
+  books[i].page=page;
+  if(max)books[i].progress=Math.round(page/max*100);
+  if(!books[i].startedAt)books[i].startedAt=new Date().toISOString().slice(0,10);
+  if(max && page>=max){
+    books[i].progress=100;
+    books[i].status='Lido';
+    books[i].finishedAt=books[i].finishedAt||new Date().toISOString().slice(0,10);
+  }else if(books[i].status==='Lido'){
+    books[i].status='Lendo';
+    books[i].finishedAt='';
+  }
+  syncDetailProgressUI(books[i]);
+  save();
+  renderShelf();
+  queueShelfSave(books[i]);
+}
+let shareBook=null,shareStyle='soft';
+const shareStyles={soft:'🌸 Soft',cozy:'🤎 Cozy',dark:'🖤 Dark Academia',botanical:'🌿 Botanical',dreamy:'💜 Dreamy',minimal:'🤍 Minimal'};
+function openShareForBook(b){shareBook=b;shareStyle='soft';renderShareStyles();renderShareCard();openModal('shareModal')}
+function renderShareStyles(){document.getElementById('shareStyles').innerHTML=Object.entries(shareStyles).map(([k,v])=>`<button class="share-style ${shareStyle===k?'active':''}" onclick="shareStyle='${k}';renderShareStyles();renderShareCard()">${v}</button>`).join('')}
+function renderShareCard(){
+  if(!shareBook)return; const shelf=books.find(x=>x.externalId===shareBook.id)||{}; const card=document.getElementById('shareCard'); card.className='share-card '+shareStyle;
+  const cover=shareBook.cover?`<img class="share-cover" src="${escapeHTML(coverSrc(shareBook.cover))}" crossorigin="anonymous" alt="" onerror="this.onerror=null;this.style.display='none'">`:`<div class="share-cover-fallback">${escapeHTML(shareBook.title)}</div>`;
+  const rating=shelf.hasUserRating?Number(shelf.rating||0):0; const progress=shelf.status==='Lendo'?`<div class="share-progress">${Number(shelf.progress||0)}% da leitura</div>`:'';
+  card.innerHTML=`<div class="share-brand">BOOKLYI</div>${cover}<div class="share-title">${escapeHTML(shareBook.title)}</div><div class="share-author">${escapeHTML(shareBook.author||'Autor desconhecido')}</div>${rating?`<div class="share-stars">${stars(rating)}</div>`:''}${progress}`;
+}
+async function shareCard(){
+  if(!shareBook)return;
+  const blob=await createShareImageBlob();
+  if(!blob){downloadShareCard();return;}
+  const file=new File([blob],'booklyi-leitura.png',{type:'image/png'});
+  if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
+    try{await navigator.share({title:`${shareBook.title} · Booklyi`,text:`Minha leitura no Booklyi 📚✨`,files:[file]});return;}catch(e){}
+  }
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement('a');link.download='booklyi-leitura.png';link.href=url;link.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  alert('Card salvo como imagem. No iPhone, abra a imagem e compartilhe pelo Instagram. 📸');
+}
+function shareCoverUrl(url){
+  if(!url)return '';
+  return '/api/cover?url='+encodeURIComponent(url);
+}
+function createShareImageBlob(){
+  return new Promise(resolve=>{
+    const w=1080,h=1350,canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');
+    const bg={soft:['#fdeaf1','#fff8fb'],cozy:['#5a4034','#a77c61'],dark:['#18151c','#44354b'],botanical:['#dcebdd','#f7fbf5'],dreamy:['#ded4f5','#f8efff'],minimal:['#fafafa','#eeeeee']}[shareStyle]||['#fdeaf1','#fff8fb'];
+    const g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,bg[0]);g.addColorStop(1,bg[1]);ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    ctx.fillStyle=shareStyle==='dark'||shareStyle==='cozy'?'#fff':'#342a30';ctx.font='800 34px system-ui';ctx.fillText('BOOKLYI',70,85);
+    const finish=()=>canvas.toBlob(resolve,'image/png',1);
+    const drawText=()=>{ctx.textAlign='center';ctx.fillStyle=shareStyle==='dark'||shareStyle==='cozy'?'#fff':'#342a30';ctx.font='900 48px system-ui';const words=shareBook.title.split(' ');let lines=[],line='';for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>800){lines.push(line);line=word}else line=test}if(line)lines.push(line);lines.slice(0,3).forEach((l,i)=>ctx.fillText(l,w/2,1030+i*55));ctx.font='400 28px system-ui';ctx.globalAlpha=.72;ctx.fillText(shareBook.author||'Autor desconhecido',w/2,1210);const shelf=books.find(x=>x.externalId===shareBook.id)||{};if(shelf.hasUserRating&&shelf.rating){ctx.globalAlpha=1;ctx.font='32px system-ui';ctx.fillText(starsText(shelf.rating),w/2,1260)}if(shelf.status==='Lendo'){ctx.globalAlpha=1;ctx.font='700 26px system-ui';ctx.fillText(`${Number(shelf.progress||0)}% da leitura`,w/2,1305)}ctx.globalAlpha=1;finish()};
+    if(shareBook.cover){const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{const maxW=520,maxH=650,scale=Math.min(maxW/img.width,maxH/img.height),cw=img.width*scale,ch=img.height*scale,x=(w-cw)/2,y=190+(maxH-ch)/2;ctx.save();ctx.shadowColor='rgba(0,0,0,.2)';ctx.shadowBlur=35;ctx.drawImage(img,x,y,cw,ch);ctx.restore();drawText()};img.onerror=()=>{ctx.fillStyle=shareStyle==='dark'||shareStyle==='cozy'?'#806a5d':'#d783a2';ctx.fillRect(310,270,460,610);drawText()};img.src=shareCoverUrl(shareBook.cover)}else{ctx.fillStyle=shareStyle==='dark'||shareStyle==='cozy'?'#806a5d':'#d783a2';ctx.fillRect(310,270,460,610);drawText()}
+  });
+}
+function downloadShareCard(){
+  const card=document.getElementById('shareCard'); if(!card)return;
+  const w=1080,h=1350,canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');
+  const bg={soft:['#fdeaf1','#fff8fb'],cozy:['#5a4034','#a77c61'],dark:['#18151c','#44354b'],botanical:['#dcebdd','#f7fbf5'],dreamy:['#ded4f5','#f8efff'],minimal:['#fafafa','#eeeeee']}[shareStyle]||['#fdeaf1','#fff8fb'];
+  const g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,bg[0]);g.addColorStop(1,bg[1]);ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+  ctx.fillStyle=shareStyle==='dark'||shareStyle==='cozy'?'#fff':'#342a30';ctx.font='800 34px system-ui';ctx.fillText('BOOKLYI',70,85);
+  const finish=()=>{const link=document.createElement('a');link.download='booklyi-leitura.png';link.href=canvas.toDataURL('image/png');link.click();};
+  const drawText=()=>{ctx.textAlign='center';ctx.fillStyle=shareStyle==='dark'||shareStyle==='cozy'?'#fff':'#342a30';ctx.font='900 48px system-ui';const words=shareBook.title.split(' ');let lines=[],line='';for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>800){lines.push(line);line=word}else line=test}if(line)lines.push(line);lines.slice(0,3).forEach((l,i)=>ctx.fillText(l,w/2,1030+i*55));ctx.font='400 28px system-ui';ctx.globalAlpha=.72;ctx.fillText(shareBook.author||'Autor desconhecido',w/2,1210);const shelf=books.find(x=>x.externalId===shareBook.id)||{};if(shelf.hasUserRating&&shelf.rating){ctx.globalAlpha=1;ctx.font='32px system-ui';ctx.fillText(starsText(shelf.rating),w/2,1260)}ctx.globalAlpha=1;finish()};
+  if(shareBook.cover){const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{const maxW=520,maxH=650,scale=Math.min(maxW/img.width,maxH/img.height),cw=img.width*scale,ch=img.height*scale,x=(w-cw)/2,y=190+(maxH-ch)/2;ctx.save();ctx.shadowColor='rgba(0,0,0,.2)';ctx.shadowBlur=35;ctx.drawImage(img,x,y,cw,ch);ctx.restore();drawText()};img.onerror=()=>{ctx.fillStyle=shareStyle==='dark'||shareStyle==='cozy'?'#806a5d':'#d783a2';ctx.fillRect(310,270,460,610);drawText()};img.src=shareCoverUrl(shareBook.cover)}else{ctx.fillStyle=shareStyle==='dark'||shareStyle==='cozy'?'#806a5d':'#d783a2';ctx.fillRect(310,270,460,610);drawText()}
+}
+
+function renderClubs(){document.getElementById('clubsGrid').innerHTML=clubs.map(c=>`<div class="club"><div class="members">👥 ${c.members} membros · ${c.privacy}</div><h3>${c.name}</h3><p>${c.desc}</p><button class="secondary">Abrir clube</button></div>`).join('')}
+function showProfileTab(tab,btn){
+  document.querySelectorAll('.profile-tab-clean').forEach(x=>x.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  const posts=document.getElementById('profileTabPosts'), fav=document.getElementById('profileTabFavorites');
+  if(posts)posts.style.display=tab==='posts'?'block':'none';
+  if(fav)fav.style.display=tab==='favorites'?'block':'none';
+}
+function renderProfile(){
+  const p=profile||{};
+  const name=p.name||'Carol', handle=p.handle||'@carol.le', bio=p.bio||'';
+  document.getElementById('profileName').textContent=name;
+  document.getElementById('profileHandle').textContent=handle.startsWith('@')?handle:'@'+handle;
+  document.getElementById('profileBio').textContent=bio;
+  const avatar=document.getElementById('profileAvatar'), fallback=document.getElementById('profileAvatarFallback');
+  if(p.avatar){avatar.src=p.avatar;avatar.style.display='block';fallback.style.display='none';}
+  else{avatar.style.display='none';fallback.style.display='grid';fallback.textContent=(name[0]||'C').toUpperCase();}
+  const ownPosts=posts.filter(x=>(x.user||'').toLowerCase()===name.toLowerCase());
+  document.getElementById('profilePostsCount').textContent=ownPosts.length;
+  profile.followers=profile.followersUsers.length;
+  profile.following=profile.followingUsers.length;
+  document.getElementById('profileFollowers').textContent=profile.followers;
+  document.getElementById('profileFollowing').textContent=profile.following;
+  document.getElementById('profileBooksCount').textContent=books.filter(b=>b.status==='Lido').length;
+  document.getElementById('profileReading').textContent=books.filter(b=>b.status==='Lendo').length;
+  document.getElementById('profileRead').textContent=books.filter(b=>b.status==='Lido').length;
+  document.getElementById('profileWant').textContent=books.filter(b=>b.status==='Quero ler').length;
+  const favs=books.filter(b=>Number(b.rating||0)>=4).slice(0,4);
+  document.getElementById('favorites').innerHTML=favs.length?favs.map(b=>`<article class="book"><div class="cover">${b.cover?coverImg(b.cover,b.title):cover(escapeHTML(b.title))}</div><b>${escapeHTML(b.title)}</b><small>${escapeHTML(b.author||'')}</small>${b.hasUserRating&&b.rating?`<div class="stars">${stars(Number(b.rating))}</div>`:''}</article>`).join(''):'<div class="profile-empty" style="grid-column:1/-1">Ainda não há favoritos. Dê 4 ou 5 estrelas aos seus livros para eles aparecerem aqui. 💗</div>';
+  document.getElementById('profilePosts').innerHTML=ownPosts.length?ownPosts.slice(0,5).map((post)=>`<article class="profile-post-mini"><div class="meta">📖 ${escapeHTML(post.book||'Livro')}</div>${post.spoiler?`<div class="spoiler-box" data-profile-spoiler="${escapeHTML(post.book||'')}"><div class="spoiler-warning">⚠️ Contém spoiler · toque para revelar</div><p class="spoiler-text">${escapeHTML(post.text||'')}</p></div>`:`<p>${escapeHTML(post.text||'')}</p>`}<div class="stars">${stars(Number(post.stars||0))}</div></article>`).join(''): '<div class="profile-empty">Suas publicações aparecerão aqui quando você compartilhar uma leitura. ✨</div>';
+  document.querySelectorAll('[data-profile-spoiler]').forEach(el=>el.addEventListener('click',()=>el.classList.toggle('revealed')));
+}
+
+function openEditProfile(){
+  document.getElementById('editProfileName').value=profile.name||'';
+  document.getElementById('editProfileHandle').value=profile.handle||'';
+  document.getElementById('editProfileBio').value=profile.bio||'';
+  const img=document.getElementById('profilePreview'),fb=document.getElementById('profilePreviewFallback');
+  if(profile.avatar){img.src=profile.avatar;img.style.display='block';fb.style.display='none';}
+  else{img.style.display='none';fb.style.display='grid';fb.textContent=(profile.name||'C')[0].toUpperCase();}
+  openModal('editProfileModal');
+}
+function prepareProfilePhoto(file){
+  return new Promise((resolve,reject)=>{
+    if(!file){resolve('');return;}
+    const reader=new FileReader();
+    reader.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        const size=420,scale=Math.min(size/img.width,size/img.height,1),w=Math.max(1,Math.round(img.width*scale)),h=Math.max(1,Math.round(img.height*scale));
+        const c=document.createElement('canvas');c.width=w;c.height=h;const ctx=c.getContext('2d');ctx.drawImage(img,0,0,w,h);
+        resolve(c.toDataURL('image/jpeg',.82));
+      };
+      img.onerror=reject;img.src=reader.result;
+    };
+    reader.onerror=reject;reader.readAsDataURL(file);
+  });
+}
+async function saveProfile(){
+  const name=document.getElementById('editProfileName').value.trim()||'Leitor';
+  let handle=document.getElementById('editProfileHandle').value.trim()||'@carol.le';if(!handle.startsWith('@'))handle='@'+handle.replace(/\s+/g,'').toLowerCase();
+  const bio=document.getElementById('editProfileBio').value.trim();
+  const file=document.getElementById('profilePhotoInput').files[0];
+  const finish=async(avatar)=>{profile={...profile,name,handle,bio,avatar:avatar||profile.avatar||'',followersUsers:Array.isArray(profile.followersUsers)?profile.followersUsers:[],followingUsers:Array.isArray(profile.followingUsers)?profile.followingUsers:[]};const ok=await persistProfileToSupabase();if(!ok)return;saveProfileLocalOnly();closeModal('editProfileModal');renderProfile();renderFeed();renderPeople();const btn=document.getElementById('accountBtn');if(btn)btn.textContent=(profile.name||'Conta').split(' ')[0].slice(0,12);};
+  if(file){try{await finish(await prepareProfilePhoto(file));}catch(_){await finish('');}}else await finish('');
+}
+function shareProfile(){
+  const url=location.href.split('#')[0];
+  const text=`Conheça o perfil de ${profile.name||'Carol'} no Booklyi 📚✨`;
+  if(navigator.share){navigator.share({title:`${profile.name||'Carol'} no Booklyi`,text,url}).catch(()=>{});}
+  else if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>alert('Link do perfil copiado!')).catch(()=>alert(url));}
+  else alert(url);
+}
+function renderThemes(){document.getElementById('themes').innerHTML=Object.entries(themes).map(([name,t])=>`<button class="theme" onclick="setTheme('${name}')"><span class="dot" style="background:${t.accent}"></span><b>${name[0].toUpperCase()+name.slice(1)}</b></button>`).join('')}
+function setTheme(name){let t=themes[name];for(let k in t)document.documentElement.style.setProperty('--'+(k==='accent2'?'accent2':k),t[k]);localStorage.setItem('booklyi_theme',name);closeModal('themeModal')}
+let postRating=0,postSelectedBook=null,postSearchTimer=null;
+function renderPostStars(){renderRatingPicker('postStars',postRating,(value)=>{postRating=value;renderPostStars()});}
+async function searchPostBooks(){const q=document.getElementById('postBook').value.trim(),box=document.getElementById('postBookSuggestions');if(!box)return;if(!q){box.innerHTML='';postSelectedBook=null;return;}box.innerHTML='<div style="color:var(--muted);font-size:12px;padding:4px">Procurando no catálogo…</div>';try{const r=await fetch('/api/books?q='+encodeURIComponent(q),{headers:{Accept:'application/json'},cache:'no-store'});if(!r.ok)throw new Error('search '+r.status);const data=await r.json();const items=(data.items||[]).slice(0,5);box.innerHTML=items.length?items.map((b,i)=>`<div class="book-suggestion" data-post-index="${i}">${b.cover?`<img src="${escapeHTML(coverSrc(b.cover))}" alt="" onerror="this.onerror=null;this.style.display='none'">`:'<div style="width:34px;height:50px;border-radius:5px;background:var(--soft)"></div>'}<div><b>${escapeHTML(b.title)}</b><div style="font-size:12px;color:var(--muted)">${escapeHTML(b.author||'Autor desconhecido')}</div></div></div>`).join(''):'<div style="color:var(--muted);font-size:12px;padding:4px">Não encontrei esse livro. Você ainda pode publicar pelo nome digitado.</div>';box.querySelectorAll('[data-post-index]').forEach(el=>el.addEventListener('click',()=>{postSelectedBook=items[Number(el.dataset.postIndex)];document.getElementById('postBook').value=postSelectedBook.title;box.innerHTML=`<div style="font-size:12px;color:var(--accent);font-weight:700">✓ ${escapeHTML(postSelectedBook.title)} · ${escapeHTML(postSelectedBook.author||'')}</div>`;}));}catch(e){box.innerHTML='<div style="color:var(--muted);font-size:12px;padding:4px">Não consegui consultar o catálogo agora.</div>';}}
+async function addPost(){
+  let book=document.getElementById('postBook').value.trim(),text=document.getElementById('postText').value.trim(),spoiler=document.getElementById('postSpoiler').checked;
+  if(!book||!text)return alert('Preencha o livro e o que você está achando da leitura.');
+  const post={user:profile.name||'Carol',book,text,stars:postRating,spoiler,bookData:postSelectedBook||null};
+  const btn=document.querySelector('#postModal .primary');if(btn)btn.disabled=true;
+  try{
+    if(supabaseClient&&authUser){
+      const row=await persistPostToSupabase(post);
+      if(!row)throw new Error('Não consegui publicar no banco agora.');
+      posts.unshift(optimisticPostObject(row,post.bookData||{title:post.book,author:'Autor desconhecido',cover:''}));
+      localStorage.setItem('booklyi_posts',JSON.stringify(posts));
+      await loadSupabaseFeed(true);
+    }else{
+      posts.unshift(post);save();renderFeed();
+    }
+    closeModal('postModal');
+    document.getElementById('postBook').value='';document.getElementById('postText').value='';document.getElementById('postSpoiler').checked=false;postRating=0;postSelectedBook=null;document.getElementById('postBookSuggestions').innerHTML='';renderPostStars();go('home');
+  }catch(e){console.error(e);alert('Não consegui publicar agora. Tente novamente em alguns segundos.');}
+  finally{if(btn)btn.disabled=false;}
+}
+
+async function addBook(){let title=document.getElementById('bookTitle').value.trim(),author=document.getElementById('bookAuthor').value.trim(),status=document.getElementById('bookStatus').value;if(!title||!author)return alert('Preencha título e autor.');const item={title,author,status,externalId:'local-'+Date.now(),rating:0,progress:status==='Lido'?100:0,page:0,pageCount:0,startedAt:status==='Lendo'?new Date().toISOString().slice(0,10):'',finishedAt:status==='Lido'?new Date().toISOString().slice(0,10):''};books.unshift(item);save();const ok=await saveShelfBookToSupabase(item);if(!ok){books.shift();save();return;}renderShelf();closeModal('bookModal');document.getElementById('bookTitle').value='';document.getElementById('bookAuthor').value='';go('shelf')}
+async function removeBook(i){if(i<0||!books[i])return;if(confirm(`Remover "${books[i].title}" da estante?`)){const b=books[i];const ok=await removeShelfBookFromSupabase(b);if(!ok)return;books.splice(i,1);save();renderShelf();renderProfile();}}
+function addClub(){let name=document.getElementById('clubName').value.trim(),desc=document.getElementById('clubDesc').value.trim(),privacy=document.getElementById('clubPrivacy').value;if(!name)return alert('Dê um nome ao clube.');clubs.unshift({name,desc:desc||'Um novo clube de leitura.',members:1,privacy});save();renderClubs();closeModal('clubModal');document.getElementById('clubName').value='';document.getElementById('clubDesc').value='';go('clubs')}
+
+const realSearchBtn=document.getElementById('realSearchBtn');
+const realSearchInput=document.getElementById('search');
+if(realSearchBtn)realSearchBtn.addEventListener('click',searchRealBooks);
+if(realSearchInput)realSearchInput.addEventListener('keydown',e=>{if(e.key==='Enter')searchRealBooks();});
+
+const postBookInput=document.getElementById('postBook');
+if(postBookInput)postBookInput.addEventListener('input',()=>{clearTimeout(postSearchTimer);postSearchTimer=setTimeout(searchPostBooks,450)});
+renderPostStars();
+renderStats();
+
+const saved=localStorage.getItem('booklyi_theme') || localStorage.getItem('lumi_theme');if(saved&&themes[saved])setTheme(saved);else setTheme('rosa');renderFeed();renderShelf();renderDiscover();renderClubs();renderProfile();
+initSupabase();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=20260929-v12-8-3-rating');
+</script>
+</body></html>
