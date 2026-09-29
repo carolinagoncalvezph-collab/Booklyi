@@ -370,7 +370,7 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
   </div>
 </div>
 
-<div class="modal" id="editBookModal" onclick="if(event.target===this)closeModal('editBookModal')"><div class="sheet"><button class="close" onclick="closeModal('editBookModal')">×</button><h2>✏️ Editar leitura</h2><div class="form-card"><input class="input" id="editBookTitle" placeholder="Título"><input class="input" id="editBookAuthor" placeholder="Autor"><select class="input" id="editBookStatus"><option>Quero ler</option><option>Lendo</option><option>Lido</option><option>Pausado</option><option>Abandonei</option></select><label class="field-label">Progresso <b id="editProgressLabel">0%</b></label><input id="editBookProgress" type="range" min="0" max="100" value="0" style="width:100%;accent-color:var(--accent)" oninput="document.getElementById('editProgressLabel').textContent=this.value+'%'"><div class="edit-dates"><label>Comecei<input class="input" id="editStarted" type="date"></label><label>Terminei<input class="input" id="editFinished" type="date"></label></div><div class="edit-pages"><label>Página atual<input class="input" id="editPage" type="number" min="0" placeholder="0"></label><label>Total de páginas<input class="input" id="editPageCount" type="number" min="0" placeholder="0"></label></div><button class="primary" onclick="saveEditedBook()">Salvar alterações</button><button class="danger-btn" onclick="removeEditedBook()">Remover da estante</button></div></div></div>
+<div class="modal" id="editBookModal" onclick="if(event.target===this)closeModal('editBookModal')"><div class="sheet"><button class="close" onclick="closeModal('editBookModal')">×</button><h2>✏️ Editar leitura</h2><div class="form-card"><input class="input" id="editBookTitle" placeholder="Título"><input class="input" id="editBookAuthor" placeholder="Autor"><select class="input" id="editBookStatus"><option>Quero ler</option><option>Lendo</option><option>Lido</option><option>Pausado</option><option>Abandonei</option></select><label class="field-label">Progresso <b id="editProgressLabel">0%</b></label><input id="editBookProgress" type="range" min="0" max="100" value="0" style="width:100%;accent-color:var(--accent)" oninput="syncEditReadingFields('progress')"><div class="edit-dates"><label>Comecei<input class="input" id="editStarted" type="date"></label><label>Terminei<input class="input" id="editFinished" type="date"></label></div><div class="edit-pages"><label>Página atual<input class="input" id="editPage" type="number" min="0" placeholder="0"></label><label>Total de páginas<input class="input" id="editPageCount" type="number" min="0" placeholder="0"></label></div><button class="primary" onclick="saveEditedBook()">Salvar alterações</button><button class="danger-btn" onclick="removeEditedBook()">Remover da estante</button></div></div></div>
 
 <div class="modal" id="editProfileModal" onclick="if(event.target===this)closeModal('editProfileModal')"><div class="sheet"><button class="close" onclick="closeModal('editProfileModal')">×</button><h2>✏️ Editar perfil</h2><div class="form-card">
 <label class="field-label">Nome</label><input class="input" id="editProfileName" maxlength="40" placeholder="Seu nome">
@@ -635,6 +635,26 @@ function openShelfShare(i){
 }
 
 function formatDate(value){if(!value)return '';const d=new Date(value+'T00:00:00');return isNaN(d)?value:d.toLocaleDateString('pt-BR');}
+function syncEditReadingFields(source){
+  const progressEl=document.getElementById('editBookProgress');
+  const progressLabel=document.getElementById('editProgressLabel');
+  const pageEl=document.getElementById('editPage');
+  const pageCountEl=document.getElementById('editPageCount');
+  if(!progressEl||!pageEl)return;
+  let progress=Math.max(0,Math.min(100,Number(progressEl.value)||0));
+  let page=Math.max(0,Number(pageEl.value)||0);
+  const total=Math.max(0,Number(pageCountEl?.value||0));
+  if(source==='progress' && total){
+    page=Math.round(total*progress/100);
+    pageEl.value=page;
+  }else if(source==='page' && total){
+    page=Math.min(total,page);
+    pageEl.value=page;
+    progress=Math.round(page/total*100);
+    progressEl.value=progress;
+  }
+  if(progressLabel)progressLabel.textContent=progress+'%';
+}
 function openEditBook(i){
   const b=books[i];if(!b)return;
   window.editingBookIndex=i;
@@ -647,6 +667,12 @@ function openEditBook(i){
   document.getElementById('editFinished').value=b.finishedAt||'';
   document.getElementById('editPage').value=Number(b.page||0);
   document.getElementById('editPageCount').value=Number(b.pageCount||0);
+  const progressEl=document.getElementById('editBookProgress');
+  const pageEl=document.getElementById('editPage');
+  const totalEl=document.getElementById('editPageCount');
+  if(progressEl)progressEl.oninput=()=>syncEditReadingFields('progress');
+  if(pageEl)pageEl.oninput=()=>syncEditReadingFields('page');
+  if(totalEl)totalEl.oninput=()=>syncEditReadingFields('progress');
   openModal('editBookModal');
 }
 async function saveEditedBook(){
@@ -661,9 +687,23 @@ async function saveEditedBook(){
   b.startedAt=document.getElementById('editStarted').value||'';
   b.finishedAt=document.getElementById('editFinished').value||'';
   if(status==='Lendo'&&!b.startedAt)b.startedAt=new Date().toISOString().slice(0,10);
-  if(status==='Lido'&&!b.finishedAt)b.finishedAt=new Date().toISOString().slice(0,10);
-  if(b.pageCount)b.progress=status==='Lido'?100:Math.min(100,Math.round(b.page/b.pageCount*100));
-  save();const ok=await saveShelfBookToSupabase(b);if(!ok)return;closeModal('editBookModal');renderShelf();
+  if(status==='Lido'){
+    b.progress=100;
+    if(b.pageCount)b.page=b.pageCount;
+    if(!b.finishedAt)b.finishedAt=new Date().toISOString().slice(0,10);
+  }else if(b.pageCount){
+    b.page=Math.max(0,Math.min(b.pageCount,b.page));
+    b.progress=Math.min(100,Math.round(b.page/b.pageCount*100));
+  }
+  save();
+  const ok=await saveShelfBookToSupabase(b);
+  if(!ok)return;
+  closeModal('editBookModal');
+  renderShelf();
+  if(window.currentDetailBookId===b.externalId){
+    const idx=window.booklyiSearchResults.findIndex(x=>x.id===b.externalId);
+    if(idx>=0)openRealBook(idx);
+  }
 }
 async function removeEditedBook(){
   const i=window.editingBookIndex;if(i==null||!books[i])return;
@@ -816,9 +856,17 @@ async function updateRealProgress(id,value,opts={}){
   books[i].progress=v;
   if(books[i].pageCount && opts.source!=='page')books[i].page=Math.round(books[i].pageCount*v/100);
   if(!books[i].startedAt)books[i].startedAt=new Date().toISOString().slice(0,10);
-  if(v>=100){books[i].status='Lido';books[i].finishedAt=books[i].finishedAt||new Date().toISOString().slice(0,10);}
+  if(v>=100){
+    books[i].status='Lido';
+    if(books[i].pageCount)books[i].page=books[i].pageCount;
+    books[i].finishedAt=books[i].finishedAt||new Date().toISOString().slice(0,10);
+  }else if(books[i].status==='Lido'){
+    books[i].status='Lendo';
+    books[i].finishedAt='';
+  }
   syncDetailProgressUI(books[i]);
-  save(); renderShelf();
+  save();
+  renderShelf();
   queueShelfSave(books[i]);
 }
 async function updateRealPage(id,value){
@@ -828,16 +876,18 @@ async function updateRealPage(id,value){
   books[i].page=page;
   if(max)books[i].progress=Math.round(page/max*100);
   if(!books[i].startedAt)books[i].startedAt=new Date().toISOString().slice(0,10);
-  if(max && page>=max){books[i].progress=100;books[i].status='Lido';books[i].finishedAt=books[i].finishedAt||new Date().toISOString().slice(0,10);}
+  if(max && page>=max){
+    books[i].progress=100;
+    books[i].status='Lido';
+    books[i].finishedAt=books[i].finishedAt||new Date().toISOString().slice(0,10);
+  }else if(books[i].status==='Lido'){
+    books[i].status='Lendo';
+    books[i].finishedAt='';
+  }
   syncDetailProgressUI(books[i]);
-  save(); renderShelf();
+  save();
+  renderShelf();
   queueShelfSave(books[i]);
-}
-async function updateRealProgress(id,value){
-  const i=books.findIndex(x=>x.externalId===id); if(i<0)return;
-  books[i].progress=Number(value); books[i].page=books[i].pageCount?Math.round(books[i].pageCount*Number(value)/100):0; if(!books[i].startedAt)books[i].startedAt=new Date().toISOString().slice(0,10); if(Number(value)>=100){books[i].status='Lido';books[i].finishedAt=books[i].finishedAt||new Date().toISOString().slice(0,10);}
-  const v=document.getElementById('progressValue'),bar=document.getElementById('detailProgressBar'); if(v)v.textContent=Number(value)+'%'; if(bar)bar.style.width=value+'%';
-  save(); await saveShelfBookToSupabase(books[i]); renderHomeReading();
 }
 let shareBook=null,shareStyle='soft';
 const shareStyles={soft:'🌸 Soft',cozy:'🤎 Cozy',dark:'🖤 Dark Academia',botanical:'🌿 Botanical',dreamy:'💜 Dreamy',minimal:'🤍 Minimal'};
