@@ -1,17 +1,20 @@
-# Booklyi V12.8.4 — Avaliação corrigida e layout estabilizado
+# Booklyi V12.8.6
 
-- Estrelas vazias agora aparecem como ☆.
-- Meia estrela usa clique na metade esquerda/direita.
-- Média superior ignora valores legados que não foram marcados como avaliação do usuário.
-- Nova avaliação é salva em incrementos de 0,5.
-- Mantém feed, login, estante, progresso, catálogo e capas.
+Correção consolidada do Feed + Catálogo + Avaliação.
 
+Principais ajustes:
+- restaura o bloco de estilos do perfil e elimina o conflito de CSS que desconfigurava publicações;
+- avaliação refeita com 5 controles fixos, 0,5 em 0,5, sem áreas sobrepostas;
+- estrelas de visualização compactas, sem distribuição pelo card;
+- posts de perfil não exibem estrelas vazias quando não há avaliação;
+- catálogo com fallback local para buscas comuns e títulos de Harry Potter, além da API real;
+- API de livros com normalização, timeout e correspondência local antes dos provedores externos;
+- cache do PWA atualizado.
 
-## V12.8.4
-- Corrige o layout do seletor de estrelas no detalhe do livro e na nova publicação.
-- Cada estrela é um único botão, com metade esquerda/direita para 0,5 em 0,5.
-- Evita sobreposição de áreas de clique e estouro visual.
-- Atualiza o cache do PWA.
+Para atualizar um projeto já existente no GitHub, substitua:
+- `public/index.html`
+- `public/sw.js`
+- `pages/api/books.js`
+- `package.json` (versão 12.8.6)
 
-
-V12.8.5: avaliação em 0,5 com layout fixo e áreas de toque separadas. Sem novo SQL.
+Não há SQL novo nesta versão.

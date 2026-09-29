@@ -1,5 +1,6 @@
 export default async function handler(request, response) {
-  const url = new URL(request.url, `https://${request.headers.host || 'localhost'}`);
+  const base = `https://${request.headers.host || 'localhost'}`;
+  const url = new URL(request.url || '/', base);
   const rawQ = (url.searchParams.get('q') || '').trim();
   const q = rawQ;
 
@@ -83,6 +84,13 @@ export default async function handler(request, response) {
 
   // Curated titles guarantee a useful result even if an external catalog is temporarily unavailable.
   const curated = [
+    {id:'bk-hp1',title:'Harry Potter e a Pedra Filosofal',author:'J. K. Rowling',publisher:'Rocco',publishedDate:'2000',pageCount:264,isbn:[],categories:['Fantasia','Literatura juvenil'],tags:['harry potter','fantasia','magia'],cover:''},
+    {id:'bk-hp2',title:'Harry Potter e a Câmara Secreta',author:'J. K. Rowling',publisher:'Rocco',publishedDate:'2000',pageCount:288,isbn:[],categories:['Fantasia','Literatura juvenil'],tags:['harry potter','fantasia','magia'],cover:''},
+    {id:'bk-hp3',title:'Harry Potter e o Prisioneiro de Azkaban',author:'J. K. Rowling',publisher:'Rocco',publishedDate:'2000',pageCount:320,isbn:[],categories:['Fantasia','Literatura juvenil'],tags:['harry potter','fantasia','magia'],cover:''},
+    {id:'bk-hp4',title:'Harry Potter e o Cálice de Fogo',author:'J. K. Rowling',publisher:'Rocco',publishedDate:'2001',pageCount:480,isbn:[],categories:['Fantasia','Literatura juvenil'],tags:['harry potter','fantasia','magia'],cover:''},
+    {id:'bk-hp5',title:'Harry Potter e a Ordem da Fênix',author:'J. K. Rowling',publisher:'Rocco',publishedDate:'2003',pageCount:704,isbn:[],categories:['Fantasia','Literatura juvenil'],tags:['harry potter','fantasia','magia'],cover:''},
+    {id:'bk-hp6',title:'Harry Potter e o Enigma do Príncipe',author:'J. K. Rowling',publisher:'Rocco',publishedDate:'2005',pageCount:568,isbn:[],categories:['Fantasia','Literatura juvenil'],tags:['harry potter','fantasia','magia'],cover:''},
+    {id:'bk-hp7',title:'Harry Potter e as Relíquias da Morte',author:'J. K. Rowling',publisher:'Rocco',publishedDate:'2007',pageCount:592,isbn:[],categories:['Fantasia','Literatura juvenil'],tags:['harry potter','fantasia','magia'],cover:''},
     {id:'bk-o-amor-nao-e-obvio',title:'O amor não é óbvio',author:'Elayne Baeta',publisher:'Galera Record',publishedDate:'2019',pageCount:392,isbn:['9788501118264'],categories:['LGBTQ+','Romance','Ficção brasileira','Lesbian'],tags:['lgbtqia+','lésbico','romance sáfico'],cover:'https://covers.openlibrary.org/isbn/9788501118264-L.jpg?default=false'},
     {id:'bk-conectadas',title:'Conectadas',author:'Clara Alves',publisher:'Seguinte',publishedDate:'2019',pageCount:320,isbn:['9788555340895'],categories:['LGBTQ+','Romance','YA'],tags:['lgbtqia+','lésbico','sáfico'],cover:'https://covers.openlibrary.org/isbn/9788555340895-L.jpg?default=false'},
     {id:'bk-heartstopper-1',title:'Heartstopper: Dois garotos, um encontro',author:'Alice Oseman',publisher:'Seguinte',publishedDate:'2021',pageCount:269,isbn:['9788555341618'],categories:['LGBTQ+','Romance','Graphic novel'],tags:['lgbtqia+','gay','queer'],cover:'https://covers.openlibrary.org/isbn/9788555341618-L.jpg?default=false'},
