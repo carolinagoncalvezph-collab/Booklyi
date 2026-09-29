@@ -773,7 +773,11 @@ async function searchRealBooks(){
     if(!response.ok)throw new Error('books api '+response.status);
     const data=await response.json();
     const items=data.items||[];
-    status.textContent=items.length?`${items.length} livro(s) encontrado(s).`:'Nenhum livro encontrado.';
+    if(data.catalogStatus==='temporarily_unavailable' && !items.length){
+      status.textContent='O catálogo externo está temporariamente indisponível. Tente novamente em instantes.';
+    }else{
+      status.textContent=items.length?`${items.length} livro(s) encontrado(s).`:'Nenhum livro encontrado.';
+    }
     renderDiscover(items);
   }catch(err){
     console.error(err);
