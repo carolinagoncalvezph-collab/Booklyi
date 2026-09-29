@@ -22,3 +22,14 @@ Nem toda obra existente no mundo possui uma imagem pública de capa disponível 
 
 ## Próxima evolução
 A próxima etapa pode transformar posts, curtidas, comentários e respostas em dados reais do Supabase e, depois, implementar mensagens privadas (DM) entre usuários.
+
+## V12.8 — Feed social real
+- Feed `Para você` e `Seguindo` conectado ao Supabase.
+- Publicações persistidas em `posts`.
+- Curtidas persistidas em `post_likes`.
+- Comentários persistidos em `comments`.
+- Respostas persistidas em `comment_replies`.
+- Curtidas de comentários e respostas persistidas em `comment_likes` e `reply_likes`.
+- Livro associado à publicação é salvo/reutilizado na tabela `books`.
+- Fallback local preservado para não quebrar a interface se o banco estiver temporariamente indisponível.
+- Execute `BOOKLYI_V12_8_Feed_Supabase.sql` no Supabase antes de testar publicação/interações reais.

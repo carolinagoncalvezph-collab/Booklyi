@@ -175,6 +175,10 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 
 
 .social-actions{display:flex;gap:16px;align-items:center;margin-top:12px;flex-wrap:wrap}.social-btn{border:0;background:none;padding:5px 0;color:var(--muted);font:inherit;cursor:pointer}.social-btn.liked{color:#d85d7b;font-weight:800}.comments-box{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:grid;gap:10px}.comment{padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.38);border:1px solid var(--line)}.comment-head{display:flex;gap:8px;align-items:center}.comment-avatar{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--soft);font-size:12px;font-weight:800}.comment-meta{font-size:11px;color:var(--muted)}.comment-text{margin:7px 0 4px;line-height:1.45}.reply-list{margin:8px 0 0 34px;display:grid;gap:7px}.reply{padding:8px 10px;border-radius:11px;background:rgba(255,255,255,.32)}.comment-compose{display:flex;gap:8px}.comment-compose .input{flex:1;min-width:0}.mini-btn{padding:9px 11px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-weight:700;cursor:pointer}.shelf-actions{display:flex;gap:7px;margin-top:8px}.shelf-actions .secondary{flex:1;min-width:0;padding:10px 6px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.danger-inline{margin-top:8px;width:100%;padding:8px;border:1px solid #e7b9c1;background:transparent;color:#b34d5a;border-radius:11px;font-weight:700;cursor:pointer}.catalog-badge{display:inline-flex;align-items:center;gap:5px;margin-top:6px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.55);border:1px solid var(--line);font-size:10px;color:var(--muted)}
+
+/* Booklyi V12.8 — feed social conectado */
+.feed-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:5px;background:rgba(255,255,255,.36);border:1px solid var(--line);border-radius:15px;margin:10px 0 12px}.feed-tab{border:0;background:transparent;color:var(--muted);padding:10px;border-radius:11px;font:inherit;font-weight:800;cursor:pointer}.feed-tab.active{background:var(--card);color:var(--text);box-shadow:0 3px 12px rgba(50,30,45,.06)}.feed-status{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:2px 0 10px;color:var(--muted);font-size:11px}.feed-refresh{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:6px 10px;font:inherit;font-weight:750;cursor:pointer}.feed-loading{padding:18px;text-align:center;color:var(--muted)}.post-book-cover{width:54px;height:78px;border-radius:8px;overflow:hidden;flex:none;background:var(--soft);display:grid;place-items:center}.post-book-cover img{width:100%;height:100%;object-fit:cover}.post-book-cover .generated-cover{width:100%;height:100%;padding:5px;font-size:7px}.post-book-cover .generated-cover-title{font-size:8px}.post-book-cover .generated-cover-author{font-size:6px}.post-book-info{min-width:0;flex:1}.post-book-info b{display:block;line-height:1.25}.post-book-info .meta{margin-top:3px}.post-book-info .progress{margin-top:8px}
+
 </style>
 
 <style>
@@ -235,6 +239,7 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 <div id="homeReading" class="home-reading-list"></div>
 <div class="section-title"><h2>✨ O que a comunidade está lendo</h2><button onclick="go('discover')">Descobrir</button></div>
 <div class="feed-tabs"><button id="feedTabAll" class="feed-tab active" onclick="setFeedMode('all',this)">Para você</button><button id="feedTabFollowing" class="feed-tab" onclick="setFeedMode('following',this)">Seguindo</button></div>
+<div class="feed-status"><span id="feedStatus">Feed conectado ao Booklyi</span><button class="feed-refresh" onclick="refreshFeed()">↻ Atualizar</button></div>
 <div class="feed" id="feed"></div>
 </section>
 
@@ -405,7 +410,7 @@ async function initSupabase(){
 }
 async function submitAuth(){if(!supabaseClient)return setAuthMessage('Ainda estou conectando. Tente novamente em instantes.','error');const email=(document.getElementById('authEmail')?.value||'').trim();const password=document.getElementById('authPassword')?.value||'';const name=(document.getElementById('authName')?.value||'').trim();if(!email||!password)return setAuthMessage('Preencha e-mail e senha.','error');if(password.length<6)return setAuthMessage('Use uma senha com pelo menos 6 caracteres.','error');setAuthMessage('Só um instante…');const btn=document.getElementById('authSubmitBtn');if(btn)btn.disabled=true;try{if(authMode==='signup'){if(!name)return setAuthMessage('Digite seu nome para criar a conta.','error');const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{display_name:name}}});if(error)throw error;if(!data.session){setAuthMessage('Conta criada! Confira seu e-mail para confirmar o cadastro e depois volte para entrar.','ok');setAuthMode('login');return;}await applyAuthSession(data.session);}else{const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)throw error;await applyAuthSession(data.session);}}catch(e){console.error(e);const msg=(e.message||'').toLowerCase().includes('invalid login')?'E-mail ou senha incorretos.':(e.message||'Não foi possível entrar.');setAuthMessage(msg,'error');}finally{if(btn)btn.disabled=false;}}
 async function authSignOut(){if(!supabaseClient)return;await supabaseClient.auth.signOut();authUser=null;showAuthGate();setAuthMode('login');setAuthMessage('Você saiu da sua conta.','ok');}
-async function applyAuthSession(session){authUser=session?.user||null;if(!authUser){showAuthGate();return;}hideAuthGate();setAuthLoading(true);try{await loadSupabaseProfile();await loadRealCommunity();await loadSupabaseShelf();renderProfile();renderFeed();renderPeople();renderShelf();const btn=document.getElementById('accountBtn');if(btn)btn.textContent=(profile.name||'Conta').split(' ')[0].slice(0,12);const hero=document.getElementById('heroGreeting');if(hero)hero.innerHTML=`Olá, ${escapeHTML((profile.name||'Leitor').split(' ')[0])}!<br>O que você está lendo hoje? 📖`;}catch(e){console.error(e);}finally{setAuthLoading(false);}}
+async function applyAuthSession(session){authUser=session?.user||null;if(!authUser){showAuthGate();return;}hideAuthGate();setAuthLoading(true);try{await loadSupabaseProfile();await loadRealCommunity();await loadSupabaseShelf();await loadSupabaseFeed();renderProfile();renderFeed();renderPeople();renderShelf();const btn=document.getElementById('accountBtn');if(btn)btn.textContent=(profile.name||'Conta').split(' ')[0].slice(0,12);const hero=document.getElementById('heroGreeting');if(hero)hero.innerHTML=`Olá, ${escapeHTML((profile.name||'Leitor').split(' ')[0])}!<br>O que você está lendo hoje? 📖`;}catch(e){console.error(e);}finally{setAuthLoading(false);}}
 async function loadSupabaseProfile(){if(!supabaseClient||!authUser)return;let {data,error}=await supabaseClient.from('profiles').select('id,username,display_name,bio,avatar_url').eq('id',authUser.id).maybeSingle();if(error)throw error;if(!data){const base=slugUsername(authUser.email?.split('@')[0]);const ins=await supabaseClient.from('profiles').insert({id:authUser.id,username:base,display_name:authUser.user_metadata?.display_name||base}).select().single();if(ins.error)throw ins.error;data=ins.data;}const old=profile||{};profile={...old,id:data.id,name:data.display_name||old.name||'Leitor',handle:'@'+(data.username||slugUsername(authUser.email?.split('@')[0])),bio:data.bio||old.bio||'',avatar:data.avatar_url||old.avatar||'',followersUsers:[],followingUsers:[]};saveProfileLocalOnly();}
 function saveProfileLocalOnly(){profile.followers=Array.isArray(profile.followersUsers)?profile.followersUsers.length:0;profile.following=Array.isArray(profile.followingUsers)?profile.followingUsers.length:0;localStorage.setItem('booklyi_profile',JSON.stringify(profile));}
 
@@ -490,7 +495,9 @@ const communityProfiles={
   '@liviasampaio':{followers:733,following:389,books:[['Aristóteles e Dante','Benjamin Alire Sáenz'],['Vermelho, Branco e Sangue Azul','Casey McQuiston'],['Torto Arado','Itamar Vieira Junior']] }
 };
 let feedMode=localStorage.getItem('booklyi_feed_mode')||'all';
+let feedDbReady=false,feedLoading=false;
 function setFeedMode(mode,btn){feedMode=mode;localStorage.setItem('booklyi_feed_mode',mode);document.querySelectorAll('.feed-tab').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');renderFeed();}
+function refreshFeed(){if(supabaseClient&&authUser)loadSupabaseFeed(true);else renderFeed();}
 function openCommunityProfile(nameOrHandle){const u=findCommunityUser(nameOrHandle);if(!u)return;const data=communityProfiles[userKey(u)]||{followers:0,following:0,books:[]};const userPosts=posts.filter(p=>{const pu=findCommunityUser(p.user);return pu&&userKey(pu)===userKey(u);});const following=isFollowing(u.handle);const booksHtml=data.books.map(b=>`<div class="community-book-mini"><div class="community-book-cover"><div class="fallback-cover">${escapeHTML(b[0])}</div></div><b>${escapeHTML(b[0])}</b><small>${escapeHTML(b[1])}</small></div>`).join('');document.getElementById('communityProfileDetail').innerHTML=`<div class="community-profile"><div class="community-profile-head"><div class="community-profile-avatar">${personAvatar(u)}</div><div class="community-profile-main"><h2>${escapeHTML(u.name)}</h2><div class="community-profile-handle">${escapeHTML(u.handle)}</div><div class="community-profile-actions"><button class="follow-btn ${following?'following':''}" onclick="toggleFollowFromProfile('${escapeHTML(u.handle)}')">${following?'Seguindo':'Seguir'}</button></div></div></div><p class="community-profile-bio">${escapeHTML(u.bio||'')}</p><div class="community-profile-stats"><div><b>${data.followers}</b><span>seguidores</span></div><div><b>${data.following}</b><span>seguindo</span></div><div><b>${data.books.length}</b><span>livros em destaque</span></div></div><div class="section-title"><h2>📚 Leituras em destaque</h2></div><div class="community-books-grid">${booksHtml||'<div class="profile-empty" style="grid-column:1/-1">Ainda não há livros em destaque.</div>'}</div><div class="section-title" style="margin-top:20px"><h2>✨ Publicações</h2></div><div class="feed">${userPosts.length?userPosts.slice(0,6).map(p=>`<article class="post"><div class="post-head"><div class="avatar">${escapeHTML((p.user||'C')[0])}</div><div class="post-head-main"><h3>${escapeHTML(p.user||u.name)}</h3><div class="meta">está lendo <b>${escapeHTML(p.book||'Livro')}</b></div></div></div>${p.spoiler?`<div class="spoiler-box"><div class="spoiler-warning">⚠️ Contém spoiler · toque para revelar</div><p class="spoiler-text">${escapeHTML(p.text||'')}</p></div>`:`<p>${escapeHTML(p.text||'')}</p>`}<div class="stars">${stars(Number(p.stars||0))}</div></article>`).join(''):'<div class="profile-empty">Este perfil ainda não publicou nada. ✨</div>'}</div></div>`;document.querySelectorAll('#communityProfileDetail [data-profile-spoiler]').forEach(el=>el.addEventListener('click',()=>el.classList.toggle('revealed')));openModal('communityProfileModal');}
 async function toggleFollowFromProfile(handle){await toggleFollow(handle);openCommunityProfile(handle);}
 
@@ -547,25 +554,146 @@ function closeModal(id){document.getElementById(id).classList.remove('show')}
 function ensureSocialData(){
   posts.forEach(p=>{if(!Array.isArray(p.likes))p.likes=[];if(!Array.isArray(p.comments))p.comments=[];p.comments.forEach(c=>{if(!Array.isArray(c.likes))c.likes=[];if(!Array.isArray(c.replies))c.replies=[];c.replies.forEach(r=>{if(!Array.isArray(r.likes))r.likes=[]})});});
 }
+/* ===== V12.8 — Feed real no Supabase ===== */
+function feedProfileForId(id,map){
+  if(!id)return {name:'Leitor',handle:'',avatar:''};
+  if(map?.has(id))return map.get(id);
+  if(authUser&&id===authUser.id)return {name:profile.name||'Leitor',handle:profile.handle||'',avatar:profile.avatar||''};
+  return {name:'Leitor',handle:'',avatar:''};
+}
+function feedBookFromMeta(meta){
+  if(!meta)return null;
+  return {externalId:meta.external_id||'',title:meta.title||'Livro',author:Array.isArray(meta.authors)?(meta.authors.join(', ')||'Autor desconhecido'):(meta.author||'Autor desconhecido'),cover:meta.cover_url||'',pageCount:Number(meta.page_count||0),publishedDate:meta.published_year?String(meta.published_year):'',description:meta.description||''};
+}
+async function loadSupabaseFeed(force=false){
+  if(!supabaseClient||!authUser)return false;
+  if(feedLoading&&!force)return false;
+  feedLoading=true;
+  const status=document.getElementById('feedStatus');
+  if(status)status.textContent='Atualizando o feed…';
+  try{
+    const {data:rows,error}=await supabaseClient.from('posts').select('id,user_id,book_id,content,spoiler,rating,created_at').order('created_at',{ascending:false}).limit(100);
+    if(error)throw error;
+    const postRows=rows||[];
+    const userIds=[...new Set(postRows.map(r=>r.user_id).filter(Boolean))];
+    const bookIds=[...new Set(postRows.map(r=>r.book_id).filter(Boolean))];
+    const [{data:profilesRows,error:profilesError},{data:bookRows,error:booksError}]=await Promise.all([
+      userIds.length?supabaseClient.from('profiles').select('id,username,display_name,bio,avatar_url').in('id',userIds):Promise.resolve({data:[],error:null}),
+      bookIds.length?supabaseClient.from('books').select('id,external_id,title,authors,cover_url,description,page_count,published_year').in('id',bookIds):Promise.resolve({data:[],error:null})
+    ]);
+    if(profilesError)throw profilesError;
+    if(booksError)throw booksError;
+    const profileMap=new Map((profilesRows||[]).map(r=>[r.id,{id:r.id,name:r.display_name||r.username||'Leitor',handle:'@'+(r.username||String(r.id).slice(0,8)),bio:r.bio||'',avatar:r.avatar_url||'',real:true}]));
+    const bookMap=new Map((bookRows||[]).map(r=>[r.id,r]));
+    const postIds=postRows.map(r=>r.id);
+    const [{data:likes,error:likesError},{data:comments,error:commentsError}]=await Promise.all([
+      postIds.length?supabaseClient.from('post_likes').select('post_id,user_id').in('post_id',postIds):Promise.resolve({data:[],error:null}),
+      postIds.length?supabaseClient.from('comments').select('id,post_id,user_id,content,created_at').in('post_id',postIds).order('created_at',{ascending:true}):Promise.resolve({data:[],error:null})
+    ]);
+    if(likesError)throw likesError;
+    if(commentsError)throw commentsError;
+    const commentRows=comments||[];
+    const commentIds=commentRows.map(c=>c.id);
+    const [{data:replies,error:repliesError},{data:commentLikes,error:commentLikesError}]=await Promise.all([
+      commentIds.length?supabaseClient.from('comment_replies').select('id,comment_id,user_id,content,created_at').in('comment_id',commentIds).order('created_at',{ascending:true}):Promise.resolve({data:[],error:null}),
+      commentIds.length?supabaseClient.from('comment_likes').select('comment_id,user_id').in('comment_id',commentIds):Promise.resolve({data:[],error:null})
+    ]);
+    if(repliesError)throw repliesError;
+    if(commentLikesError)throw commentLikesError;
+    const replyRows=replies||[];
+    const replyIds=replyRows.map(r=>r.id);
+    let replyLikes=[];
+    if(replyIds.length){const rr=await supabaseClient.from('reply_likes').select('reply_id,user_id').in('reply_id',replyIds);if(rr.error)throw rr.error;replyLikes=rr.data||[];}
+    const commentUserIds=[...new Set(commentRows.concat(replyRows).map(r=>r.user_id).filter(Boolean))];
+    if(commentUserIds.length){const extra=await supabaseClient.from('profiles').select('id,username,display_name,bio,avatar_url').in('id',commentUserIds);if(extra.error)throw extra.error;for(const r of (extra.data||[]))profileMap.set(r.id,{id:r.id,name:r.display_name||r.username||'Leitor',handle:'@'+(r.username||String(r.id).slice(0,8)),bio:r.bio||'',avatar:r.avatar_url||'',real:true});}
+    const likesByPost=new Map(),likesByComment=new Map(),likesByReply=new Map();
+    for(const l of (likes||[])){if(!likesByPost.has(l.post_id))likesByPost.set(l.post_id,[]);likesByPost.get(l.post_id).push(l.user_id);}
+    for(const l of (commentLikes||[])){if(!likesByComment.has(l.comment_id))likesByComment.set(l.comment_id,[]);likesByComment.get(l.comment_id).push(l.user_id);}
+    for(const l of (replyLikes||[])){if(!likesByReply.has(l.reply_id))likesByReply.set(l.reply_id,[]);likesByReply.get(l.reply_id).push(l.user_id);}
+    const repliesByComment=new Map();
+    for(const r of replyRows){if(!repliesByComment.has(r.comment_id))repliesByComment.set(r.comment_id,[]);const u=feedProfileForId(r.user_id,profileMap);repliesByComment.get(r.comment_id).push({id:r.id,remoteId:r.id,userId:r.user_id,user:u.name,handle:u.handle,avatar:u.avatar,text:r.content||'',likes:likesByReply.get(r.id)||[],createdAt:r.created_at});}
+    const commentsByPost=new Map();
+    for(const c of commentRows){if(!commentsByPost.has(c.post_id))commentsByPost.set(c.post_id,[]);const u=feedProfileForId(c.user_id,profileMap);commentsByPost.get(c.post_id).push({id:c.id,remoteId:c.id,userId:c.user_id,user:u.name,handle:u.handle,avatar:u.avatar,text:c.content||'',likes:likesByComment.get(c.id)||[],replies:repliesByComment.get(c.id)||[],createdAt:c.created_at});}
+    const mapped=postRows.map(r=>{const u=feedProfileForId(r.user_id,profileMap);const b=feedBookFromMeta(bookMap.get(r.book_id));return {id:r.id,remoteId:r.id,userId:r.user_id,user:u.name,handle:u.handle,avatar:u.avatar,book:b?.title||'Livro',bookData:b,text:r.content||'',stars:Number(r.rating||0),spoiler:!!r.spoiler,likes:likesByPost.get(r.id)||[],comments:commentsByPost.get(r.id)||[],createdAt:r.created_at};});
+    if(mapped.length||feedDbReady){posts=mapped;localStorage.setItem('booklyi_posts',JSON.stringify(posts));}
+    feedDbReady=true;
+    if(status)status.textContent=mapped.length?`Feed conectado · ${mapped.length} publicação${mapped.length===1?'':'ões'}`:'Feed conectado · ainda não há publicações';
+    renderFeed();
+    return true;
+  }catch(e){
+    console.error('Booklyi V12.8: erro ao carregar feed',e);
+    feedDbReady=false;
+    if(status)status.textContent='Não foi possível atualizar agora · mostrando o último feed salvo';
+    renderFeed();
+    return false;
+  }finally{feedLoading=false;}
+}
+async function ensureFeedBook(book,title,author){
+  if(book?.externalId)return ensureSupabaseBook(book);
+  return ensureSupabaseBook({externalId:'local-'+Date.now(),title:title||'Livro',author:author||'Autor desconhecido',cover:book?.cover||'',pageCount:Number(book?.pageCount||0),description:book?.description||''});
+}
+function optimisticPostObject(row,book){return {id:row.id,remoteId:row.id,userId:authUser.id,user:profile.name||'Leitor',handle:profile.handle||'',avatar:profile.avatar||'',book:book.title,bookData:book,text:row.content,stars:Number(row.rating||0),spoiler:!!row.spoiler,likes:[],comments:[],createdAt:row.created_at};}
+async function persistPostToSupabase(post){
+  if(!supabaseClient||!authUser)return false;
+  try{
+    const bookId=await ensureFeedBook(post.bookData,post.book,post.bookData?.author||'Autor desconhecido');
+    if(!bookId)throw new Error('Livro não encontrado no banco.');
+    const {data,error}=await supabaseClient.from('posts').insert({user_id:authUser.id,book_id:bookId,content:post.text||'',spoiler:!!post.spoiler,rating:Number(post.stars||0)}).select('id,user_id,book_id,content,spoiler,rating,created_at').single();
+    if(error)throw error;
+    return data;
+  }catch(e){console.error('Booklyi V12.8: erro ao publicar',e);return null;}
+}
+async function toggleRemotePostLike(post){
+  if(!supabaseClient||!authUser||!post.remoteId)return false;
+  const liked=post.likes.includes(authUser.id);
+  const q=liked?supabaseClient.from('post_likes').delete().eq('post_id',post.remoteId).eq('user_id',authUser.id):supabaseClient.from('post_likes').insert({post_id:post.remoteId,user_id:authUser.id});
+  const {error}=await q;if(error){console.error(error);return false;}return true;
+}
+async function addRemoteComment(post,text){
+  if(!supabaseClient||!authUser||!post.remoteId)return null;
+  const {data,error}=await supabaseClient.from('comments').insert({post_id:post.remoteId,user_id:authUser.id,content:text}).select('id,post_id,user_id,content,created_at').single();
+  if(error){console.error(error);return null;}return data;
+}
+async function addRemoteReply(comment,text){
+  if(!supabaseClient||!authUser||!comment.remoteId)return null;
+  const {data,error}=await supabaseClient.from('comment_replies').insert({comment_id:comment.remoteId,user_id:authUser.id,content:text}).select('id,comment_id,user_id,content,created_at').single();
+  if(error){console.error(error);return null;}return data;
+}
+async function toggleRemoteCommentLike(comment){
+  if(!supabaseClient||!authUser||!comment.remoteId)return false;
+  const liked=comment.likes.includes(authUser.id);
+  const q=liked?supabaseClient.from('comment_likes').delete().eq('comment_id',comment.remoteId).eq('user_id',authUser.id):supabaseClient.from('comment_likes').insert({comment_id:comment.remoteId,user_id:authUser.id});
+  const {error}=await q;if(error){console.error(error);return false;}return true;
+}
+async function toggleRemoteReplyLike(reply){
+  if(!supabaseClient||!authUser||!reply.remoteId)return false;
+  const liked=reply.likes.includes(authUser.id);
+  const q=liked?supabaseClient.from('reply_likes').delete().eq('reply_id',reply.remoteId).eq('user_id',authUser.id):supabaseClient.from('reply_likes').insert({reply_id:reply.remoteId,user_id:authUser.id});
+  const {error}=await q;if(error){console.error(error);return false;}return true;
+}
+
 function currentUserKey(){return profile.handle||profile.name||'carol'}
 function renderFeed(){
-  ensureSocialData(); save();
-  const feed=document.getElementById('feed'); if(!feed)return;
+  ensureSocialData();
+  const feed=document.getElementById('feed');if(!feed)return;
   const allTab=document.getElementById('feedTabAll'),followTab=document.getElementById('feedTabFollowing');
   if(allTab)allTab.classList.toggle('active',feedMode==='all');if(followTab)followTab.classList.toggle('active',feedMode==='following');
-  const visiblePosts=feedMode==='following'?posts.filter(p=>{const u=findCommunityUser(p.user);return (u&&isFollowing(u.handle)) || userKey(p.user)===userKey(profile);}):posts;
-  const emptyMessage=feedMode==='following'?'Você ainda não segue ninguém que tenha publicado aqui. Explore a comunidade e siga alguns leitores. ✨':'Ainda não há publicações. ✨';
+  const followingIds=new Set((profile.followingUsers||[]).map(String));
+  const visiblePosts=feedMode==='following'?posts.filter(p=>String(p.userId||'')===String(authUser?.id||'')||followingIds.has(String(p.handle||'').toLowerCase())||followingIds.has(String(p.userId||''))||isFollowing(p.handle||p.user)):posts;
+  const emptyMessage=feedMode==='following'?'Você ainda não segue ninguém que tenha publicado aqui. Explore a comunidade e siga alguns leitores. ✨':'Ainda não há publicações. Seja a primeira pessoa a compartilhar uma leitura! ✨';
   feed.innerHTML=visiblePosts.map(p=>{
-    const i=posts.indexOf(p), liked=p.likes.includes(currentUserKey()), comments=p.comments||[], pu=findCommunityUser(p.user);
+    const i=posts.indexOf(p),liked=p.likes.includes(authUser?.id||currentUserKey()),comments=p.comments||[],pu=findCommunityUser(p.handle||p.user||'')||{name:p.user,handle:p.handle||'',avatar:p.avatar||'',id:p.userId};
+    const coverHtml=p.bookData?.cover?coverImg(p.bookData.cover,p.book,'real-book-cover',p.bookData?.coverFallbacks||[],p.bookData?.author||''):generatedCover(p.book,p.bookData?.author||'');
     return `<article class="post">
-      <div class="post-head"><div class="avatar" ${pu?`onclick="openCommunityProfile('${escapeHTML(pu.handle)}')"`:''}>${escapeHTML((p.user||'C')[0])}</div><div class="post-head-main"><h3 ${pu?`onclick="openCommunityProfile('${escapeHTML(pu.handle)}')"`:''}>${escapeHTML(p.user||'Leitor')}</h3><div class="meta">está lendo <b>${escapeHTML(p.book||'Livro')}</b></div></div>${pu&&userKey(pu)!==userKey(profile)?`<button class="follow-btn post-follow ${isFollowing(pu.handle)?'following':''}" data-follow-user="${escapeHTML(pu.handle)}">${isFollowing(pu.handle)?'Seguindo':'Seguir'}</button>`:''}</div>
+      <div class="post-head"><div class="avatar" ${pu?.handle?`onclick="openCommunityProfile('${escapeHTML(pu.handle)}')"`:''}>${pu?.avatar?`<img src="${escapeHTML(pu.avatar)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:escapeHTML((p.user||'C')[0])}</div><div class="post-head-main"><h3 ${pu?.handle?`onclick="openCommunityProfile('${escapeHTML(pu.handle)}')"`:''}>${escapeHTML(p.user||'Leitor')}</h3><div class="meta">está lendo <b>${escapeHTML(p.book||'Livro')}</b></div></div>${pu?.handle&&userKey(pu)!==userKey(profile)?`<button class="follow-btn post-follow ${isFollowing(pu.handle)?'following':''}" data-follow-user="${escapeHTML(pu.handle)}">${isFollowing(pu.handle)?'Seguindo':'Seguir'}</button>`:''}</div>
+      <div class="post-book"><div class="post-book-cover">${coverHtml}</div><div class="post-book-info"><b>${escapeHTML(p.book||'Livro')}</b><div class="meta">${escapeHTML(p.bookData?.author||'Autor desconhecido')}</div>${p.bookData?.pageCount?`<small style="color:var(--muted)">${Number(p.bookData.pageCount)} páginas</small>`:''}</div></div>
       ${p.spoiler?`<div class="spoiler-box" data-spoiler="${i}"><div class="spoiler-warning">⚠️ Contém spoiler · toque para revelar</div><p class="spoiler-text">${escapeHTML(p.text||'')}</p></div>`:`<p>${escapeHTML(p.text||'')}</p>`}
       ${p.stars?`<div class="stars">${stars(Number(p.stars||0))}</div>`:''}
       <div class="social-actions"><button class="social-btn ${liked?'liked':''}" data-like-post="${i}">${liked?'♥':'♡'} Curtir ${p.likes.length?`· ${p.likes.length}`:''}</button><button class="social-btn" data-toggle-comments="${i}">💬 Comentar ${comments.length?`· ${comments.length}`:''}</button><button class="social-btn" data-share-post="${i}">↗ Compartilhar</button></div>
       <div class="comments-box" id="comments-${i}" style="display:${comments.length?'grid':'none'}"><div class="comment-compose"><input class="input" id="comment-input-${i}" placeholder="Escreva um comentário…"><button class="mini-btn" data-add-comment="${i}">Enviar</button></div>
-      ${comments.map((c,ci)=>{const cliked=c.likes.includes(currentUserKey());return `<div class="comment"><div class="comment-head"><div class="comment-avatar">${escapeHTML((c.user||'C')[0])}</div><div><b>${escapeHTML(c.user||'Leitor')}</b><div class="comment-meta">comentário</div></div></div><div class="comment-text">${escapeHTML(c.text||'')}</div><div><button class="social-btn ${cliked?'liked':''}" data-like-comment="${i}" data-comment-index="${ci}">${cliked?'♥':'♡'} ${c.likes.length||0}</button> <button class="social-btn" data-reply="${i}" data-comment-index="${ci}">↩ Responder</button></div><div class="reply-list">${(c.replies||[]).map((r,ri)=>{const rl=r.likes.includes(currentUserKey());return `<div class="reply"><b>${escapeHTML(r.user||'Leitor')}</b><div class="comment-text">${escapeHTML(r.text||'')}</div><button class="social-btn ${rl?'liked':''}" data-like-reply="${i}" data-comment-index="${ci}" data-reply-index="${ri}">${rl?'♥':'♡'} ${r.likes.length||0}</button></div>`}).join('')}</div><div id="reply-compose-${i}-${ci}" class="comment-compose" style="display:none;margin-top:7px"><input class="input" id="reply-input-${i}-${ci}" placeholder="Responder…"><button class="mini-btn" data-add-reply="${i}" data-comment-index="${ci}">Enviar</button></div></div>`}).join('')}</div>
+      ${comments.map((c,ci)=>{const cliked=c.likes.includes(authUser?.id||currentUserKey());return `<div class="comment"><div class="comment-head"><div class="comment-avatar">${c.avatar?`<img src="${escapeHTML(c.avatar)}" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`:escapeHTML((c.user||'C')[0])}</div><div><b>${escapeHTML(c.user||'Leitor')}</b><div class="comment-meta">comentário</div></div></div><div class="comment-text">${escapeHTML(c.text||'')}</div><div><button class="social-btn ${cliked?'liked':''}" data-like-comment="${i}" data-comment-index="${ci}">${cliked?'♥':'♡'} ${c.likes.length||0}</button> <button class="social-btn" data-reply="${i}" data-comment-index="${ci}">↩ Responder</button></div><div class="reply-list">${(c.replies||[]).map((r,ri)=>{const rl=r.likes.includes(authUser?.id||currentUserKey());return `<div class="reply"><b>${escapeHTML(r.user||'Leitor')}</b><div class="comment-text">${escapeHTML(r.text||'')}</div><button class="social-btn ${rl?'liked':''}" data-like-reply="${i}" data-comment-index="${ci}" data-reply-index="${ri}">${rl?'♥':'♡'} ${r.likes.length||0}</button></div>`}).join('')}</div><div id="reply-compose-${i}-${ci}" class="comment-compose" style="display:none;margin-top:7px"><input class="input" id="reply-input-${i}-${ci}" placeholder="Responder…"><button class="mini-btn" data-add-reply="${i}" data-comment-index="${ci}">Enviar</button></div></div>`}).join('')}</div>
     </article>`;
-  }).join('') || `<div class="empty">${emptyMessage}</div>`;
+  }).join('')||`<div class="empty">${emptyMessage}</div>`;
   document.querySelectorAll('[data-spoiler]').forEach(el=>el.addEventListener('click',()=>el.classList.toggle('revealed')));
   document.querySelectorAll('[data-like-post]').forEach(el=>el.addEventListener('click',()=>togglePostLike(Number(el.dataset.likePost))));
   document.querySelectorAll('[data-toggle-comments]').forEach(el=>el.addEventListener('click',()=>toggleComments(Number(el.dataset.toggleComments))));
@@ -577,14 +705,24 @@ function renderFeed(){
   document.querySelectorAll('[data-share-post]').forEach(el=>el.addEventListener('click',()=>sharePost(Number(el.dataset.sharePost))));
   document.querySelectorAll('[data-follow-user]').forEach(el=>el.addEventListener('click',()=>toggleFollow(el.dataset.followUser)));
 }
-function togglePostLike(i){ensureSocialData();const key=currentUserKey();const arr=posts[i].likes;const n=arr.indexOf(key);if(n>=0)arr.splice(n,1);else arr.push(key);save();renderFeed()}
-function toggleComments(i){const box=document.getElementById('comments-'+i);if(!box)return;box.style.display=box.style.display==='none'?'grid':'none';if(box.style.display==='grid'){const input=document.getElementById('comment-input-'+i);if(input)input.focus()}}
-function addComment(i){const input=document.getElementById('comment-input-'+i);const text=(input?.value||'').trim();if(!text)return;ensureSocialData();posts[i].comments.push({user:profile.name||'Carol',text,likes:[],replies:[]});save();renderFeed();const box=document.getElementById('comments-'+i);if(box)box.style.display='grid'}
-function toggleCommentLike(pi,ci){ensureSocialData();const c=posts[pi]?.comments?.[ci];if(!c)return;const key=currentUserKey(),n=c.likes.indexOf(key);if(n>=0)c.likes.splice(n,1);else c.likes.push(key);save();renderFeed()}
-function toggleReply(pi,ci){const box=document.getElementById(`reply-compose-${pi}-${ci}`);if(box)box.style.display=box.style.display==='none'?'flex':'none'}
-function addReply(pi,ci){const input=document.getElementById(`reply-input-${pi}-${ci}`);const text=(input?.value||'').trim();if(!text)return;ensureSocialData();posts[pi].comments[ci].replies.push({user:profile.name||'Carol',text,likes:[]});save();renderFeed();const box=document.getElementById(`reply-compose-${pi}-${ci}`);if(box)box.style.display='flex'}
-function toggleReplyLike(pi,ci,ri){ensureSocialData();const r=posts[pi]?.comments?.[ci]?.replies?.[ri];if(!r)return;const key=currentUserKey(),n=r.likes.indexOf(key);if(n>=0)r.likes.splice(n,1);else r.likes.push(key);save();renderFeed()}
-function sharePost(i){const p=posts[i];const text=`${p.user||'Leitor'} está lendo ${p.book||'um livro'} no Booklyi 📚✨`;if(navigator.share)navigator.share({title:'Booklyi',text}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>alert('Texto copiado!')).catch(()=>{});}
+async function togglePostLike(i){
+  const p=posts[i];if(!p)return;ensureSocialData();const key=authUser?.id||currentUserKey(),idx=p.likes.indexOf(key),wasLiked=idx>=0;
+  if(wasLiked)p.likes.splice(idx,1);else p.likes.push(key);renderFeed();
+  if(p.remoteId&&supabaseClient&&authUser){const ok=await toggleRemotePostLike(p);if(!ok){if(wasLiked)p.likes.push(key);else p.likes.splice(p.likes.indexOf(key),1);renderFeed();alert('Não consegui atualizar a curtida agora.');}}
+  else{localStorage.setItem('booklyi_posts',JSON.stringify(posts));}
+}
+function toggleComments(i){const box=document.getElementById('comments-'+i);if(!box)return;box.style.display=box.style.display==='none'?'grid':'none';if(box.style.display==='grid'){const input=document.getElementById('comment-input-'+i);if(input)input.focus();}}
+async function addComment(i){
+  const input=document.getElementById('comment-input-'+i),text=(input?.value||'').trim();if(!text)return;const p=posts[i];if(!p)return;ensureSocialData();
+  const optimistic={id:'local-'+Date.now(),remoteId:null,userId:authUser?.id||'',user:profile.name||'Carol',handle:profile.handle||'',avatar:profile.avatar||'',text,likes:[],replies:[],createdAt:new Date().toISOString()};
+  if(p.remoteId&&supabaseClient&&authUser){const row=await addRemoteComment(p,text);if(!row)return alert('Não consegui publicar o comentário agora.');optimistic.id=row.id;optimistic.remoteId=row.id;}
+  p.comments.push(optimistic);input.value='';localStorage.setItem('booklyi_posts',JSON.stringify(posts));renderFeed();const box=document.getElementById('comments-'+i);if(box)box.style.display='grid';
+}
+async function toggleCommentLike(pi,ci){ensureSocialData();const c=posts[pi]?.comments?.[ci];if(!c)return;const key=authUser?.id||currentUserKey(),idx=c.likes.indexOf(key),wasLiked=idx>=0;if(wasLiked)c.likes.splice(idx,1);else c.likes.push(key);renderFeed();if(c.remoteId&&supabaseClient&&authUser){const ok=await toggleRemoteCommentLike(c);if(!ok){if(wasLiked)c.likes.push(key);else c.likes.splice(c.likes.indexOf(key),1);renderFeed();}}else localStorage.setItem('booklyi_posts',JSON.stringify(posts));}
+function toggleReply(pi,ci){const box=document.getElementById(`reply-compose-${pi}-${ci}`);if(box)box.style.display=box.style.display==='none'?'flex':'none';}
+async function addReply(pi,ci){const input=document.getElementById(`reply-input-${pi}-${ci}`),text=(input?.value||'').trim(),c=posts[pi]?.comments?.[ci];if(!text||!c)return;const optimistic={id:'local-'+Date.now(),remoteId:null,userId:authUser?.id||'',user:profile.name||'Carol',handle:profile.handle||'',avatar:profile.avatar||'',text,likes:[],createdAt:new Date().toISOString()};if(c.remoteId&&supabaseClient&&authUser){const row=await addRemoteReply(c,text);if(!row)return alert('Não consegui publicar a resposta agora.');optimistic.id=row.id;optimistic.remoteId=row.id;}c.replies.push(optimistic);input.value='';localStorage.setItem('booklyi_posts',JSON.stringify(posts));renderFeed();const box=document.getElementById(`reply-compose-${pi}-${ci}`);if(box)box.style.display='flex';}
+async function toggleReplyLike(pi,ci,ri){ensureSocialData();const r=posts[pi]?.comments?.[ci]?.replies?.[ri];if(!r)return;const key=authUser?.id||currentUserKey(),idx=r.likes.indexOf(key),wasLiked=idx>=0;if(wasLiked)r.likes.splice(idx,1);else r.likes.push(key);renderFeed();if(r.remoteId&&supabaseClient&&authUser){const ok=await toggleRemoteReplyLike(r);if(!ok){if(wasLiked)r.likes.push(key);else r.likes.splice(r.likes.indexOf(key),1);renderFeed();}}else localStorage.setItem('booklyi_posts',JSON.stringify(posts));}
+function sharePost(i){const p=posts[i];const text=`${p.user||'Leitor'} está lendo ${p.book||'um livro'} no Booklyi 📚✨`;if(navigator.share)navigator.share({title:'Booklyi',text,url:location.href}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>alert('Texto copiado!')).catch(()=>{});}
 
 let shelfFilter='Todos';
 function setShelfFilter(filter,btn){
@@ -1034,7 +1172,27 @@ function setTheme(name){let t=themes[name];for(let k in t)document.documentEleme
 let postRating=0,postSelectedBook=null,postSearchTimer=null;
 function renderPostStars(){const el=document.getElementById('postStars');if(!el)return;el.innerHTML=[1,2,3,4,5].map(n=>`<button type="button" aria-label="${n} estrelas">${n<=postRating?'★':'☆'}</button>`).join('');el.querySelectorAll('button').forEach((btn,i)=>btn.addEventListener('click',()=>{postRating=i+1;renderPostStars()}));}
 async function searchPostBooks(){const q=document.getElementById('postBook').value.trim(),box=document.getElementById('postBookSuggestions');if(!box)return;if(!q){box.innerHTML='';postSelectedBook=null;return;}box.innerHTML='<div style="color:var(--muted);font-size:12px;padding:4px">Procurando no catálogo…</div>';try{const r=await fetch('/api/books?q='+encodeURIComponent(q),{headers:{Accept:'application/json'},cache:'no-store'});if(!r.ok)throw new Error('search '+r.status);const data=await r.json();const items=(data.items||[]).slice(0,5);box.innerHTML=items.length?items.map((b,i)=>`<div class="book-suggestion" data-post-index="${i}">${b.cover?`<img src="${escapeHTML(coverSrc(b.cover))}" alt="" onerror="this.onerror=null;this.style.display='none'">`:'<div style="width:34px;height:50px;border-radius:5px;background:var(--soft)"></div>'}<div><b>${escapeHTML(b.title)}</b><div style="font-size:12px;color:var(--muted)">${escapeHTML(b.author||'Autor desconhecido')}</div></div></div>`).join(''):'<div style="color:var(--muted);font-size:12px;padding:4px">Não encontrei esse livro. Você ainda pode publicar pelo nome digitado.</div>';box.querySelectorAll('[data-post-index]').forEach(el=>el.addEventListener('click',()=>{postSelectedBook=items[Number(el.dataset.postIndex)];document.getElementById('postBook').value=postSelectedBook.title;box.innerHTML=`<div style="font-size:12px;color:var(--accent);font-weight:700">✓ ${escapeHTML(postSelectedBook.title)} · ${escapeHTML(postSelectedBook.author||'')}</div>`;}));}catch(e){box.innerHTML='<div style="color:var(--muted);font-size:12px;padding:4px">Não consegui consultar o catálogo agora.</div>';}}
-function addPost(){let book=document.getElementById('postBook').value.trim(),text=document.getElementById('postText').value.trim(),spoiler=document.getElementById('postSpoiler').checked;if(!book||!text)return alert('Preencha o livro e o que você está achando da leitura.');posts.unshift({user:profile.name||'Carol',book,text,stars:postRating,spoiler,bookData:postSelectedBook||null});save();renderFeed();closeModal('postModal');document.getElementById('postBook').value='';document.getElementById('postText').value='';document.getElementById('postSpoiler').checked=false;postRating=0;postSelectedBook=null;document.getElementById('postBookSuggestions').innerHTML='';renderPostStars();go('home')}
+async function addPost(){
+  let book=document.getElementById('postBook').value.trim(),text=document.getElementById('postText').value.trim(),spoiler=document.getElementById('postSpoiler').checked;
+  if(!book||!text)return alert('Preencha o livro e o que você está achando da leitura.');
+  const post={user:profile.name||'Carol',book,text,stars:postRating,spoiler,bookData:postSelectedBook||null};
+  const btn=document.querySelector('#postModal .primary');if(btn)btn.disabled=true;
+  try{
+    if(supabaseClient&&authUser){
+      const row=await persistPostToSupabase(post);
+      if(!row)throw new Error('Não consegui publicar no banco agora.');
+      posts.unshift(optimisticPostObject(row,post.bookData||{title:post.book,author:'Autor desconhecido',cover:''}));
+      localStorage.setItem('booklyi_posts',JSON.stringify(posts));
+      await loadSupabaseFeed(true);
+    }else{
+      posts.unshift(post);save();renderFeed();
+    }
+    closeModal('postModal');
+    document.getElementById('postBook').value='';document.getElementById('postText').value='';document.getElementById('postSpoiler').checked=false;postRating=0;postSelectedBook=null;document.getElementById('postBookSuggestions').innerHTML='';renderPostStars();go('home');
+  }catch(e){console.error(e);alert('Não consegui publicar agora. Tente novamente em alguns segundos.');}
+  finally{if(btn)btn.disabled=false;}
+}
+
 async function addBook(){let title=document.getElementById('bookTitle').value.trim(),author=document.getElementById('bookAuthor').value.trim(),status=document.getElementById('bookStatus').value;if(!title||!author)return alert('Preencha título e autor.');const item={title,author,status,externalId:'local-'+Date.now(),rating:0,progress:status==='Lido'?100:0,page:0,pageCount:0,startedAt:status==='Lendo'?new Date().toISOString().slice(0,10):'',finishedAt:status==='Lido'?new Date().toISOString().slice(0,10):''};books.unshift(item);save();const ok=await saveShelfBookToSupabase(item);if(!ok){books.shift();save();return;}renderShelf();closeModal('bookModal');document.getElementById('bookTitle').value='';document.getElementById('bookAuthor').value='';go('shelf')}
 async function removeBook(i){if(i<0||!books[i])return;if(confirm(`Remover "${books[i].title}" da estante?`)){const b=books[i];const ok=await removeShelfBookFromSupabase(b);if(!ok)return;books.splice(i,1);save();renderShelf();renderProfile();}}
 function addClub(){let name=document.getElementById('clubName').value.trim(),desc=document.getElementById('clubDesc').value.trim(),privacy=document.getElementById('clubPrivacy').value;if(!name)return alert('Dê um nome ao clube.');clubs.unshift({name,desc:desc||'Um novo clube de leitura.',members:1,privacy});save();renderClubs();closeModal('clubModal');document.getElementById('clubName').value='';document.getElementById('clubDesc').value='';go('clubs')}
@@ -1050,6 +1208,6 @@ renderPostStars();
 
 const saved=localStorage.getItem('booklyi_theme') || localStorage.getItem('lumi_theme');if(saved&&themes[saved])setTheme(saved);else setTheme('rosa');renderFeed();renderShelf();renderDiscover();renderClubs();renderProfile();
 initSupabase();
-if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=20260929-v12-5-shelf-polish');
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=20260929-v12-8-feed-real');
 </script>
 </body></html>
