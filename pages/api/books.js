@@ -12,6 +12,17 @@ export default async function handler(request, response) {
   const normalizeGoogle = (item) => {
     const v = item.volumeInfo || {};
     const isbn = (v.industryIdentifiers || []).map(x => x.identifier);
+    const isbn13 = isbn.find(x => /^97[89]\d{10}$/.test(String(x || "")));
+    const isbn10 = isbn.find(x => /^\d{9}[0-9Xx]$/.test(String(x || "")));
+    const links = v.imageLinks || {};
+    const imageCandidates = [
+      links.extraLarge, links.large, links.medium, links.small,
+      links.thumbnail, links.smallThumbnail
+    ].filter(Boolean).map(x => String(x).replace(/^http:/, "https:"));
+    const isbnCandidates = [];
+    if (isbn13) isbnCandidates.push(`https://covers.openlibrary.org/isbn/${isbn13}-L.jpg`);
+    if (isbn10) isbnCandidates.push(`https://covers.openlibrary.org/isbn/${isbn10}-L.jpg`);
+    const coverCandidates = [...new Set([...imageCandidates, ...isbnCandidates])];
     return {
       id: item.id,
       title: v.title || "Sem título",
@@ -25,15 +36,8 @@ export default async function handler(request, response) {
       isbn,
       rating: v.averageRating || null,
       ratingsCount: v.ratingsCount || 0,
-      cover: (v.imageLinks?.thumbnail || v.imageLinks?.smallThumbnail || "").replace(/^http:/, "https:"),
-      coverFallbacks: (() => {
-        const isbn13 = isbn.find(x => /^97[89]\d{10}$/.test(String(x || "")));
-        const isbn10 = isbn.find(x => /^\d{9}[0-9Xx]$/.test(String(x || "")));
-        const urls = [];
-        if (isbn13) urls.push(`https://covers.openlibrary.org/isbn/${isbn13}-L.jpg`);
-        if (isbn10) urls.push(`https://covers.openlibrary.org/isbn/${isbn10}-L.jpg`);
-        return urls;
-      })(),
+      cover: coverCandidates[0] || "",
+      coverFallbacks: coverCandidates.slice(1),
       infoLink: v.infoLink || ""
     };
   };
@@ -42,10 +46,10 @@ export default async function handler(request, response) {
     const isbn = doc.isbn || [];
     const isbn13 = isbn.find(x => /^97[89]\d{10}$/.test(String(x || "")));
     const isbn10 = isbn.find(x => /^\d{9}[0-9Xx]$/.test(String(x || "")));
-    const cover = doc.cover_i ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg` : (isbn13 ? `https://covers.openlibrary.org/isbn/${isbn13}-L.jpg` : (isbn10 ? `https://covers.openlibrary.org/isbn/${isbn10}-L.jpg` : ""));
-    const coverFallbacks = [];
-    if (doc.cover_i && isbn13) coverFallbacks.push(`https://covers.openlibrary.org/isbn/${isbn13}-L.jpg`);
-    if (doc.cover_i && isbn10) coverFallbacks.push(`https://covers.openlibrary.org/isbn/${isbn10}-L.jpg`);
+    const coverCandidates = [];
+    if (doc.cover_i) coverCandidates.push(`https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`);
+    if (isbn13) coverCandidates.push(`https://covers.openlibrary.org/isbn/${isbn13}-L.jpg`);
+    if (isbn10) coverCandidates.push(`https://covers.openlibrary.org/isbn/${isbn10}-L.jpg`);
     return {
       id: `ol-${doc.key || index}`,
       title: doc.title || "Sem título",
@@ -55,12 +59,12 @@ export default async function handler(request, response) {
       publisher: (doc.publisher || [])[0] || "",
       publishedDate: doc.first_publish_year ? String(doc.first_publish_year) : "",
       pageCount: doc.number_of_pages_median || "",
-      categories: doc.subject ? doc.subject.slice(0, 5) : [],
-      isbn: isbn.slice(0, 10),
-      coverFallbacks,
+      categories: doc.subject ? doc.subject.slice(0, 8) : [],
+      isbn: isbn.slice(0, 20),
+      coverFallbacks: [...new Set(coverCandidates.slice(1))],
       rating: null,
       ratingsCount: doc.ratings_count || 0,
-      cover,
+      cover: coverCandidates[0] || "",
       infoLink: doc.key ? `https://openlibrary.org${doc.key}` : ""
     };
   };
@@ -96,30 +100,29 @@ export default async function handler(request, response) {
   };
 
   try {
-    const googleUrl = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(q)}&maxResults=20&printType=books&orderBy=relevance`;
-    const googleResponse = await fetch(googleUrl, {
-      headers: { "accept": "application/json" }
-    });
+    const isIsbn = /^(?:97[89]\d{10}|\d{9}[0-9Xx])$/.test(q.replace(/[-\s]/g, ""));
+    const googleQueries = isIsbn
+      ? [`isbn:${q.replace(/[-\s]/g, "")}`, q]
+      : [q];
 
-    if (googleResponse.ok) {
-      const data = await googleResponse.json();
-      const items = (data.items || []).map(normalizeGoogle);
-      if (items.length || curatedMatches.length) {
-        return send({ items: mergeUnique(curatedMatches, items), source: curatedMatches.length ? "Booklyi + Google Books" : "Google Books" }, 200, { "Cache-Control": "no-store, max-age=0" });
-      }
-    }
-  } catch (_) {}
+    const googleResults = await Promise.allSettled(googleQueries.map(gq => {
+      const googleUrl = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(gq)}&maxResults=40&printType=books&orderBy=relevance`;
+      return fetch(googleUrl, { headers: { "accept": "application/json" } }).then(r => r.ok ? r.json() : null);
+    }));
+    const googleItems = googleResults.flatMap(r => r.status === 'fulfilled' && r.value?.items ? r.value.items.map(normalizeGoogle) : []);
 
-  try {
-    const olUrl = `https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&limit=20&fields=key,title,author_name,first_publish_year,publisher,cover_i,isbn,subject,number_of_pages_median,ratings_count`;
-    const olResponse = await fetch(olUrl, {
-      headers: { "accept": "application/json" }
-    });
+    const olUrl = `https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&limit=60&fields=key,title,author_name,first_publish_year,publisher,cover_i,isbn,subject,number_of_pages_median,ratings_count`;
+    const olPromise = fetch(olUrl, { headers: { "accept": "application/json" } }).then(r => r.ok ? r.json() : null).catch(() => null);
+    const olData = await olPromise;
+    const olItems = (olData?.docs || []).map(normalizeOpenLibrary);
 
-    if (olResponse.ok) {
-      const data = await olResponse.json();
-      const items = (data.docs || []).map(normalizeOpenLibrary);
-      return send({ items: mergeUnique(curatedMatches, items), source: curatedMatches.length ? "Booklyi + Open Library" : "Open Library" }, 200, { "Cache-Control": "no-store, max-age=0" });
+    const items = mergeUnique(curatedMatches, mergeUnique(googleItems, olItems));
+    if (items.length) {
+      return send({
+        items,
+        total: items.length,
+        source: [curatedMatches.length ? "Booklyi" : "", googleItems.length ? "Google Books" : "", olItems.length ? "Open Library" : ""].filter(Boolean).join(" + ")
+      }, 200, { "Cache-Control": "no-store, max-age=0" });
     }
   } catch (_) {}
 
