@@ -554,7 +554,7 @@ function closeModal(id){document.getElementById(id).classList.remove('show')}
 function ensureSocialData(){
   posts.forEach(p=>{if(!Array.isArray(p.likes))p.likes=[];if(!Array.isArray(p.comments))p.comments=[];p.comments.forEach(c=>{if(!Array.isArray(c.likes))c.likes=[];if(!Array.isArray(c.replies))c.replies=[];c.replies.forEach(r=>{if(!Array.isArray(r.likes))r.likes=[]})});});
 }
-/* ===== V12.8 — Feed real no Supabase ===== */
+/* ===== V12.8.1 — Feed social robusto no Supabase ===== */
 function feedProfileForId(id,map){
   if(!id)return {name:'Leitor',handle:'',avatar:''};
   if(map?.has(id))return map.get(id);
@@ -572,7 +572,7 @@ async function loadSupabaseFeed(force=false){
   const status=document.getElementById('feedStatus');
   if(status)status.textContent='Atualizando o feed…';
   try{
-    const {data:rows,error}=await supabaseClient.from('posts').select('id,user_id,book_id,content,spoiler,rating,created_at').order('created_at',{ascending:false}).limit(100);
+    const {data:rows,error}=await supabaseClient.from('posts').select('id,user_id,book_id,book_title,book_author,book_cover_url,book_external_id,content,spoiler,rating,created_at').order('created_at',{ascending:false}).limit(100);
     if(error)throw error;
     const postRows=rows||[];
     const userIds=[...new Set(postRows.map(r=>r.user_id).filter(Boolean))];
@@ -614,7 +614,7 @@ async function loadSupabaseFeed(force=false){
     for(const r of replyRows){if(!repliesByComment.has(r.comment_id))repliesByComment.set(r.comment_id,[]);const u=feedProfileForId(r.user_id,profileMap);repliesByComment.get(r.comment_id).push({id:r.id,remoteId:r.id,userId:r.user_id,user:u.name,handle:u.handle,avatar:u.avatar,text:r.content||'',likes:likesByReply.get(r.id)||[],createdAt:r.created_at});}
     const commentsByPost=new Map();
     for(const c of commentRows){if(!commentsByPost.has(c.post_id))commentsByPost.set(c.post_id,[]);const u=feedProfileForId(c.user_id,profileMap);commentsByPost.get(c.post_id).push({id:c.id,remoteId:c.id,userId:c.user_id,user:u.name,handle:u.handle,avatar:u.avatar,text:c.content||'',likes:likesByComment.get(c.id)||[],replies:repliesByComment.get(c.id)||[],createdAt:c.created_at});}
-    const mapped=postRows.map(r=>{const u=feedProfileForId(r.user_id,profileMap);const b=feedBookFromMeta(bookMap.get(r.book_id));return {id:r.id,remoteId:r.id,userId:r.user_id,user:u.name,handle:u.handle,avatar:u.avatar,book:b?.title||'Livro',bookData:b,text:r.content||'',stars:Number(r.rating||0),spoiler:!!r.spoiler,likes:likesByPost.get(r.id)||[],comments:commentsByPost.get(r.id)||[],createdAt:r.created_at};});
+    const mapped=postRows.map(r=>{const u=feedProfileForId(r.user_id,profileMap);const meta=bookMap.get(r.book_id);const linked=feedBookFromMeta(meta);const b=(r.book_title||r.book_author||r.book_cover_url||r.book_external_id)?{externalId:r.book_external_id||linked?.externalId||'',title:r.book_title||linked?.title||'Livro',author:r.book_author||linked?.author||'Autor desconhecido',cover:r.book_cover_url||linked?.cover||'',pageCount:linked?.pageCount||0,publishedDate:linked?.publishedDate||'',description:linked?.description||''}:linked;return {id:r.id,remoteId:r.id,userId:r.user_id,user:u.name,handle:u.handle,avatar:u.avatar,book:b?.title||'Livro',bookData:b,text:r.content||'',stars:Number(r.rating||0),spoiler:!!r.spoiler,likes:likesByPost.get(r.id)||[],comments:commentsByPost.get(r.id)||[],createdAt:r.created_at};});
     if(mapped.length||feedDbReady){posts=mapped;localStorage.setItem('booklyi_posts',JSON.stringify(posts));}
     feedDbReady=true;
     if(status)status.textContent=mapped.length?`Feed conectado · ${mapped.length} publicação${mapped.length===1?'':'ões'}`:'Feed conectado · ainda não há publicações';
@@ -632,16 +632,30 @@ async function ensureFeedBook(book,title,author){
   if(book?.externalId)return ensureSupabaseBook(book);
   return ensureSupabaseBook({externalId:'local-'+Date.now(),title:title||'Livro',author:author||'Autor desconhecido',cover:book?.cover||'',pageCount:Number(book?.pageCount||0),description:book?.description||''});
 }
-function optimisticPostObject(row,book){return {id:row.id,remoteId:row.id,userId:authUser.id,user:profile.name||'Leitor',handle:profile.handle||'',avatar:profile.avatar||'',book:book.title,bookData:book,text:row.content,stars:Number(row.rating||0),spoiler:!!row.spoiler,likes:[],comments:[],createdAt:row.created_at};}
+function optimisticPostObject(row,book){const snapshot={...book,title:row.book_title||book.title,author:row.book_author||book.author,cover:row.book_cover_url||book.cover||'',externalId:row.book_external_id||book.externalId||book.id||''};return {id:row.id,remoteId:row.id,userId:authUser.id,user:profile.name||'Leitor',handle:profile.handle||'',avatar:profile.avatar||'',book:snapshot.title,bookData:snapshot,text:row.content,stars:Number(row.rating||0),spoiler:!!row.spoiler,likes:[],comments:[],createdAt:row.created_at};}
 async function persistPostToSupabase(post){
   if(!supabaseClient||!authUser)return false;
   try{
-    const bookId=await ensureFeedBook(post.bookData,post.book,post.bookData?.author||'Autor desconhecido');
-    if(!bookId)throw new Error('Livro não encontrado no banco.');
-    const {data,error}=await supabaseClient.from('posts').insert({user_id:authUser.id,book_id:bookId,content:post.text||'',spoiler:!!post.spoiler,rating:Number(post.stars||0)}).select('id,user_id,book_id,content,spoiler,rating,created_at').single();
+    const book=post.bookData||{title:post.book||'Livro',author:'Autor desconhecido',cover:''};
+    let bookId=null;
+    // O vínculo com books é opcional para a publicação: se a tabela de livros estiver temporariamente bloqueada,
+    // o post ainda consegue ser salvo com um retrato do livro diretamente em posts.
+    try{bookId=await ensureFeedBook(book,post.book,book.author||'Autor desconhecido');}catch(bookError){console.warn('Booklyi V12.8.1: não foi possível vincular books; salvando snapshot no post.',bookError);}
+    const payload={
+      user_id:authUser.id,
+      book_id:bookId||null,
+      book_title:book.title||post.book||'Livro',
+      book_author:book.author||'Autor desconhecido',
+      book_cover_url:book.cover||null,
+      book_external_id:book.externalId||book.id||null,
+      content:post.text||'',
+      spoiler:!!post.spoiler,
+      rating:Number(post.stars||0)
+    };
+    const {data,error}=await supabaseClient.from('posts').insert(payload).select('id,user_id,book_id,book_title,book_author,book_cover_url,book_external_id,content,spoiler,rating,created_at').single();
     if(error)throw error;
     return data;
-  }catch(e){console.error('Booklyi V12.8: erro ao publicar',e);return null;}
+  }catch(e){console.error('Booklyi V12.8.1: erro ao publicar',e);return null;}
 }
 async function toggleRemotePostLike(post){
   if(!supabaseClient||!authUser||!post.remoteId)return false;
