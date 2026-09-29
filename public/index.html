@@ -414,7 +414,7 @@ async function persistProfileToSupabase(){
     // O perfil já é criado automaticamente pelo trigger do Supabase quando a conta nasce.
     // Por isso, para editar o perfil usamos UPDATE em vez de UPSERT. Isso evita que o RLS
     // exija uma política de INSERT durante uma simples edição do próprio perfil.
-    const {data,error}=await supabaseClient.from('profiles').update(payload).eq('id',authUser.id).select('id,username,display_name,bio,avatar_url').maybeSingle();
+    const {error}=await supabaseClient.from('profiles').update(payload).eq('id',authUser.id);
     if(error)throw error;
     if(!data){
       const ins=await supabaseClient.from('profiles').insert({id:authUser.id,...payload}).select('id,username,display_name,bio,avatar_url').single();
@@ -425,7 +425,7 @@ async function persistProfileToSupabase(){
     return true;
   }catch(error){
     console.error('Booklyi: erro ao salvar perfil no Supabase',error);
-    alert(error?.code==='23505'?'Esse @usuário já está sendo usado. Escolha outro.':'Não consegui salvar o perfil no banco agora.');
+    alert(error?.code==='23505'?'Esse @usuário já está sendo usado. Escolha outro.':`Não consegui salvar o perfil no banco agora.\n\n${error?.message||'Erro desconhecido'}${error?.code?`\nCódigo: ${error.code}`:''}`);
     return false;
   }
 }
@@ -920,6 +920,6 @@ renderPostStars();
 
 const saved=localStorage.getItem('booklyi_theme') || localStorage.getItem('lumi_theme');if(saved&&themes[saved])setTheme(saved);else setTheme('rosa');renderFeed();renderShelf();renderDiscover();renderClubs();renderProfile();
 initSupabase();
-if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=20260929-v12-auth');
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=20260929-v12-2-profile');
 </script>
 </body></html>
