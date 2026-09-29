@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#e85d8e">
+<link rel="manifest" href="manifest.json?v=20260929-v10-3-4-covers">
+<title>Booklyi — seu cantinho literário</title>
+<style>
+:root{--accent:#e85d8e;--accent2:#f7b2c9;--bg:#fff8fb;--card:#fff;--text:#342a30;--muted:#8a7c83;--line:#f0dfe6;--soft:#fdeaf1}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+button,input,textarea{font:inherit}button{cursor:pointer;border:0}.app{min-height:100vh;max-width:1150px;margin:auto;padding-bottom:90px}
+header{padding:22px 22px 8px;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:900;font-size:25px;letter-spacing:-1px}.brand span{color:var(--accent)}.header-actions{display:flex;gap:8px}
+.icon-btn{width:42px;height:42px;border-radius:14px;background:var(--card);border:1px solid var(--line);font-size:18px}
+main{padding:10px 18px}.page{display:none}.page.active{display:block}
+.hero{background:linear-gradient(135deg,var(--soft),var(--card));border:1px solid var(--line);border-radius:26px;padding:24px;margin:8px 0 18px}
+.eyebrow{text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);font-size:11px;font-weight:800}.hero h1{font-size:31px;line-height:1.05;margin:7px 0}.hero p{color:var(--muted);margin:8px 0 0}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin:20px 2px 10px}.section-title h2{font-size:18px;margin:0}.section-title button{background:none;color:var(--accent);font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.book{min-width:0;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:10px;box-shadow:0 5px 18px #5d27400b}.cover{height:175px;border-radius:12px;display:flex;align-items:flex-end;padding:12px;color:white;font-weight:900;font-size:17px;background:linear-gradient(145deg,var(--accent),#3e2330);overflow:hidden}.book b{display:block;min-width:0;overflow-wrap:anywhere;line-height:1.15}.book small{display:block;min-width:0;color:var(--muted);margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stars{color:#e7a529;letter-spacing:1px;font-size:13px;margin-top:5px}
+.feed{display:grid;gap:12px}.post,.club,.profile-card,.form-card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:17px}.post-head{display:flex;gap:11px;align-items:center}.avatar{width:42px;height:42px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:900;color:var(--accent)}.post h3{margin:0;font-size:15px}.post .meta{font-size:12px;color:var(--muted)}.post p{line-height:1.55}.post-book{display:flex;gap:12px;padding:10px;background:var(--bg);border-radius:15px}.mini-cover{width:52px;height:72px;border-radius:8px;background:linear-gradient(145deg,var(--accent),#4b2939);color:white;padding:7px;font-size:10px;font-weight:800;display:flex;align-items:flex-end}.actions{display:flex;gap:18px;color:var(--muted);font-size:13px;margin-top:12px}.spoiler-box{position:relative;overflow:hidden;border-radius:14px}.spoiler-text{filter:blur(8px);cursor:pointer}.spoiler-box.revealed .spoiler-text{filter:none}.spoiler-warning{position:absolute;inset:0;display:grid;place-items:center;background:rgba(255,255,255,.18);backdrop-filter:blur(2px);font-weight:800;color:var(--text);cursor:pointer}.spoiler-box.revealed .spoiler-warning{display:none}.book-suggestion{display:flex;gap:10px;align-items:center;padding:9px;border:1px solid var(--line);border-radius:13px;background:var(--card);cursor:pointer}.book-suggestion img{width:34px;height:50px;object-fit:cover;border-radius:5px}.post-book-search{display:grid;gap:7px}.rating-picker{display:flex;gap:2px;align-items:center}.rating-picker button{background:none;padding:2px;color:#e7a529;font-size:28px;line-height:1;cursor:pointer}
+.progress{height:8px;background:var(--line);border-radius:20px;overflow:hidden;margin-top:10px}.progress i{display:block;height:100%;width:53%;background:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:14px;text-align:center}.stat b{display:block;font-size:22px}.stat span{font-size:11px;color:var(--muted)}
+.tabs{display:flex;gap:8px;overflow:auto;padding-bottom:8px}.tab{padding:9px 13px;border-radius:999px;background:var(--card);border:1px solid var(--line);white-space:nowrap;color:var(--muted)}.tab.active{background:var(--accent);color:white;border-color:var(--accent)}
+.clubs{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.club h3{margin:5px 0}.club p{color:var(--muted);font-size:13px}.club .members{font-size:12px;color:var(--accent);font-weight:800}
+.form-card{display:grid;gap:12px;margin-bottom:14px}.input,.textarea{width:100%;padding:12px 13px;border-radius:13px;border:1px solid var(--line);background:var(--bg);outline:none;color:var(--text)}.textarea{min-height:90px;resize:vertical}.primary{background:var(--accent);color:#fff;padding:12px 16px;border-radius:13px;font-weight:800}.secondary{background:var(--soft);color:var(--accent);padding:11px 15px;border-radius:13px;font-weight:800}
+.modal{position:fixed;inset:0;background:#1f142099;display:none;align-items:flex-end;z-index:20}.modal.show{display:flex}.sheet{background:var(--card);width:100%;max-width:620px;margin:auto;border-radius:28px 28px 0 0;padding:22px;max-height:90vh;overflow:auto}.sheet h2{margin-top:0}.close{float:right;background:var(--bg);border-radius:10px;width:34px;height:34px}
+.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.theme{padding:15px;border-radius:16px;border:2px solid transparent;background:var(--bg);text-align:left}.theme.active{border-color:var(--accent)}.dot{width:26px;height:26px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:8px}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#ffffffee;backdrop-filter:blur(16px);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:10}.nav{max-width:620px;width:100%;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom))}.nav button{background:none;color:var(--muted);padding:7px 2px;border-radius:12px;font-size:10px}.nav button b{display:block;font-size:20px;margin-bottom:2px}.nav button.active{color:var(--accent);font-weight:800}
+.empty{text-align:center;padding:28px;color:var(--muted)}
+@media(min-width:800px){main{padding:15px 28px}.hero{padding:32px}.bottom{position:fixed}.sheet{border-radius:28px}.grid{grid-template-columns:repeat(5,1fr)}}@media(max-width:600px){.grid{grid-template-columns:repeat(2,1fr)}.cover{height:190px}.clubs{grid-template-columns:1fr}.hero h1{font-size:27px}}
+
+
+/* BOOKLYI V5 — catálogo real */
+.real-search{
+  padding:14px;
+  border-radius:24px;
+  background:rgba(255,255,255,.30);
+  border:1px solid rgba(255,255,255,.72);
+  box-shadow:var(--glass-shadow);
+  backdrop-filter:blur(22px) saturate(150%);
+  -webkit-backdrop-filter:blur(22px) saturate(150%);
+}
+.real-search-row{display:flex;gap:9px;align-items:center}
+.real-search-row svg{width:21px;min-width:21px;color:var(--accent);stroke:currentColor}
+.real-search-row .input{margin:0}
+.real-search-row .primary{white-space:nowrap}
+#realSearchStatus{font-size:12px;color:var(--muted);padding:9px 3px 1px}
+.cover.cover-failed{background:linear-gradient(145deg,var(--accent),#3e2330)}.real-book-cover{width:100%;height:100%;aspect-ratio:2/3;object-fit:cover;object-position:center;border-radius:12px;display:block;background:rgba(255,255,255,.2)}
+.real-book-card{cursor:pointer}
+.real-book-card .cover{position:relative;padding:0;height:auto;aspect-ratio:2/3;min-width:0}
+.real-book-card .cover .fallback-cover{height:100%;width:100%;display:flex;align-items:flex-end;padding:12px;color:#fff;font-weight:900;font-size:15px;background:linear-gradient(145deg,var(--accent),#3e2330);border-radius:12px}
+.book-detail-modal .sheet{max-width:760px}
+.real-detail{display:grid;grid-template-columns:180px 1fr;gap:22px}
+.real-detail-cover{width:100%;aspect-ratio:2/3;object-fit:cover;object-position:center;border-radius:18px;display:block;background:rgba(255,255,255,.2)}
+.real-detail h2{margin:0 0 7px;line-height:1.1}
+.real-detail-meta{color:var(--muted);line-height:1.55;font-size:13px}
+.real-detail-description{line-height:1.55}
+.status-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.status-row button{padding:10px 12px;border-radius:13px;background:rgba(255,255,255,.48);border:1px solid rgba(255,255,255,.72);color:var(--text);font-weight:700}
+.status-row button:hover{background:rgba(255,255,255,.72)}
+@media(max-width:600px){
+ .real-search-row{align-items:stretch}
+ .real-search-row svg{display:none}
+ .real-search-row{flex-direction:column}
+ .real-search-row .input,.real-search-row .primary{width:100%}
+ .real-detail{grid-template-columns:105px 1fr;gap:14px}
+ .real-book-cover{height:100%}.real-book-card .cover{height:auto}
+}
+
+/* BOOKLYI · LIQUID GLASS */
+:root{
+ --glass:rgba(255,255,255,.58);
+ --glass-strong:rgba(255,255,255,.72);
+ --glass-line:rgba(255,255,255,.78);
+ --glass-shadow:0 18px 45px rgba(64,30,48,.10), inset 0 1px 0 rgba(255,255,255,.85);
+}
+body{
+ background:
+ radial-gradient(circle at 8% 0%, color-mix(in srgb,var(--accent2) 32%,transparent), transparent 34%),
+ radial-gradient(circle at 92% 12%, color-mix(in srgb,var(--accent) 13%,transparent), transparent 31%),
+ var(--bg);
+}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:linear-gradient(135deg,rgba(255,255,255,.26),transparent 45%,rgba(255,255,255,.18))}
+.brand{font-size:26px;letter-spacing:-1.4px}
+.brand span{display:inline-block;font-size:16px;margin-left:2px}
+.icon-btn{
+ display:grid;place-items:center;
+ background:rgba(255,255,255,.48);
+ border:1px solid var(--glass-line);
+ box-shadow:var(--glass-shadow);
+ backdrop-filter:blur(18px) saturate(140%);
+ -webkit-backdrop-filter:blur(18px) saturate(140%);
+ transition:transform .2s ease,background .2s ease;
+}
+.icon-btn:hover{transform:translateY(-1px);background:var(--glass-strong)}
+svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.hero,.book,.post,.club,.profile-card,.form-card,.stat,.tab,.theme,.sheet{
+ background:var(--glass);
+ border:1px solid var(--glass-line);
+ box-shadow:var(--glass-shadow);
+ backdrop-filter:blur(20px) saturate(145%);
+ -webkit-backdrop-filter:blur(20px) saturate(145%);
+}
+.hero{
+ position:relative;overflow:hidden;
+ background:linear-gradient(135deg,rgba(255,255,255,.62),color-mix(in srgb,var(--soft) 55%,rgba(255,255,255,.5)));
+}
+.hero:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-70px;top:-80px;background:rgba(255,255,255,.28);filter:blur(2px)}
+.book{transition:transform .22s ease,box-shadow .22s ease}
+.book:hover{transform:translateY(-3px);box-shadow:0 22px 42px rgba(64,30,48,.13),inset 0 1px 0 rgba(255,255,255,.9)}
+.cover,.mini-cover{box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 10px 22px rgba(45,20,30,.12)}
+.post-book{background:rgba(255,255,255,.30);border:1px solid rgba(255,255,255,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
+.input,.textarea{
+ background:rgba(255,255,255,.44);
+ border:1px solid rgba(255,255,255,.78);
+ box-shadow:inset 0 1px 3px rgba(70,30,50,.035);
+ backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.input:focus,.textarea:focus{border-color:color-mix(in srgb,var(--accent) 45%,white);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 10%,transparent)}
+.primary,.secondary{box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 18%,transparent)}
+.primary{background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 78%,#fff));}
+.secondary{background:rgba(255,255,255,.46);border:1px solid rgba(255,255,255,.7)}
+.bottom{
+ background:rgba(255,255,255,.52);
+ border-top:1px solid rgba(255,255,255,.82);
+ box-shadow:0 -14px 40px rgba(65,30,48,.07);
+ backdrop-filter:blur(24px) saturate(160%);
+ -webkit-backdrop-filter:blur(24px) saturate(160%);
+}
+.nav button{position:relative;transition:transform .2s ease,color .2s ease}
+.nav button b{height:23px;display:grid;place-items:center;margin-bottom:3px}
+.nav button b svg{width:21px;height:21px;stroke-width:1.7}
+.nav button.active:before{content:"";position:absolute;inset:1px 8px 25px;border-radius:14px;background:color-mix(in srgb,var(--accent) 12%,transparent);z-index:-1}
+.nav button.active b svg{stroke-width:2.1}
+.modal{background:rgba(22,14,22,.32);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.sheet{background:rgba(255,255,255,.72);border-color:rgba(255,255,255,.85)}
+.close{background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.7)}
+.theme.active{background:rgba(255,255,255,.72)}
+@media(max-width:600px){
+ header{padding:18px 17px 7px}
+ main{padding:10px 14px 24px}
+ .hero{border-radius:28px;padding:22px}
+ .grid{gap:10px}
+ .book{border-radius:20px;padding:9px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+
+/* BOOKLYI V8 — página do livro + compartilhamento aesthetic */
+.booklyi-detail-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}
+.booklyi-detail-actions button{padding:11px 14px;border-radius:14px;font-weight:800;border:1px solid var(--glass-line);background:rgba(255,255,255,.52);color:var(--text);box-shadow:0 8px 20px rgba(64,30,48,.06)}
+.booklyi-detail-actions .primary{color:#fff;background:var(--accent);border-color:transparent}
+.rating-picker{display:flex;gap:3px;margin:7px 0 2px}
+.rating-picker button{font-size:27px;padding:0 2px;background:none;color:#d7b05b;border:0;line-height:1}
+.reading-progress{margin-top:16px;padding:14px;border-radius:18px;background:rgba(255,255,255,.40);border:1px solid var(--glass-line)}
+.reading-progress .progress{margin:9px 0 5px}
+.progress-row{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted)}
+.share-preview{display:flex;justify-content:center;margin:8px 0 14px}
+.share-card{width:min(100%,360px);aspect-ratio:4/5;border-radius:25px;padding:24px;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 20px 45px rgba(64,30,48,.16)}
+.share-card.soft{background:radial-gradient(circle at 15% 10%,#fff 0 8%,transparent 30%),linear-gradient(145deg,#fdeaf1,#fff8fb 55%,#f7d3e0);color:#342a30}
+.share-card.cozy{background:radial-gradient(circle at 80% 15%,#f4dfbf 0 8%,transparent 28%),linear-gradient(145deg,#5a4034,#a77c61);color:#fff9f2}
+.share-card.dark{background:radial-gradient(circle at 85% 10%,#5d496c 0 6%,transparent 24%),linear-gradient(145deg,#18151c,#44354b);color:#fff}
+.share-card.botanical{background:radial-gradient(circle at 15% 10%,#e6f4e9 0 8%,transparent 28%),linear-gradient(145deg,#dcebdd,#f7fbf5 55%,#bdd6bf);color:#263a2b}
+.share-card.dreamy{background:radial-gradient(circle at 20% 15%,#fff 0 5%,transparent 24%),linear-gradient(145deg,#ded4f5,#f8efff 55%,#c9dcf5);color:#3d3553}
+.share-card.minimal{background:#fafafa;color:#222;border:1px solid #e5e5e5}
+.share-brand{position:absolute;top:20px;left:22px;font-size:12px;font-weight:900;letter-spacing:1.2px}
+.share-cover{width:42%;max-height:52%;object-fit:cover;border-radius:10px;box-shadow:0 15px 28px rgba(0,0,0,.20);margin-bottom:15px}
+.share-cover-fallback{width:42%;height:48%;border-radius:10px;background:linear-gradient(145deg,var(--accent),#3e2330);color:#fff;display:grid;place-items:center;padding:15px;font-weight:900;font-size:15px;box-shadow:0 15px 28px rgba(0,0,0,.20);margin-bottom:15px}
+.share-title{font-size:19px;font-weight:900;line-height:1.12;max-width:90%}.share-author{font-size:12px;opacity:.72;margin-top:5px}.share-stars{letter-spacing:2px;margin-top:8px}.share-progress{font-size:11px;margin-top:7px;opacity:.75}
+.share-style-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 14px}.share-style{padding:11px 7px;border-radius:13px;border:1px solid var(--line);background:var(--bg);font-size:11px;font-weight:800}.share-style.active{outline:2px solid var(--accent);border-color:transparent}
+.share-actions{display:flex;gap:8px}.share-actions button{flex:1}
+@media(max-width:600px){.share-card{width:min(100%,330px)}.share-style-grid{grid-template-columns:repeat(2,1fr)}}
+
+
+.social-actions{display:flex;gap:16px;align-items:center;margin-top:12px;flex-wrap:wrap}.social-btn{border:0;background:none;padding:5px 0;color:var(--muted);font:inherit;cursor:pointer}.social-btn.liked{color:#d85d7b;font-weight:800}.comments-box{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:grid;gap:10px}.comment{padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.38);border:1px solid var(--line)}.comment-head{display:flex;gap:8px;align-items:center}.comment-avatar{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--soft);font-size:12px;font-weight:800}.comment-meta{font-size:11px;color:var(--muted)}.comment-text{margin:7px 0 4px;line-height:1.45}.reply-list{margin:8px 0 0 34px;display:grid;gap:7px}.reply{padding:8px 10px;border-radius:11px;background:rgba(255,255,255,.32)}.comment-compose{display:flex;gap:8px}.comment-compose .input{flex:1;min-width:0}.mini-btn{padding:9px 11px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-weight:700;cursor:pointer}.danger-inline{margin-top:8px;width:100%;padding:8px;border:1px solid #e7b9c1;background:transparent;color:#b34d5a;border-radius:11px;font-weight:700;cursor:pointer}.catalog-badge{display:inline-flex;align-items:center;gap:5px;margin-top:6px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.55);border:1px solid var(--line);font-size:10px;color:var(--muted)}
+</style>
+
+<style>
+.field-label{display:flex;justify-content:space-between;margin:10px 0 6px;color:var(--muted);font-size:13px}.edit-dates,.edit-pages{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.edit-dates label,.edit-pages label{font-size:12px;color:var(--muted)}.shelf-dates{font-size:10px!important;color:var(--muted)}.shelf-book-card{cursor:pointer}.danger-btn{width:100%;margin-top:8px;padding:12px;border:1px solid #e7b9c1;background:transparent;color:#b34d5a;border-radius:14px;font-weight:700}.shelf-tabs{overflow-x:auto;scrollbar-width:none}.shelf-tabs::-webkit-scrollbar{display:none}@media(max-width:600px){.edit-dates,.edit-pages{grid-template-columns:1fr}.shelf-tabs{padding-bottom:4px}}
+
+.profile-hero{position:relative;overflow:hidden;padding:22px;background:linear-gradient(135deg,var(--soft),rgba(255,255,255,.65));border:1px solid var(--glass-line);box-shadow:var(--glass-shadow);border-radius:26px}
+.profile-top{display:flex;gap:16px;align-items:center}
+.profile-avatar{width:82px;height:82px;border-radius:28px;object-fit:cover;display:grid;place-items:center;flex:none;background:var(--soft);color:var(--accent);font-size:28px;font-weight:900;border:3px solid rgba(255,255,255,.8);box-shadow:0 12px 30px rgba(64,30,48,.10)}
+.profile-info{min-width:0;flex:1}.profile-info h2{margin:0 0 3px;font-size:24px}.profile-handle{color:var(--muted);font-size:13px}.profile-bio{margin:10px 0 0;color:var(--muted);line-height:1.45}
+.profile-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.profile-actions button{flex:1;min-width:120px}
+.profile-social{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}
+.profile-social .stat{padding:11px 7px;background:rgba(255,255,255,.45);border-color:var(--glass-line)}
+.profile-social .stat b{font-size:19px}.profile-social .stat span{font-size:10px}
+.profile-section-head{display:flex;justify-content:space-between;align-items:center;margin:20px 2px 10px}.profile-section-head h3{margin:0;font-size:17px}.profile-section-head button{background:none;color:var(--accent);font-weight:800}
+.profile-empty{padding:20px;border-radius:18px;background:var(--card);border:1px solid var(--line);color:var(--muted);text-align:center}
+.profile-post-mini{padding:14px;border-radius:18px;background:var(--card);border:1px solid var(--line)}
+.profile-post-mini .meta{font-size:12px;color:var(--muted);margin-bottom:6px}.profile-post-mini p{margin:7px 0;line-height:1.45}
+.avatar-file{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:var(--bg);border:1px solid var(--line)}
+.avatar-file-preview{width:56px;height:56px;border-radius:18px;object-fit:cover;background:var(--soft);display:grid;place-items:center;font-weight:900;color:var(--accent)}
+@media(max-width:600px){.profile-top{align-items:flex-start}.profile-avatar{width:72px;height:72px;border-radius:23px}.profile-social{grid-template-columns:repeat(2,1fr)}}
+
+.social-actions{display:flex;gap:16px;align-items:center;margin-top:12px;flex-wrap:wrap}.social-btn{border:0;background:none;padding:5px 0;color:var(--muted);font:inherit;cursor:pointer}.social-btn.liked{color:#d85d7b;font-weight:800}.comments-box{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:grid;gap:10px}.comment{padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.38);border:1px solid var(--line)}.comment-head{display:flex;gap:8px;align-items:center}.comment-avatar{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--soft);font-size:12px;font-weight:800}.comment-meta{font-size:11px;color:var(--muted)}.comment-text{margin:7px 0 4px;line-height:1.45}.reply-list{margin:8px 0 0 34px;display:grid;gap:7px}.reply{padding:8px 10px;border-radius:11px;background:rgba(255,255,255,.32)}.comment-compose{display:flex;gap:8px}.comment-compose .input{flex:1;min-width:0}.mini-btn{padding:9px 11px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-weight:700;cursor:pointer}.danger-inline{margin-top:8px;width:100%;padding:8px;border:1px solid #e7b9c1;background:transparent;color:#b34d5a;border-radius:11px;font-weight:700;cursor:pointer}.catalog-badge{display:inline-flex;align-items:center;gap:5px;margin-top:6px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.55);border:1px solid var(--line);font-size:10px;color:var(--muted)}
+
+<style>
+/* Booklyi V10.2 — perfil clean, inspirado em apps sociais */
+.profile-clean{background:transparent;padding:10px 2px 0}.profile-clean-top{display:flex;gap:18px;align-items:flex-start}.profile-clean-avatar-wrap{flex:none}.profile-clean-avatar{width:88px;height:88px;border-radius:50%;object-fit:cover;background:var(--soft);display:grid;place-items:center;color:var(--accent);font-size:30px;font-weight:800;border:1px solid var(--line)}.profile-clean-main{flex:1;min-width:0}.profile-clean-name-row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.profile-clean-name-row h2{margin:2px 0 2px;font-size:22px;letter-spacing:-.5px}.profile-clean-handle{font-size:13px;color:var(--muted)}.profile-more{background:none;color:var(--muted);font-size:18px;letter-spacing:2px;padding:4px 0}.profile-clean-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:17px}.profile-clean-stats div{text-align:left}.profile-clean-stats b{display:block;font-size:16px;line-height:1.1}.profile-clean-stats span{display:block;font-size:10px;color:var(--muted);margin-top:4px}.profile-clean-bio{margin:14px 0 10px;font-size:14px;line-height:1.45;max-width:620px;color:var(--text)}.profile-clean-actions{display:flex;gap:8px}.profile-edit-btn{flex:1;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 14px;font-weight:750;color:var(--text)}.profile-share-btn{width:42px;background:var(--card);border:1px solid var(--line);border-radius:11px;font-size:18px}.profile-reading-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:15px;overflow:hidden;margin:22px 0 12px}.profile-reading-strip button{background:var(--card);padding:11px 5px 10px;display:grid;grid-template-columns:auto auto;column-gap:6px;align-items:center;text-align:left}.profile-reading-strip span{grid-row:span 2;font-size:16px}.profile-reading-strip b{font-size:15px}.profile-reading-strip small{font-size:10px;color:var(--muted)}.profile-tabs-clean{display:grid;grid-template-columns:repeat(2,1fr);border-bottom:1px solid var(--line);margin:4px 0 0}.profile-tab-clean{background:none;padding:12px 6px 11px;color:var(--muted);font-weight:700;border-bottom:2px solid transparent}.profile-tab-clean.active{color:var(--text);border-bottom-color:var(--accent)}.clean-head{margin:14px 0 9px}.clean-head h3{font-size:15px;font-weight:750}.clean-head button{font-size:20px}.profile-feed-clean .profile-post-mini{border-radius:14px;border-left:0;border-right:0;box-shadow:none;padding:14px 2px;background:transparent}.profile-favorites-clean{grid-template-columns:repeat(4,1fr);gap:7px}.profile-favorites-clean .book{border:0;border-radius:0;padding:0;background:transparent;box-shadow:none}.profile-favorites-clean .cover{height:170px;border-radius:8px;padding:7px;font-size:11px}.profile-favorites-clean .book b,.profile-favorites-clean .book small,.profile-favorites-clean .stars{padding-left:2px}.profile-favorites-clean .book b{display:block;margin-top:6px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.profile-favorites-clean .book small{font-size:10px}.profile-favorites-clean .stars{font-size:10px}@media(max-width:600px){.profile-clean-top{gap:14px}.profile-clean-avatar{width:82px;height:82px}.profile-clean-stats{margin-top:14px;gap:5px}.profile-clean-stats span{font-size:9px}.profile-clean-stats b{font-size:15px}.profile-clean-bio{font-size:13px}.profile-favorites-clean{grid-template-columns:repeat(3,1fr)}.profile-favorites-clean .cover{height:155px}}
+</style>
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand">booklyi<span>•</span></div><div class="header-actions"><button class="icon-btn" aria-label="Personalizar tema" onclick="openModal('themeModal')"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-1.1-.9-2-2-2h-1.2a2 2 0 0 1-2-2V6.8A3.8 3.8 0 0 0 12 3Z"/><circle cx="7.5" cy="10" r=".8"/><circle cx="10" cy="6.5" r=".8"/><circle cx="6.8" cy="14" r=".8"/></svg></button><button class="icon-btn" aria-label="Nova publicação" onclick="openModal('postModal')"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div></header>
+<main>
+<section id="home" class="page active">
+<div class="hero"><div class="eyebrow">seu cantinho literário</div><h1>Olá, Carol!<br>O que você está lendo hoje? 📖</h1><p>Compartilhe sua leitura, descubra histórias e encontre pessoas que amam livros tanto quanto você.</p></div>
+<div class="stats"><div class="stat"><b id="statRead">12</b><span>livros lidos</span></div><div class="stat"><b id="statReading">1</b><span>lendo agora</span></div><div class="stat"><b>4,6</b><span>média das estrelas</span></div></div>
+<div class="section-title"><h2>📖 Lendo agora</h2><button onclick="go('shelf')">Ver estante</button></div>
+<div class="post-book"><div class="mini-cover">A<br>HIPÓTESE<br>DO AMOR</div><div style="flex:1"><b>A Hipótese do Amor</b><div class="meta">Ali Hazelwood</div><div class="progress"><i></i></div><small>187 de 352 páginas · 53%</small></div></div>
+<div class="section-title"><h2>✨ O que a comunidade está lendo</h2><button onclick="go('discover')">Descobrir</button></div>
+<div class="feed" id="feed"></div>
+</section>
+
+<section id="discover" class="page">
+<div class="section-title"><h2>🔎 Descobrir</h2></div>
+<div class="real-search">
+  <div class="real-search-row">
+    <svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+    <input class="input" id="search" placeholder="Buscar título, autor ou ISBN..." autocomplete="off">
+    <button class="primary" id="realSearchBtn">Buscar</button>
+  </div>
+  <div id="realSearchStatus">Pesquise por um livro, autor ou ISBN para encontrar dados reais.</div>
+</div>
+<div class="section-title" style="margin-top:12px"><h2>🌈 Explore por tema</h2></div>
+<div style="display:flex;gap:8px;overflow:auto;padding-bottom:4px">
+  <button class="tab" type="button" onclick="quickCatalogSearch('LGBTQ+')">🌈 LGBTQIA+</button>
+  <button class="tab" type="button" onclick="quickCatalogSearch('romance sáfico')">💗 Romance sáfico</button>
+  <button class="tab" type="button" onclick="quickCatalogSearch('gay romance')">💙 Romance gay</button>
+  <button class="tab" type="button" onclick="quickCatalogSearch('literatura brasileira')">🇧🇷 Literatura brasileira</button>
+  <button class="tab" type="button" onclick="quickCatalogSearch('autoria negra')">✊🏿 Autoria negra</button>
+</div>
+<div class="section-title"><h2>📚 Resultados</h2></div>
+<div class="grid" id="discoverGrid"></div>
+<div class="section-title"><h2>👥 Clubes para conhecer</h2></div>
+<div class="clubs" id="discoverClubs"></div>
+</section>
+
+<section id="shelf" class="page"><div class="section-title"><h2>📚 Minha estante</h2><button onclick="openModal('bookModal')">+ Livro</button></div><div class="tabs shelf-tabs"><button class="tab active" onclick="setShelfFilter('Todos',this)">Todos</button><button class="tab" onclick="setShelfFilter('Lendo',this)">Lendo</button><button class="tab" onclick="setShelfFilter('Lido',this)">Lidos</button><button class="tab" onclick="setShelfFilter('Quero ler',this)">Quero ler</button><button class="tab" onclick="setShelfFilter('Pausado',this)">Pausados</button><button class="tab" onclick="setShelfFilter('Abandonei',this)">Abandonei</button></div><div class="grid" id="shelfGrid"></div></section>
+
+<section id="clubs" class="page"><div class="section-title"><h2>👥 Clubes de leitura</h2><button onclick="openModal('clubModal')">+ Criar clube</button></div><div class="clubs" id="clubsGrid"></div></section>
+
+<section id="profile" class="page profile-page">
+<div class="profile-clean">
+  <div class="profile-clean-top">
+    <div class="profile-clean-avatar-wrap">
+      <img id="profileAvatar" class="profile-clean-avatar" alt="Foto de perfil" style="display:none">
+      <div id="profileAvatarFallback" class="profile-clean-avatar profile-avatar-fallback">C</div>
+    </div>
+    <div class="profile-clean-main">
+      <div class="profile-clean-name-row">
+        <div>
+          <h2 id="profileName">Carol</h2>
+          <div id="profileHandle" class="profile-clean-handle">@carol.le</div>
+        </div>
+        <button class="profile-more" aria-label="Mais opções">•••</button>
+      </div>
+      <div class="profile-clean-stats">
+        <div><b id="profilePostsCount">0</b><span>publicações</span></div>
+        <div><b id="profileFollowers">0</b><span>seguidores</span></div>
+        <div><b id="profileFollowing">0</b><span>seguindo</span></div>
+        <div><b id="profileBooksCount">0</b><span>lidos</span></div>
+      </div>
+    </div>
+  </div>
+  <p id="profileBio" class="profile-clean-bio">Amo histórias que me fazem perder a noção do tempo. ☕📚</p>
+  <div class="profile-clean-actions">
+    <button class="profile-edit-btn" onclick="openEditProfile()">Editar perfil</button>
+    <button class="profile-share-btn" onclick="shareProfile()" aria-label="Compartilhar perfil">↗</button>
+  </div>
+</div>
+
+<div class="profile-reading-strip">
+  <button onclick="go('shelf')"><span>📖</span><b id="profileReading">0</b><small>lendo</small></button>
+  <button onclick="go('shelf')"><span>✓</span><b id="profileRead">0</b><small>lidos</small></button>
+  <button onclick="go('shelf')"><span>♡</span><b id="profileWant">0</b><small>quero ler</small></button>
+</div>
+
+<div class="profile-tabs-clean" role="tablist">
+  <button class="profile-tab-clean active" onclick="showProfileTab('posts',this)">Publicações</button>
+  <button class="profile-tab-clean" onclick="showProfileTab('favorites',this)">Favoritos</button>
+</div>
+
+<div id="profileTabPosts" class="profile-tab-panel">
+  <div class="profile-section-head clean-head"><h3>Minhas publicações</h3><button onclick="openModal('postModal')">＋</button></div>
+  <div class="feed profile-feed-clean" id="profilePosts"></div>
+</div>
+
+<div id="profileTabFavorites" class="profile-tab-panel" style="display:none">
+  <div class="profile-section-head clean-head"><h3>Livros favoritos</h3><button onclick="go('shelf')">Ver estante</button></div>
+  <div class="grid profile-favorites-clean" id="favorites"></div>
+</div>
+</section>
+</main>
+</div>
+
+<div class="bottom"><div class="nav">
+<button class="active" data-page="home" onclick="go('home')"><b><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10Z"/></svg></b>Início</button>
+<button data-page="discover" onclick="go('discover')"><b><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></b>Descobrir</button>
+<button data-page="shelf" onclick="go('shelf')"><b><svg viewBox="0 0 24 24"><path d="M6 4.5A2.5 2.5 0 0 1 8.5 2H19v18H8.5A2.5 2.5 0 0 0 6 22V4.5Z"/><path d="M6 4.5A2.5 2.5 0 0 0 3.5 7V19A2.5 2.5 0 0 0 6 21.5"/></svg></b>Estante</button>
+<button data-page="clubs" onclick="go('clubs')"><b><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.5"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M14.5 16a4.5 4.5 0 0 1 6 3"/></svg></b>Clubes</button>
+<button data-page="profile" onclick="go('profile')"><b><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 21a7 7 0 0 1 14 0"/></svg></b>Perfil</button>
+</div></div>
+
+
+<div class="modal book-detail-modal" id="realBookModal" onclick="if(event.target===this)closeModal('realBookModal')">
+  <div class="sheet">
+    <button class="close" onclick="closeModal('realBookModal')">×</button>
+    <div id="realBookDetail"></div>
+  </div>
+</div>
+
+
+<div class="modal" id="shareModal" onclick="if(event.target===this)closeModal('shareModal')">
+  <div class="sheet">
+    <button class="close" onclick="closeModal('shareModal')">×</button>
+    <h2>✨ Compartilhar leitura</h2>
+    <p style="color:var(--muted);margin-top:-4px">Crie um card aesthetic para postar no Instagram.</p>
+    <div class="share-preview"><div id="shareCard" class="share-card soft"></div></div>
+    <div class="section-title" style="margin-top:4px"><h2>Escolha o estilo</h2></div>
+    <div class="share-style-grid" id="shareStyles"></div>
+    <div class="share-actions"><button class="secondary" onclick="downloadShareCard()">Salvar imagem</button><button class="primary" onclick="shareCard()">Compartilhar</button></div>
+  </div>
+</div>
+
+<div class="modal" id="editBookModal" onclick="if(event.target===this)closeModal('editBookModal')"><div class="sheet"><button class="close" onclick="closeModal('editBookModal')">×</button><h2>✏️ Editar leitura</h2><div class="form-card"><input class="input" id="editBookTitle" placeholder="Título"><input class="input" id="editBookAuthor" placeholder="Autor"><select class="input" id="editBookStatus"><option>Quero ler</option><option>Lendo</option><option>Lido</option><option>Pausado</option><option>Abandonei</option></select><label class="field-label">Progresso <b id="editProgressLabel">0%</b></label><input id="editBookProgress" type="range" min="0" max="100" value="0" style="width:100%;accent-color:var(--accent)" oninput="document.getElementById('editProgressLabel').textContent=this.value+'%'"><div class="edit-dates"><label>Comecei<input class="input" id="editStarted" type="date"></label><label>Terminei<input class="input" id="editFinished" type="date"></label></div><div class="edit-pages"><label>Página atual<input class="input" id="editPage" type="number" min="0" placeholder="0"></label><label>Total de páginas<input class="input" id="editPageCount" type="number" min="0" placeholder="0"></label></div><button class="primary" onclick="saveEditedBook()">Salvar alterações</button><button class="danger-btn" onclick="removeEditedBook()">Remover da estante</button></div></div></div>
+
+<div class="modal" id="editProfileModal" onclick="if(event.target===this)closeModal('editProfileModal')"><div class="sheet"><button class="close" onclick="closeModal('editProfileModal')">×</button><h2>✏️ Editar perfil</h2><div class="form-card">
+<label class="field-label">Nome</label><input class="input" id="editProfileName" maxlength="40" placeholder="Seu nome">
+<label class="field-label">@usuário</label><input class="input" id="editProfileHandle" maxlength="30" placeholder="@seuusuario">
+<label class="field-label">Bio</label><textarea class="textarea" id="editProfileBio" maxlength="160" placeholder="Conte um pouquinho sobre você e seus livros…"></textarea>
+<div class="avatar-file"><img id="profilePreview" class="avatar-file-preview" alt="Prévia" style="display:none"><div id="profilePreviewFallback" class="avatar-file-preview">C</div><div style="flex:1"><b>Foto de perfil</b><div style="font-size:12px;color:var(--muted);margin:3px 0 8px">Escolha uma foto do seu celular.</div><input id="profilePhotoInput" type="file" accept="image/*"></div></div>
+<button class="primary" onclick="saveProfile()">Salvar perfil</button>
+</div></div></div>
+<div class="modal" id="themeModal" onclick="if(event.target===this)closeModal('themeModal')"><div class="sheet"><button class="close" onclick="closeModal('themeModal')">×</button><h2>Personalize seu tema</h2><p style="color:var(--muted)">Seu aplicativo, do seu jeitinho.</p><div class="theme-grid" id="themes"></div></div></div>
+
+<div class="modal" id="postModal" onclick="if(event.target===this)closeModal('postModal')"><div class="sheet"><button class="close" onclick="closeModal('postModal')">×</button><h2>✍️ Nova publicação</h2><div class="form-card"><div class="post-book-search"><input class="input" id="postBook" placeholder="Comece a digitar o nome do livro…" autocomplete="off"><div id="postBookSuggestions"></div><small style="color:var(--muted)">O Booklyi procura automaticamente no catálogo real.</small></div><textarea class="textarea" id="postText" placeholder="O que você está achando da leitura?"></textarea><label style="display:flex;gap:9px;align-items:center;color:var(--muted);font-size:13px"><input id="postSpoiler" type="checkbox"> Contém spoiler</label><div><span>Minha avaliação: </span><span id="postStars" class="rating-picker"></span></div><button class="primary" onclick="addPost()">Publicar</button></div></div></div></div>
+
+<div class="modal" id="bookModal" onclick="if(event.target===this)closeModal('bookModal')"><div class="sheet"><button class="close" onclick="closeModal('bookModal')">×</button><h2>📚 Adicionar livro</h2><div class="form-card"><input class="input" id="bookTitle" placeholder="Título"><input class="input" id="bookAuthor" placeholder="Autor"><select class="input" id="bookStatus"><option>Quero ler</option><option>Lendo</option><option>Lido</option><option>Abandonei</option></select><button class="primary" onclick="addBook()">Adicionar à estante</button></div></div></div>
+
+<div class="modal" id="clubModal" onclick="if(event.target===this)closeModal('clubModal')"><div class="sheet"><button class="close" onclick="closeModal('clubModal')">×</button><h2>👥 Criar clube</h2><div class="form-card"><input class="input" id="clubName" placeholder="Nome do clube"><input class="input" id="clubDesc" placeholder="Sobre o clube"><select class="input" id="clubPrivacy"><option>Público</option><option>Privado</option></select><button class="primary" onclick="addClub()">Criar clube</button></div></div></div>
+
+<script>
+const themes={
+rosa:{accent:'#e85d8e',accent2:'#f7b2c9',bg:'#fff8fb',soft:'#fdeaf1'},
+amarelo:{accent:'#d89b22',accent2:'#f2d27b',bg:'#fffcf3',soft:'#fff3c9'},
+verde:{accent:'#4c9a70',accent2:'#a9d8bc',bg:'#f5fbf7',soft:'#e3f4e9'},
+vermelho:{accent:'#c94d59',accent2:'#eea5ac',bg:'#fff7f7',soft:'#fde2e4'},
+azul:{accent:'#4b83c4',accent2:'#a9c9eb',bg:'#f5faff',soft:'#e1effc'},
+roxo:{accent:'#8561b8',accent2:'#c9b6e8',bg:'#faf7ff',soft:'#eee6fb'},
+laranja:{accent:'#db7a32',accent2:'#f3bd91',bg:'#fff9f4',soft:'#fde9da'},
+preto:{accent:'#5b5360',accent2:'#aaa3ad',bg:'#f5f4f6',soft:'#e6e4e8'}
+};
+
+let profile=JSON.parse(localStorage.getItem('booklyi_profile')||'null')||{
+  name:'Carol',handle:'@carol.le',bio:'Amo histórias que me fazem perder a noção do tempo. ☕📚',avatar:'',followers:0,following:0
+};
+function saveProfileData(){localStorage.setItem('booklyi_profile',JSON.stringify(profile))}
+let books=JSON.parse(localStorage.getItem('booklyi_books') || localStorage.getItem('lumi_books')||'null')||[
+{title:'A Hipótese do Amor',author:'Ali Hazelwood',status:'Lendo'},
+{title:'Os Sete Maridos de Evelyn Hugo',author:'Taylor Jenkins Reid',status:'Lido'},
+{title:'Verity',author:'Colleen Hoover',status:'Quero ler'},
+{title:'Teto Para Dois',author:'Beth O’Leary',status:'Lido'}
+];
+let posts=JSON.parse(localStorage.getItem('booklyi_posts') || localStorage.getItem('lumi_posts')||'null')||[
+{user:'Marina',book:'A Biblioteca da Meia-Noite',text:'Esse livro está mexendo muito comigo. Cada capítulo parece uma conversa diferente com a gente mesma.',stars:5},
+{user:'Bia',book:'Verity',text:'Comecei ontem e já estou completamente presa. Preciso de alguém para discutir sem spoiler! 😭',stars:4}
+];
+let clubs=JSON.parse(localStorage.getItem('booklyi_clubs') || localStorage.getItem('lumi_clubs')||'null')||[
+{name:'Romances que destroem nosso psicológico 💔',desc:'Para quem gosta de sofrer por personagens fictícios.',members:128,privacy:'Público'},
+{name:'Café, livros & surtos ☕',desc:'Leituras variadas e muita conversa.',members:74,privacy:'Público'}
+];
+function save(){localStorage.setItem('booklyi_books',JSON.stringify(books));localStorage.setItem('booklyi_posts',JSON.stringify(posts));localStorage.setItem('booklyi_clubs',JSON.stringify(clubs));saveProfileData()}
+function stars(n){return '★'.repeat(n)+'☆'.repeat(5-n)}
+
+function coverSrc(url){
+  if(!url) return '';
+  const u=String(url);
+  if(u.startsWith('/api/cover?')) return u;
+  return '/api/cover?url='+encodeURIComponent(u);
+}
+function coverImg(url,title,cls='real-book-cover',fallbacks=[]){
+  const safeTitle=escapeHTML(title||'Capa do livro');
+  const urls=[url,...(Array.isArray(fallbacks)?fallbacks:[])].filter(Boolean).map(String);
+  if(!urls.length) return `<div class="fallback-cover" style="height:100%;width:100%">${safeTitle}</div>`;
+  const encoded=urls.map(coverSrc).map(escapeHTML);
+  const src=encoded[0];
+  const next=encoded.slice(1).join('|');
+  return `<img class="${cls}" src="${src}" data-cover-fallbacks="${escapeHTML(next)}" alt="Capa de ${safeTitle}" loading="lazy" onerror="coverFallback(this)">`;
+}
+function coverFallback(img){
+  const list=(img.dataset.coverFallbacks||'').split('|').filter(Boolean);
+  if(list.length){img.src=list.shift();img.dataset.coverFallbacks=list.join('|');return;}
+  img.onerror=null;img.style.display='none';img.parentElement.classList.add('cover-failed');
+}
+
+function cover(t){return t.toUpperCase().split(' ').slice(0,4).join('<br>')}
+function go(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));if(id==='shelf')renderShelf();if(id==='clubs')renderClubs();if(id==='discover')renderDiscover();if(id==='profile')renderProfile();window.scrollTo({top:0,behavior:'smooth'})}
+function openModal(id){document.getElementById(id).classList.add('show');if(id==='themeModal')renderThemes()}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+function ensureSocialData(){
+  posts.forEach(p=>{if(!Array.isArray(p.likes))p.likes=[];if(!Array.isArray(p.comments))p.comments=[];p.comments.forEach(c=>{if(!Array.isArray(c.likes))c.likes=[];if(!Array.isArray(c.replies))c.replies=[];c.replies.forEach(r=>{if(!Array.isArray(r.likes))r.likes=[]})});});
+}
+function currentUserKey(){return profile.handle||profile.name||'carol'}
+function renderFeed(){
+  ensureSocialData(); save();
+  const feed=document.getElementById('feed'); if(!feed)return;
+  feed.innerHTML=posts.map((p,i)=>{
+    const liked=p.likes.includes(currentUserKey());
+    const comments=p.comments||[];
+    return `<article class="post">
+      <div class="post-head"><div class="avatar">${escapeHTML((p.user||'C')[0])}</div><div><h3>${escapeHTML(p.user||'Leitor')}</h3><div class="meta">está lendo <b>${escapeHTML(p.book||'Livro')}</b></div></div></div>
+      ${p.spoiler?`<div class="spoiler-box" data-spoiler="${i}"><div class="spoiler-warning">⚠️ Contém spoiler · toque para revelar</div><p class="spoiler-text">${escapeHTML(p.text||'')}</p></div>`:`<p>${escapeHTML(p.text||'')}</p>`}
+      ${p.stars?`<div class="stars">${stars(Number(p.stars||0))}</div>`:''}
+      <div class="social-actions">
+        <button class="social-btn ${liked?'liked':''}" data-like-post="${i}">${liked?'♥':'♡'} Curtir ${p.likes.length?`· ${p.likes.length}`:''}</button>
+        <button class="social-btn" data-toggle-comments="${i}">💬 Comentar ${comments.length?`· ${comments.length}`:''}</button>
+        <button class="social-btn" data-share-post="${i}">↗ Compartilhar</button>
+      </div>
+      <div class="comments-box" id="comments-${i}" style="display:${comments.length?'grid':'none'}">
+        <div class="comment-compose"><input class="input" id="comment-input-${i}" placeholder="Escreva um comentário…"><button class="mini-btn" data-add-comment="${i}">Enviar</button></div>
+        ${comments.map((c,ci)=>{
+          const cliked=c.likes.includes(currentUserKey());
+          return `<div class="comment"><div class="comment-head"><div class="comment-avatar">${escapeHTML((c.user||'C')[0])}</div><div><b>${escapeHTML(c.user||'Leitor')}</b><div class="comment-meta">comentário</div></div></div><div class="comment-text">${escapeHTML(c.text||'')}</div><div><button class="social-btn ${cliked?'liked':''}" data-like-comment="${i}" data-comment-index="${ci}">${cliked?'♥':'♡'} ${c.likes.length||0}</button> <button class="social-btn" data-reply="${i}" data-comment-index="${ci}">↩ Responder</button></div>
+            <div class="reply-list">${(c.replies||[]).map((r,ri)=>{const rl=r.likes.includes(currentUserKey());return `<div class="reply"><b>${escapeHTML(r.user||'Leitor')}</b><div class="comment-text">${escapeHTML(r.text||'')}</div><button class="social-btn ${rl?'liked':''}" data-like-reply="${i}" data-comment-index="${ci}" data-reply-index="${ri}">${rl?'♥':'♡'} ${r.likes.length||0}</button></div>`}).join('')}</div>
+            <div id="reply-compose-${i}-${ci}" class="comment-compose" style="display:none;margin-top:7px"><input class="input" id="reply-input-${i}-${ci}" placeholder="Responder…"><button class="mini-btn" data-add-reply="${i}" data-comment-index="${ci}">Enviar</button></div>
+          </div>`;
+        }).join('')}
+      </div>
+    </article>`;
+  }).join('') || '<div class="empty">Ainda não há publicações. ✨</div>';
+  document.querySelectorAll('[data-spoiler]').forEach(el=>el.addEventListener('click',()=>el.classList.toggle('revealed')));
+  document.querySelectorAll('[data-like-post]').forEach(el=>el.addEventListener('click',()=>togglePostLike(Number(el.dataset.likePost))));
+  document.querySelectorAll('[data-toggle-comments]').forEach(el=>el.addEventListener('click',()=>toggleComments(Number(el.dataset.toggleComments))));
+  document.querySelectorAll('[data-add-comment]').forEach(el=>el.addEventListener('click',()=>addComment(Number(el.dataset.addComment))));
+  document.querySelectorAll('[data-like-comment]').forEach(el=>el.addEventListener('click',()=>toggleCommentLike(Number(el.dataset.likeComment),Number(el.dataset.commentIndex))));
+  document.querySelectorAll('[data-reply]').forEach(el=>el.addEventListener('click',()=>toggleReply(Number(el.dataset.reply),Number(el.dataset.commentIndex))));
+  document.querySelectorAll('[data-add-reply]').forEach(el=>el.addEventListener('click',()=>addReply(Number(el.dataset.addReply),Number(el.dataset.commentIndex))));
+  document.querySelectorAll('[data-like-reply]').forEach(el=>el.addEventListener('click',()=>toggleReplyLike(Number(el.dataset.likeReply),Number(el.dataset.commentIndex),Number(el.dataset.replyIndex))));
+  document.querySelectorAll('[data-share-post]').forEach(el=>el.addEventListener('click',()=>sharePost(Number(el.dataset.sharePost))));
+}
+function togglePostLike(i){ensureSocialData();const key=currentUserKey();const arr=posts[i].likes;const n=arr.indexOf(key);if(n>=0)arr.splice(n,1);else arr.push(key);save();renderFeed()}
+function toggleComments(i){const box=document.getElementById('comments-'+i);if(!box)return;box.style.display=box.style.display==='none'?'grid':'none';if(box.style.display==='grid'){const input=document.getElementById('comment-input-'+i);if(input)input.focus()}}
+function addComment(i){const input=document.getElementById('comment-input-'+i);const text=(input?.value||'').trim();if(!text)return;ensureSocialData();posts[i].comments.push({user:profile.name||'Carol',text,likes:[],replies:[]});save();renderFeed();const box=document.getElementById('comments-'+i);if(box)box.style.display='grid'}
+function toggleCommentLike(pi,ci){ensureSocialData();const c=posts[pi]?.comments?.[ci];if(!c)return;const key=currentUserKey(),n=c.likes.indexOf(key);if(n>=0)c.likes.splice(n,1);else c.likes.push(key);save();renderFeed()}
+function toggleReply(pi,ci){const box=document.getElementById(`reply-compose-${pi}-${ci}`);if(box)box.style.display=box.style.display==='none'?'flex':'none'}
+function addReply(pi,ci){const input=document.getElementById(`reply-input-${pi}-${ci}`);const text=(input?.value||'').trim();if(!text)return;ensureSocialData();posts[pi].comments[ci].replies.push({user:profile.name||'Carol',text,likes:[]});save();renderFeed();const box=document.getElementById(`reply-compose-${pi}-${ci}`);if(box)box.style.display='flex'}
+function toggleReplyLike(pi,ci,ri){ensureSocialData();const r=posts[pi]?.comments?.[ci]?.replies?.[ri];if(!r)return;const key=currentUserKey(),n=r.likes.indexOf(key);if(n>=0)r.likes.splice(n,1);else r.likes.push(key);save();renderFeed()}
+function sharePost(i){const p=posts[i];const text=`${p.user||'Leitor'} está lendo ${p.book||'um livro'} no Booklyi 📚✨`;if(navigator.share)navigator.share({title:'Booklyi',text}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>alert('Texto copiado!')).catch(()=>{});}
+
+let shelfFilter='Todos';
+function setShelfFilter(filter,btn){
+  shelfFilter=filter||'Todos';
+  document.querySelectorAll('.shelf-tabs .tab').forEach(x=>x.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderShelf();
+}
+
+function renderShelf(){
+  const grid=document.getElementById('shelfGrid'); if(!grid)return;
+  const filtered=shelfFilter==='Todos'?books:books.filter(b=>b.status===shelfFilter);
+  grid.innerHTML=filtered.map((b)=>{
+    const i=books.indexOf(b);
+    const progress=b.status==='Lendo'?Number(b.progress||0):b.status==='Lido'?100:0;
+    const page=Number(b.page||0), pageCount=Number(b.pageCount||0);
+    const dates=[b.startedAt?`início ${formatDate(b.startedAt)}`:'',b.finishedAt?`fim ${formatDate(b.finishedAt)}`:''].filter(Boolean).join(' · ');
+    return `<article class="book shelf-book-card">
+      <div onclick="openShelfBook(${i})" style="cursor:pointer">
+        <div class="cover">${b.cover?coverImg(b.cover,b.title,'real-book-cover',b.coverFallbacks||[]):`${cover(b.title)}`}</div>
+        <b>${escapeHTML(b.title)}</b><small>${escapeHTML(b.author||'')}</small>
+        <small>${escapeHTML(b.status||'Quero ler')}${b.status==='Lendo'?` · ${progress}%`:''}</small>
+        ${b.rating?`<div class="stars">${stars(Number(b.rating))}</div>`:''}
+        ${b.status==='Lendo'?`<div class="progress"><i style="width:${progress}%"></i></div>`:''}
+        ${pageCount?`<small>📖 ${page} de ${pageCount} páginas</small>`:''}
+        ${dates?`<small class="shelf-dates">${escapeHTML(dates)}</small>`:''}
+      </div>
+      <div style="display:flex;gap:7px;margin-top:8px">
+        <button class="secondary" type="button" style="flex:1" onclick="event.stopPropagation();openShelfBook(${i})">📖 Livro</button>
+        <button class="secondary" type="button" style="flex:1" onclick="event.stopPropagation();openShelfShare(${i})">📸 Instagram</button>
+      </div>
+      <button class="danger-inline" type="button" onclick="event.stopPropagation();removeBook(${i})">🗑️ Remover da estante</button>
+    </article>`;
+  }).join('')||'<div class="empty">Nenhum livro nesta parte da estante ainda.</div>';
+  const reading=books.filter(b=>b.status==='Lendo').length;
+  const read=books.filter(b=>b.status==='Lido').length;
+  const sr=document.getElementById('statReading');if(sr)sr.textContent=reading;
+  const rr=document.getElementById('statRead');if(rr)rr.textContent=read;
+}
+
+function openShelfShare(i){
+  const b=books[i]; if(!b)return;
+  const book={id:b.externalId||('local-'+i),title:b.title,author:b.author||'Autor desconhecido',cover:b.cover||'',pageCount:b.pageCount||0};
+  openShareForBook(book);
+}
+
+function formatDate(value){if(!value)return '';const d=new Date(value+'T00:00:00');return isNaN(d)?value:d.toLocaleDateString('pt-BR');}
+function openEditBook(i){
+  const b=books[i];if(!b)return;
+  window.editingBookIndex=i;
+  document.getElementById('editBookTitle').value=b.title||'';
+  document.getElementById('editBookAuthor').value=b.author||'';
+  document.getElementById('editBookStatus').value=b.status||'Quero ler';
+  document.getElementById('editBookProgress').value=Number(b.progress||0);
+  document.getElementById('editProgressLabel').textContent=Number(b.progress||0)+'%';
+  document.getElementById('editStarted').value=b.startedAt||'';
+  document.getElementById('editFinished').value=b.finishedAt||'';
+  document.getElementById('editPage').value=Number(b.page||0);
+  document.getElementById('editPageCount').value=Number(b.pageCount||0);
+  openModal('editBookModal');
+}
+function saveEditedBook(){
+  const i=window.editingBookIndex,b=books[i];if(!b)return;
+  const status=document.getElementById('editBookStatus').value;
+  b.title=document.getElementById('editBookTitle').value.trim()||b.title;
+  b.author=document.getElementById('editBookAuthor').value.trim()||b.author;
+  b.status=status;
+  b.progress=status==='Lido'?100:Number(document.getElementById('editBookProgress').value||0);
+  b.page=Math.max(0,Number(document.getElementById('editPage').value||0));
+  b.pageCount=Math.max(0,Number(document.getElementById('editPageCount').value||b.pageCount||0));
+  b.startedAt=document.getElementById('editStarted').value||'';
+  b.finishedAt=document.getElementById('editFinished').value||'';
+  if(status==='Lendo'&&!b.startedAt)b.startedAt=new Date().toISOString().slice(0,10);
+  if(status==='Lido'&&!b.finishedAt)b.finishedAt=new Date().toISOString().slice(0,10);
+  if(b.pageCount)b.progress=status==='Lido'?100:Math.min(100,Math.round(b.page/b.pageCount*100));
+  save();closeModal('editBookModal');renderShelf();
+}
+function removeEditedBook(){
+  const i=window.editingBookIndex;if(i==null||!books[i])return;
+  if(confirm(`Remover "${books[i].title}" da sua estante?`)){books.splice(i,1);save();closeModal('editBookModal');renderShelf();}
+}
+function openShelfBook(i){
+  const b=books[i];if(!b)return;
+  if(!b.externalId){b.externalId='local-'+Date.now()+'-'+i;save();}
+  window.editingBookIndex=i;
+  const idx=window.booklyiSearchResults.findIndex(x=>x.id===b.externalId);
+  if(idx>=0){openRealBook(idx);return;}
+  const pseudo={id:b.externalId,title:b.title,author:b.author,cover:b.cover||'',publisher:b.publisher||'',publishedDate:b.publishedDate||'',pageCount:b.pageCount||0,isbn:b.isbn||[],categories:b.categories||[],description:b.description||''};
+  window.booklyiSearchResults=[pseudo];openRealBook(0);
+}
+
+function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function bookCoverUrl(b){return b.cover||''}
+function renderDiscover(data){
+  const grid=document.getElementById('discoverGrid');
+  if(!grid)return;
+  if(data){
+    if(!data.length){
+      grid.innerHTML='<div class="empty">Nenhum livro encontrado. Tente outro título, autor ou ISBN.</div>';
+      return;
+    }
+    grid.innerHTML=data.map((b,i)=>`<article class="book real-book-card" onclick="openRealBook(${i})">
+      <div class="cover">${b.cover?coverImg(b.cover,b.title,'real-book-cover',b.coverFallbacks||[]):`<div class="fallback-cover">${escapeHTML(b.title)}</div>`}</div>
+      <b>${escapeHTML(b.title)}</b>
+      <small>${escapeHTML(b.author||'Autor desconhecido')}</small>${b.tags?.length?`<div class="catalog-badge">🌈 ${escapeHTML(b.tags[0])}</div>`:''}
+      ${b.rating?`<div class="stars">★ ${Number(b.rating).toFixed(1)}</div>`:''}
+    </article>`).join('');
+    window.booklyiSearchResults=data;
+    return;
+  }
+  const local=[...books].slice(0,6);
+  grid.innerHTML=local.map(b=>`<article class="book"><div class="cover">${cover(b.title)}</div><b>${escapeHTML(b.title)}</b><small>${escapeHTML(b.author)}</small><small>${escapeHTML(b.status)}</small></article>`).join('');
+  document.getElementById('discoverClubs').innerHTML=clubs.map(c=>`<div class="club"><div class="members">👥 ${c.members} membros</div><h3>${escapeHTML(c.name)}</h3><p>${escapeHTML(c.desc)}</p><button class="secondary">Entrar no clube</button></div>`).join('');
+}
+
+window.booklyiSearchResults=[];
+async function quickCatalogSearch(q){const input=document.getElementById('search');if(input)input.value=q;await searchRealBooks();}
+async function searchRealBooks(){
+  const input=document.getElementById('search');
+  const btn=document.getElementById('realSearchBtn');
+  const status=document.getElementById('realSearchStatus');
+  const q=(input?.value||'').trim();
+  if(!q){status.textContent='Digite um título, autor ou ISBN.';return;}
+  btn.disabled=true;btn.textContent='Buscando…';status.textContent='Buscando livros reais…';
+  try{
+    const url='/api/books?q='+encodeURIComponent(q);
+    const response=await fetch(url,{headers:{Accept:'application/json'},cache:'no-store'});
+    if(!response.ok)throw new Error('books api '+response.status);
+    const data=await response.json();
+    const items=data.items||[];
+    status.textContent=items.length?`${items.length} livro(s) encontrado(s).`:'Nenhum livro encontrado.';
+    renderDiscover(items);
+  }catch(err){
+    console.error(err);
+    status.textContent='O catálogo está sendo atualizado. Tente novamente em alguns segundos.';
+    document.getElementById('discoverGrid').innerHTML='<div class="empty">O catálogo real não respondeu neste momento.</div>';
+  }finally{btn.disabled=false;btn.textContent='Buscar';}
+}
+function openRealBook(index){
+  const b=window.booklyiSearchResults[index];
+  if(!b)return;
+  const shelf=books.find(x=>x.externalId===b.id);
+  const coverHtml=b.cover?coverImg(b.cover,b.title,'real-detail-cover',b.coverFallbacks||[]):`<div class="fallback-cover" style="height:100%;min-height:260px">${escapeHTML(b.title)}</div>`;
+  document.getElementById('realBookDetail').innerHTML=`
+    <div class="real-detail">
+      <div>${coverHtml}</div>
+      <div>
+        <h2>${escapeHTML(b.title)}</h2>
+        ${b.subtitle?`<div class="real-detail-meta">${escapeHTML(b.subtitle)}</div>`:''}
+        <div class="real-detail-meta"><strong>${escapeHTML(b.author||'Autor desconhecido')}</strong><br>
+        ${escapeHTML(b.publisher)}${b.publishedDate?' · '+escapeHTML(b.publishedDate):''}${b.pageCount?' · '+escapeHTML(String(b.pageCount))+' páginas':''}<br>
+        ${escapeHTML(b.categories.join(' · '))}</div>
+        ${b.rating?`<div class="stars" style="margin-top:9px">★ ${Number(b.rating).toFixed(1)} · ${b.ratingsCount||0} avaliações</div>`:''}
+        <p class="real-detail-description">${escapeHTML(b.description||'Sinopse não disponível.')}</p>
+        <div style="margin-top:12px"><b>Minha avaliação</b><div class="rating-picker" id="ratingPicker">${[1,2,3,4,5].map(n=>`<button aria-label="${n} estrelas" data-rating="${n}">${(shelf?.rating||0)>=n?'★':'☆'}</button>`).join('')}</div></div>
+        ${shelf?.status==='Lendo'?`<div class="reading-progress"><div style="display:flex;justify-content:space-between;gap:10px"><b>Meu progresso</b><b id="progressValue">${Number(shelf.progress||0)}%</b></div><input id="progressInput" type="range" min="0" max="100" value="${Number(shelf.progress||0)}" style="width:100%;accent-color:var(--accent)"><div class="progress"><i id="detailProgressBar" style="width:${Number(shelf.progress||0)}%"></i></div><div class="progress-row"><span>${Number(shelf.page||0)} de ${Number(b.pageCount||0)} páginas</span><span>arraste para atualizar</span></div></div>`:''}
+        <div class="status-row">
+          ${['Quero ler','Lendo','Lido','Pausado','Abandonei'].map(s=>`<button type="button" data-status="${escapeHTML(s)}">${s}</button>`).join('')}
+        </div>
+        <div class="booklyi-detail-actions"><button class="primary" id="detailAddBtn" type="button">+ Adicionar à estante</button><button id="detailShareBtn" type="button">✨ Compartilhar</button></div>${shelf?`<button class="secondary" style="margin-top:8px" id="detailEditBtn" type="button">✏️ Editar minha leitura</button>`:''}
+        ${shelf?`<div class="book-status">✓ Já está na sua estante como ${escapeHTML(shelf.status)}${shelf.rating?` · ${shelf.rating} estrelas`:''}</div>`:''}
+      </div>
+    </div>`;
+  window.currentDetailBookId=b.id;
+  const detail=document.getElementById('realBookDetail');
+  detail.querySelectorAll('[data-rating]').forEach(btn=>btn.addEventListener('click',()=>rateRealBookById(b.id,Number(btn.dataset.rating))));
+  detail.querySelectorAll('[data-status]').forEach(btn=>btn.addEventListener('click',()=>addRealBook(b,btn.dataset.status)));
+  const progressInput=detail.querySelector('#progressInput');
+  if(progressInput)progressInput.addEventListener('input',e=>updateRealProgress(b.id,e.target.value));
+  const addBtn=detail.querySelector('#detailAddBtn'); if(addBtn)addBtn.addEventListener('click',()=>addRealBook(b,shelf?.status||'Quero ler'));
+  const shareBtn=detail.querySelector('#detailShareBtn'); if(shareBtn)shareBtn.addEventListener('click',()=>openShareForBook(b));
+  const editBtn=detail.querySelector('#detailEditBtn'); if(editBtn)editBtn.addEventListener('click',()=>{const idx=books.findIndex(x=>x.externalId===b.id);if(idx>=0)openEditBook(idx)});
+  openModal('realBookModal');
+}
+function addRealBook(b,status){
+  const existing=books.findIndex(x=>x.externalId===b.id);
+  const previous=existing>=0?books[existing]:{};
+  const item={...previous,title:b.title,author:b.author||'Autor desconhecido',status,externalId:b.id,cover:b.cover||'',publisher:b.publisher,publishedDate:b.publishedDate,pageCount:b.pageCount,isbn:b.isbn||[],rating:previous.rating||0,progress:status==='Lido'?100:(status==='Lendo'?(previous.progress||0):0),page:status==='Lendo'?(previous.page||0):0,startedAt:previous.startedAt||'',finishedAt:status==='Lido'?(previous.finishedAt||new Date().toISOString().slice(0,10)):(previous.finishedAt||'')};
+  if(existing>=0)books[existing]=item;else books.unshift(item);
+  save();renderShelf();closeModal('realBookModal');
+  document.getElementById('realSearchStatus').textContent=`✓ ${b.title} foi adicionado à sua estante como "${status}".`;
+}
+
+
+function rateRealBookById(id,n){
+  const b=window.booklyiSearchResults.find(x=>x.id===id); if(!b)return;
+  let i=books.findIndex(x=>x.externalId===id);
+  if(i<0){addRealBook(b,'Quero ler');i=books.findIndex(x=>x.externalId===id);}
+  books[i].rating=n; save(); openRealBook(window.booklyiSearchResults.findIndex(x=>x.id===id));
+}
+function updateRealProgress(id,value){
+  const i=books.findIndex(x=>x.externalId===id); if(i<0)return;
+  books[i].progress=Number(value); books[i].page=books[i].pageCount?Math.round(books[i].pageCount*Number(value)/100):0; if(!books[i].startedAt)books[i].startedAt=new Date().toISOString().slice(0,10); if(Number(value)>=100){books[i].status='Lido';books[i].finishedAt=books[i].finishedAt||new Date().toISOString().slice(0,10);}
+  const v=document.getElementById('progressValue'),bar=document.getElementById('detailProgressBar'); if(v)v.textContent=Number(value)+'%'; if(bar)bar.style.width=value+'%';
+  save();
+}
+let shareBook=null,shareStyle='soft';
+const shareStyles={soft:'🌸 Soft',cozy:'🤎 Cozy',dark:'🖤 Dark Academia',botanical:'🌿 Botanical',dreamy:'💜 Dreamy',minimal:'🤍 Minimal'};
+function openShareForBook(b){shareBook=b;shareStyle='soft';renderShareStyles();renderShareCard();openModal('shareModal')}
+function renderShareStyles(){document.getElementById('shareStyles').innerHTML=Object.entries(shareStyles).map(([k,v])=>`<button class="share-style ${shareStyle===k?'active':''}" onclick="shareStyle='${k}';renderShareStyles();renderShareCard()">${v}</button>`).join('')}
+function renderShareCard(){
+  if(!shareBook)return; const shelf=books.find(x=>x.externalId===shareBook.id)||{}; const card=document.getElementById('shareCard'); card.className='share-card '+shareStyle;
+  const cover=shareBook.cover?`<img class="share-cover" src="${escapeHTML(coverSrc(shareBook.cover))}" crossorigin="anonymous" alt="" onerror="this.onerror=null;this.style.display='none'">`:`<div class="share-cover-fallback">${escapeHTML(shareBook.title)}</div>`;
+  const rating=Number(shelf.rating||0); const progress=shelf.status==='Lendo'?`<div class="share-progress">${Number(shelf.progress||0)}% da leitura</div>`:'';
+  card.innerHTML=`<div class="share-brand">BOOKLYI</div>${cover}<div class="share-title">${escapeHTML(shareBook.title)}</div><div class="share-author">${escapeHTML(shareBook.author||'Autor desconhecido')}</div>${rating?`<div class="share-stars">${stars(rating)}</div>`:''}${progress}`;
+}
+async function shareCard(){
+  if(!shareBook)return;
+  const blob=await createShareImageBlob();
+  if(!blob){downloadShareCard();return;}
+  const file=new File([blob],'booklyi-leitura.png',{type:'image/png'});
+  if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
+    try{await navigator.share({title:`${shareBook.title} · Booklyi`,text:`Minha leitura no Booklyi 📚✨`,files:[file]});return;}catch(e){}
+  }
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement('a');link.download='booklyi-leitura.png';link.href=url;link.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  alert('Card salvo como imagem. No iPhone, abra a imagem e compartilhe pelo Instagram. 📸');
+}
+function shareCoverUrl(url){
+  if(!url)return '';
+  return '/api/cover?url='+encodeURIComponent(url);
+}
+function createShareImageBlob(){
+  return new Promise(resolve=>{
+    const w=1080,h=1350,canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');
+    const bg={soft:['#fdeaf1','#fff8fb'],cozy:['#5a4034','#a77c61'],dark:['#18151c','#44354b'],botanical:['#dcebdd','#f7fbf5'],dreamy:['#ded4f5','#f8efff'],minimal:['#fafafa','#eeeeee']}[shareStyle]||['#fdeaf1','#fff8fb'];
+    const g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,bg[0]);g.addColorStop(1,bg[1]);ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    ctx.fillStyle=shareStyle==='dark'||shareStyle==='cozy'?'#fff':'#342a30';ctx.font='800 34px system-ui';ctx.fillText('BOOKLYI',70,85);
+    const finish=()=>canvas.toBlob(resolve,'image/png',1);
+    const drawText=()=>{ctx.textAlign='center';ctx.fillStyle=shareStyle==='dark'||shareStyle==='cozy'?'#fff':'#342a30';ctx.font='900 48px system-ui';const words=shareBook.title.split(' ');let lines=[],line='';for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>800){lines.push(line);line=word}else line=test}if(line)lines.push(line);lines.slice(0,3).forEach((l,i)=>ctx.fillText(l,w/2,1030+i*55));ctx.font='400 28px system-ui';ctx.globalAlpha=.72;ctx.fillText(shareBook.author||'Autor desconhecido',w/2,1210);const shelf=books.find(x=>x.externalId===shareBook.id)||{};if(shelf.rating){ctx.globalAlpha=1;ctx.font='32px system-ui';ctx.fillText(stars(shelf.rating),w/2,1260)}if(shelf.status==='Lendo'){ctx.globalAlpha=1;ctx.font='700 26px system-ui';ctx.fillText(`${Number(shelf.progress||0)}% da leitura`,w/2,1305)}ctx.globalAlpha=1;finish()};
+    if(shareBook.cover){const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{const maxW=520,maxH=650,scale=Math.min(maxW/img.width,maxH/img.height),cw=img.width*scale,ch=img.height*scale,x=(w-cw)/2,y=190+(maxH-ch)/2;ctx.save();ctx.shadowColor='rgba(0,0,0,.2)';ctx.shadowBlur=35;ctx.drawImage(img,x,y,cw,ch);ctx.restore();drawText()};img.onerror=()=>{ctx.fillStyle=shareStyle==='dark'||shareStyle==='cozy'?'#806a5d':'#d783a2';ctx.fillRect(310,270,460,610);drawText()};img.src=shareCoverUrl(shareBook.cover)}else{ctx.fillStyle=shareStyle==='dark'||shareStyle==='cozy'?'#806a5d':'#d783a2';ctx.fillRect(310,270,460,610);drawText()}
+  });
+}
+function downloadShareCard(){
+  const card=document.getElementById('shareCard'); if(!card)return;
+  const w=1080,h=1350,canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');
+  const bg={soft:['#fdeaf1','#fff8fb'],cozy:['#5a4034','#a77c61'],dark:['#18151c','#44354b'],botanical:['#dcebdd','#f7fbf5'],dreamy:['#ded4f5','#f8efff'],minimal:['#fafafa','#eeeeee']}[shareStyle]||['#fdeaf1','#fff8fb'];
+  const g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,bg[0]);g.addColorStop(1,bg[1]);ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+  ctx.fillStyle=shareStyle==='dark'||shareStyle==='cozy'?'#fff':'#342a30';ctx.font='800 34px system-ui';ctx.fillText('BOOKLYI',70,85);
+  const finish=()=>{const link=document.createElement('a');link.download='booklyi-leitura.png';link.href=canvas.toDataURL('image/png');link.click();};
+  const drawText=()=>{ctx.textAlign='center';ctx.fillStyle=shareStyle==='dark'||shareStyle==='cozy'?'#fff':'#342a30';ctx.font='900 48px system-ui';const words=shareBook.title.split(' ');let lines=[],line='';for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>800){lines.push(line);line=word}else line=test}if(line)lines.push(line);lines.slice(0,3).forEach((l,i)=>ctx.fillText(l,w/2,1030+i*55));ctx.font='400 28px system-ui';ctx.globalAlpha=.72;ctx.fillText(shareBook.author||'Autor desconhecido',w/2,1210);const shelf=books.find(x=>x.externalId===shareBook.id)||{};if(shelf.rating){ctx.globalAlpha=1;ctx.font='32px system-ui';ctx.fillText(stars(shelf.rating),w/2,1260)}ctx.globalAlpha=1;finish()};
+  if(shareBook.cover){const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{const maxW=520,maxH=650,scale=Math.min(maxW/img.width,maxH/img.height),cw=img.width*scale,ch=img.height*scale,x=(w-cw)/2,y=190+(maxH-ch)/2;ctx.save();ctx.shadowColor='rgba(0,0,0,.2)';ctx.shadowBlur=35;ctx.drawImage(img,x,y,cw,ch);ctx.restore();drawText()};img.onerror=()=>{ctx.fillStyle=shareStyle==='dark'||shareStyle==='cozy'?'#806a5d':'#d783a2';ctx.fillRect(310,270,460,610);drawText()};img.src=shareCoverUrl(shareBook.cover)}else{ctx.fillStyle=shareStyle==='dark'||shareStyle==='cozy'?'#806a5d':'#d783a2';ctx.fillRect(310,270,460,610);drawText()}
+}
+
+function renderClubs(){document.getElementById('clubsGrid').innerHTML=clubs.map(c=>`<div class="club"><div class="members">👥 ${c.members} membros · ${c.privacy}</div><h3>${c.name}</h3><p>${c.desc}</p><button class="secondary">Abrir clube</button></div>`).join('')}
+function showProfileTab(tab,btn){
+  document.querySelectorAll('.profile-tab-clean').forEach(x=>x.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  const posts=document.getElementById('profileTabPosts'), fav=document.getElementById('profileTabFavorites');
+  if(posts)posts.style.display=tab==='posts'?'block':'none';
+  if(fav)fav.style.display=tab==='favorites'?'block':'none';
+}
+function renderProfile(){
+  const p=profile||{};
+  const name=p.name||'Carol', handle=p.handle||'@carol.le', bio=p.bio||'';
+  document.getElementById('profileName').textContent=name;
+  document.getElementById('profileHandle').textContent=handle.startsWith('@')?handle:'@'+handle;
+  document.getElementById('profileBio').textContent=bio;
+  const avatar=document.getElementById('profileAvatar'), fallback=document.getElementById('profileAvatarFallback');
+  if(p.avatar){avatar.src=p.avatar;avatar.style.display='block';fallback.style.display='none';}
+  else{avatar.style.display='none';fallback.style.display='grid';fallback.textContent=(name[0]||'C').toUpperCase();}
+  const ownPosts=posts.filter(x=>(x.user||'').toLowerCase()===name.toLowerCase());
+  document.getElementById('profilePostsCount').textContent=ownPosts.length;
+  document.getElementById('profileFollowers').textContent=Number(p.followers||0);
+  document.getElementById('profileFollowing').textContent=Number(p.following||0);
+  document.getElementById('profileBooksCount').textContent=books.filter(b=>b.status==='Lido').length;
+  document.getElementById('profileReading').textContent=books.filter(b=>b.status==='Lendo').length;
+  document.getElementById('profileRead').textContent=books.filter(b=>b.status==='Lido').length;
+  document.getElementById('profileWant').textContent=books.filter(b=>b.status==='Quero ler').length;
+  const favs=books.filter(b=>Number(b.rating||0)>=4).slice(0,4);
+  document.getElementById('favorites').innerHTML=favs.length?favs.map(b=>`<article class="book"><div class="cover">${b.cover?coverImg(b.cover,b.title):cover(escapeHTML(b.title))}</div><b>${escapeHTML(b.title)}</b><small>${escapeHTML(b.author||'')}</small>${b.rating?`<div class="stars">${stars(Number(b.rating))}</div>`:''}</article>`).join(''):'<div class="profile-empty" style="grid-column:1/-1">Ainda não há favoritos. Dê 4 ou 5 estrelas aos seus livros para eles aparecerem aqui. 💗</div>';
+  document.getElementById('profilePosts').innerHTML=ownPosts.length?ownPosts.slice(0,5).map((post)=>`<article class="profile-post-mini"><div class="meta">📖 ${escapeHTML(post.book||'Livro')}</div>${post.spoiler?`<div class="spoiler-box" data-profile-spoiler="${escapeHTML(post.book||'')}"><div class="spoiler-warning">⚠️ Contém spoiler · toque para revelar</div><p class="spoiler-text">${escapeHTML(post.text||'')}</p></div>`:`<p>${escapeHTML(post.text||'')}</p>`}<div class="stars">${stars(Number(post.stars||0))}</div></article>`).join(''): '<div class="profile-empty">Suas publicações aparecerão aqui quando você compartilhar uma leitura. ✨</div>';
+  document.querySelectorAll('[data-profile-spoiler]').forEach(el=>el.addEventListener('click',()=>el.classList.toggle('revealed')));
+}
+
+function openEditProfile(){
+  document.getElementById('editProfileName').value=profile.name||'';
+  document.getElementById('editProfileHandle').value=profile.handle||'';
+  document.getElementById('editProfileBio').value=profile.bio||'';
+  const img=document.getElementById('profilePreview'),fb=document.getElementById('profilePreviewFallback');
+  if(profile.avatar){img.src=profile.avatar;img.style.display='block';fb.style.display='none';}
+  else{img.style.display='none';fb.style.display='grid';fb.textContent=(profile.name||'C')[0].toUpperCase();}
+  openModal('editProfileModal');
+}
+function prepareProfilePhoto(file){
+  return new Promise((resolve,reject)=>{
+    if(!file){resolve('');return;}
+    const reader=new FileReader();
+    reader.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        const size=420,scale=Math.min(size/img.width,size/img.height,1),w=Math.max(1,Math.round(img.width*scale)),h=Math.max(1,Math.round(img.height*scale));
+        const c=document.createElement('canvas');c.width=w;c.height=h;const ctx=c.getContext('2d');ctx.drawImage(img,0,0,w,h);
+        resolve(c.toDataURL('image/jpeg',.82));
+      };
+      img.onerror=reject;img.src=reader.result;
+    };
+    reader.onerror=reject;reader.readAsDataURL(file);
+  });
+}
+function saveProfile(){
+  const name=document.getElementById('editProfileName').value.trim()||'Carol';
+  let handle=document.getElementById('editProfileHandle').value.trim()||'@carol.le';if(!handle.startsWith('@'))handle='@'+handle.replace(/\s+/g,'').toLowerCase();
+  const bio=document.getElementById('editProfileBio').value.trim();
+  const file=document.getElementById('profilePhotoInput').files[0];
+  const finish=(avatar)=>{profile={...profile,name,handle,bio,avatar:avatar||profile.avatar||'',followers:Number(profile.followers||0),following:Number(profile.following||0)};saveProfileData();closeModal('editProfileModal');renderProfile();renderFeed();};
+  if(file)prepareProfilePhoto(file).then(finish).catch(()=>finish(''));else finish('');
+}
+function shareProfile(){
+  const url=location.href.split('#')[0];
+  const text=`Conheça o perfil de ${profile.name||'Carol'} no Booklyi 📚✨`;
+  if(navigator.share){navigator.share({title:`${profile.name||'Carol'} no Booklyi`,text,url}).catch(()=>{});}
+  else if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>alert('Link do perfil copiado!')).catch(()=>alert(url));}
+  else alert(url);
+}
+function renderThemes(){document.getElementById('themes').innerHTML=Object.entries(themes).map(([name,t])=>`<button class="theme" onclick="setTheme('${name}')"><span class="dot" style="background:${t.accent}"></span><b>${name[0].toUpperCase()+name.slice(1)}</b></button>`).join('')}
+function setTheme(name){let t=themes[name];for(let k in t)document.documentElement.style.setProperty('--'+(k==='accent2'?'accent2':k),t[k]);localStorage.setItem('booklyi_theme',name);closeModal('themeModal')}
+let postRating=0,postSelectedBook=null,postSearchTimer=null;
+function renderPostStars(){const el=document.getElementById('postStars');if(!el)return;el.innerHTML=[1,2,3,4,5].map(n=>`<button type="button" aria-label="${n} estrelas">${n<=postRating?'★':'☆'}</button>`).join('');el.querySelectorAll('button').forEach((btn,i)=>btn.addEventListener('click',()=>{postRating=i+1;renderPostStars()}));}
+async function searchPostBooks(){const q=document.getElementById('postBook').value.trim(),box=document.getElementById('postBookSuggestions');if(!box)return;if(!q){box.innerHTML='';postSelectedBook=null;return;}box.innerHTML='<div style="color:var(--muted);font-size:12px;padding:4px">Procurando no catálogo…</div>';try{const r=await fetch('/api/books?q='+encodeURIComponent(q),{headers:{Accept:'application/json'},cache:'no-store'});if(!r.ok)throw new Error('search '+r.status);const data=await r.json();const items=(data.items||[]).slice(0,5);box.innerHTML=items.length?items.map((b,i)=>`<div class="book-suggestion" data-post-index="${i}">${b.cover?`<img src="${escapeHTML(coverSrc(b.cover))}" alt="" onerror="this.onerror=null;this.style.display='none'">`:'<div style="width:34px;height:50px;border-radius:5px;background:var(--soft)"></div>'}<div><b>${escapeHTML(b.title)}</b><div style="font-size:12px;color:var(--muted)">${escapeHTML(b.author||'Autor desconhecido')}</div></div></div>`).join(''):'<div style="color:var(--muted);font-size:12px;padding:4px">Não encontrei esse livro. Você ainda pode publicar pelo nome digitado.</div>';box.querySelectorAll('[data-post-index]').forEach(el=>el.addEventListener('click',()=>{postSelectedBook=items[Number(el.dataset.postIndex)];document.getElementById('postBook').value=postSelectedBook.title;box.innerHTML=`<div style="font-size:12px;color:var(--accent);font-weight:700">✓ ${escapeHTML(postSelectedBook.title)} · ${escapeHTML(postSelectedBook.author||'')}</div>`;}));}catch(e){box.innerHTML='<div style="color:var(--muted);font-size:12px;padding:4px">Não consegui consultar o catálogo agora.</div>';}}
+function addPost(){let book=document.getElementById('postBook').value.trim(),text=document.getElementById('postText').value.trim(),spoiler=document.getElementById('postSpoiler').checked;if(!book||!text)return alert('Preencha o livro e o que você está achando da leitura.');posts.unshift({user:profile.name||'Carol',book,text,stars:postRating,spoiler,bookData:postSelectedBook||null});save();renderFeed();closeModal('postModal');document.getElementById('postBook').value='';document.getElementById('postText').value='';document.getElementById('postSpoiler').checked=false;postRating=0;postSelectedBook=null;document.getElementById('postBookSuggestions').innerHTML='';renderPostStars();go('home')}
+function addBook(){let title=document.getElementById('bookTitle').value.trim(),author=document.getElementById('bookAuthor').value.trim(),status=document.getElementById('bookStatus').value;if(!title||!author)return alert('Preencha título e autor.');books.unshift({title,author,status,externalId:'local-'+Date.now(),rating:0,progress:status==='Lido'?100:0,page:0,pageCount:0,startedAt:status==='Lendo'?new Date().toISOString().slice(0,10):'',finishedAt:status==='Lido'?new Date().toISOString().slice(0,10):''});save();renderShelf();closeModal('bookModal');document.getElementById('bookTitle').value='';document.getElementById('bookAuthor').value='';go('shelf')}
+function removeBook(i){if(i<0||!books[i])return;if(confirm(`Remover "${books[i].title}" da estante?`)){books.splice(i,1);save();renderShelf();renderProfile();}}
+function addClub(){let name=document.getElementById('clubName').value.trim(),desc=document.getElementById('clubDesc').value.trim(),privacy=document.getElementById('clubPrivacy').value;if(!name)return alert('Dê um nome ao clube.');clubs.unshift({name,desc:desc||'Um novo clube de leitura.',members:1,privacy});save();renderClubs();closeModal('clubModal');document.getElementById('clubName').value='';document.getElementById('clubDesc').value='';go('clubs')}
+
+const realSearchBtn=document.getElementById('realSearchBtn');
+const realSearchInput=document.getElementById('search');
+if(realSearchBtn)realSearchBtn.addEventListener('click',searchRealBooks);
+if(realSearchInput)realSearchInput.addEventListener('keydown',e=>{if(e.key==='Enter')searchRealBooks();});
+
+const postBookInput=document.getElementById('postBook');
+if(postBookInput)postBookInput.addEventListener('input',()=>{clearTimeout(postSearchTimer);postSearchTimer=setTimeout(searchPostBooks,450)});
+renderPostStars();
+
+const saved=localStorage.getItem('booklyi_theme') || localStorage.getItem('lumi_theme');if(saved&&themes[saved])setTheme(saved);else setTheme('rosa');renderFeed();renderShelf();renderDiscover();renderClubs();renderProfile();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=20260929-v10-3-2-next');
+</script>
+</body></html>

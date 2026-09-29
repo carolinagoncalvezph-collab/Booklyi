@@ -1,0 +1,10 @@
+{
+  "name": "Booklyi",
+  "short_name": "Booklyi",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fff8fb",
+  "theme_color": "#e85d8e",
+  "description": "Sua comunidade literária.",
+  "icons": []
+}
