@@ -17,3 +17,7 @@ Requer as variáveis de ambiente:
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 
 > Nesta etapa, autenticação/perfis/follows já usam Supabase. A migração de estante, posts, likes e comentários para o banco deve ser feita na etapa seguinte, para reduzir risco de regressão.
+
+
+## V12.1
+- Correção do salvamento do perfil: edições usam UPDATE do próprio perfil em vez de UPSERT, evitando conflito desnecessário com RLS/INSERT.

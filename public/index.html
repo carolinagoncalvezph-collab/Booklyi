@@ -406,7 +406,29 @@ async function authSignOut(){if(!supabaseClient)return;await supabaseClient.auth
 async function applyAuthSession(session){authUser=session?.user||null;if(!authUser){showAuthGate();return;}hideAuthGate();setAuthLoading(true);try{await loadSupabaseProfile();await loadRealCommunity();renderProfile();renderFeed();renderPeople();renderShelf();const btn=document.getElementById('accountBtn');if(btn)btn.textContent=(profile.name||'Conta').split(' ')[0].slice(0,12);const hero=document.getElementById('heroGreeting');if(hero)hero.innerHTML=`Olá, ${escapeHTML((profile.name||'Leitor').split(' ')[0])}!<br>O que você está lendo hoje? 📖`;}catch(e){console.error(e);}finally{setAuthLoading(false);}}
 async function loadSupabaseProfile(){if(!supabaseClient||!authUser)return;let {data,error}=await supabaseClient.from('profiles').select('id,username,display_name,bio,avatar_url').eq('id',authUser.id).maybeSingle();if(error)throw error;if(!data){const base=slugUsername(authUser.email?.split('@')[0]);const ins=await supabaseClient.from('profiles').insert({id:authUser.id,username:base,display_name:authUser.user_metadata?.display_name||base}).select().single();if(ins.error)throw ins.error;data=ins.data;}const old=profile||{};profile={...old,id:data.id,name:data.display_name||old.name||'Leitor',handle:'@'+(data.username||slugUsername(authUser.email?.split('@')[0])),bio:data.bio||old.bio||'',avatar:data.avatar_url||old.avatar||'',followersUsers:[],followingUsers:[]};saveProfileLocalOnly();}
 function saveProfileLocalOnly(){profile.followers=Array.isArray(profile.followersUsers)?profile.followersUsers.length:0;profile.following=Array.isArray(profile.followingUsers)?profile.followingUsers.length:0;localStorage.setItem('booklyi_profile',JSON.stringify(profile));}
-async function persistProfileToSupabase(){if(!supabaseClient||!authUser)return true;const username=slugUsername(String(profile.handle||'').replace(/^@/,''));const payload={id:authUser.id,username,display_name:profile.name||'Leitor',bio:profile.bio||'',avatar_url:profile.avatar||null,updated_at:new Date().toISOString()};const {error}=await supabaseClient.from('profiles').upsert(payload,{onConflict:'id'});if(error){console.error(error);alert(error.code==='23505'?'Esse @usuário já está sendo usado. Escolha outro.':'Não consegui salvar o perfil no banco agora.');return false;}profile.handle='@'+username;saveProfileLocalOnly();return true;}
+async function persistProfileToSupabase(){
+  if(!supabaseClient||!authUser)return true;
+  const username=slugUsername(String(profile.handle||'').replace(/^@/,''));
+  const payload={username,display_name:profile.name||'Leitor',bio:profile.bio||'',avatar_url:profile.avatar||null,updated_at:new Date().toISOString()};
+  try{
+    // O perfil já é criado automaticamente pelo trigger do Supabase quando a conta nasce.
+    // Por isso, para editar o perfil usamos UPDATE em vez de UPSERT. Isso evita que o RLS
+    // exija uma política de INSERT durante uma simples edição do próprio perfil.
+    const {data,error}=await supabaseClient.from('profiles').update(payload).eq('id',authUser.id).select('id,username,display_name,bio,avatar_url').maybeSingle();
+    if(error)throw error;
+    if(!data){
+      const ins=await supabaseClient.from('profiles').insert({id:authUser.id,...payload}).select('id,username,display_name,bio,avatar_url').single();
+      if(ins.error)throw ins.error;
+    }
+    profile.handle='@'+username;
+    saveProfileLocalOnly();
+    return true;
+  }catch(error){
+    console.error('Booklyi: erro ao salvar perfil no Supabase',error);
+    alert(error?.code==='23505'?'Esse @usuário já está sendo usado. Escolha outro.':'Não consegui salvar o perfil no banco agora.');
+    return false;
+  }
+}
 async function loadRealCommunity(){if(!supabaseClient||!authUser)return;const [{data:rows,error},{data:follows,error:ferr}]=await Promise.all([supabaseClient.from('profiles').select('id,username,display_name,bio,avatar_url').neq('id',authUser.id),supabaseClient.from('follows').select('follower_id,following_id')]);if(error)throw error;if(ferr)throw ferr;const real=(rows||[]).map(r=>({id:r.id,name:r.display_name||r.username||'Leitor',handle:'@'+(r.username||String(r.id).slice(0,8)),bio:r.bio||'',avatar:r.avatar_url||'',real:true}));const demos=communityUsers.filter(u=>!u.real);communityUsers=[...real,...demos];const profileById=new Map(real.map(u=>[u.id,u]));profileById.set(authUser.id,profile);const outgoing=(follows||[]).filter(f=>f.follower_id===authUser.id);const incoming=(follows||[]).filter(f=>f.following_id===authUser.id);profile.followingUsers=outgoing.map(f=>profileById.get(f.following_id)).filter(Boolean).map(userKey);profile.followersUsers=incoming.map(f=>profileById.get(f.follower_id)).filter(Boolean).map(userKey);profile.followers=incoming.length;profile.following=outgoing.length;for(const u of real){const key=userKey(u);communityProfiles[key]={followers:(follows||[]).filter(f=>f.following_id===u.id).length,following:(follows||[]).filter(f=>f.follower_id===u.id).length,books:communityProfiles[key]?.books||[]};}saveProfileLocalOnly();}
 const themes={
 rosa:{accent:'#e85d8e',accent2:'#f7b2c9',bg:'#fff8fb',soft:'#fdeaf1'},
