@@ -403,17 +403,29 @@ async function initSupabase(){
 }
 async function submitAuth(){if(!supabaseClient)return setAuthMessage('Ainda estou conectando. Tente novamente em instantes.','error');const email=(document.getElementById('authEmail')?.value||'').trim();const password=document.getElementById('authPassword')?.value||'';const name=(document.getElementById('authName')?.value||'').trim();if(!email||!password)return setAuthMessage('Preencha e-mail e senha.','error');if(password.length<6)return setAuthMessage('Use uma senha com pelo menos 6 caracteres.','error');setAuthMessage('Só um instante…');const btn=document.getElementById('authSubmitBtn');if(btn)btn.disabled=true;try{if(authMode==='signup'){if(!name)return setAuthMessage('Digite seu nome para criar a conta.','error');const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{display_name:name}}});if(error)throw error;if(!data.session){setAuthMessage('Conta criada! Confira seu e-mail para confirmar o cadastro e depois volte para entrar.','ok');setAuthMode('login');return;}await applyAuthSession(data.session);}else{const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)throw error;await applyAuthSession(data.session);}}catch(e){console.error(e);const msg=(e.message||'').toLowerCase().includes('invalid login')?'E-mail ou senha incorretos.':(e.message||'Não foi possível entrar.');setAuthMessage(msg,'error');}finally{if(btn)btn.disabled=false;}}
 async function authSignOut(){if(!supabaseClient)return;await supabaseClient.auth.signOut();authUser=null;showAuthGate();setAuthMode('login');setAuthMessage('Você saiu da sua conta.','ok');}
-async function applyAuthSession(session){authUser=session?.user||null;if(!authUser){showAuthGate();return;}hideAuthGate();setAuthLoading(true);try{await loadSupabaseProfile();await loadRealCommunity();renderProfile();renderFeed();renderPeople();renderShelf();const btn=document.getElementById('accountBtn');if(btn)btn.textContent=(profile.name||'Conta').split(' ')[0].slice(0,12);const hero=document.getElementById('heroGreeting');if(hero)hero.innerHTML=`Olá, ${escapeHTML((profile.name||'Leitor').split(' ')[0])}!<br>O que você está lendo hoje? 📖`;}catch(e){console.error(e);}finally{setAuthLoading(false);}}
+async function applyAuthSession(session){authUser=session?.user||null;if(!authUser){showAuthGate();return;}hideAuthGate();setAuthLoading(true);try{await loadSupabaseProfile();await loadRealCommunity();await loadSupabaseShelf();renderProfile();renderFeed();renderPeople();renderShelf();const btn=document.getElementById('accountBtn');if(btn)btn.textContent=(profile.name||'Conta').split(' ')[0].slice(0,12);const hero=document.getElementById('heroGreeting');if(hero)hero.innerHTML=`Olá, ${escapeHTML((profile.name||'Leitor').split(' ')[0])}!<br>O que você está lendo hoje? 📖`;}catch(e){console.error(e);}finally{setAuthLoading(false);}}
 async function loadSupabaseProfile(){if(!supabaseClient||!authUser)return;let {data,error}=await supabaseClient.from('profiles').select('id,username,display_name,bio,avatar_url').eq('id',authUser.id).maybeSingle();if(error)throw error;if(!data){const base=slugUsername(authUser.email?.split('@')[0]);const ins=await supabaseClient.from('profiles').insert({id:authUser.id,username:base,display_name:authUser.user_metadata?.display_name||base}).select().single();if(ins.error)throw ins.error;data=ins.data;}const old=profile||{};profile={...old,id:data.id,name:data.display_name||old.name||'Leitor',handle:'@'+(data.username||slugUsername(authUser.email?.split('@')[0])),bio:data.bio||old.bio||'',avatar:data.avatar_url||old.avatar||'',followersUsers:[],followingUsers:[]};saveProfileLocalOnly();}
 function saveProfileLocalOnly(){profile.followers=Array.isArray(profile.followersUsers)?profile.followersUsers.length:0;profile.following=Array.isArray(profile.followingUsers)?profile.followingUsers.length:0;localStorage.setItem('booklyi_profile',JSON.stringify(profile));}
+
+// ===== V12.4 — estante real no Supabase =====
+let shelfDbReady=false;
+function shelfRowToBook(r,meta){const m=meta||{};return {title:m.title||'Livro',author:Array.isArray(m.authors)?(m.authors.join(', ')||'Autor desconhecido'):(m.author||'Autor desconhecido'),status:r.status||'Quero ler',externalId:m.external_id||'',cover:m.cover_url||'',publisher:'',publishedDate:m.published_year?String(m.published_year):'',pageCount:Number(m.page_count||0),isbn:[],rating:Number(r.rating||0),progress:Number(r.progress||0),page:Number(r.current_page||0),startedAt:r.started_at?r.started_at.slice(0,10):'',finishedAt:r.finished_at?r.finished_at.slice(0,10):'',categories:[],description:m.description||''};}
+function bookPublishedYear(b){const y=String(b?.publishedDate||'').match(/(19|20)\d{2}/);return y?Number(y[0]):null;}
+async function ensureSupabaseBook(b){if(!supabaseClient||!authUser)return null;const externalId=String(b.externalId||('local-'+Date.now()));const {data:existing,error:findError}=await supabaseClient.from('books').select('id,external_id').eq('external_id',externalId).maybeSingle();if(findError)throw findError;if(existing)return existing.id;const row={external_id:externalId,source:externalId.startsWith('local-')?'booklyi':'openlibrary',title:b.title||'Livro',authors:[b.author||'Autor desconhecido'],cover_url:b.cover||null,description:b.description||null,page_count:Number(b.pageCount||0)||null,published_year:bookPublishedYear(b)};const {data,error}=await supabaseClient.from('books').insert(row).select('id').single();if(error){if(error.code==='23505'){const again=await supabaseClient.from('books').select('id').eq('external_id',externalId).maybeSingle();if(again.error)throw again.error;return again.data?.id||null;}throw error;}return data?.id||null;}
+async function loadSupabaseShelf(){if(!supabaseClient||!authUser)return;try{const {data:rows,error}=await supabaseClient.from('shelf_items').select('id,user_id,book_id,status,progress,current_page,total_pages,rating,started_at,finished_at,created_at,updated_at').eq('user_id',authUser.id);if(error)throw error;const ids=[...new Set((rows||[]).map(r=>r.book_id).filter(Boolean))];let metas=[];if(ids.length){const {data,error:booksError}=await supabaseClient.from('books').select('id,external_id,title,authors,cover_url,description,page_count,published_year').in('id',ids);if(booksError)throw booksError;metas=books||[];}const byId=new Map(metas.map(m=>[m.id,m]));books=(rows||[]).map(r=>shelfRowToBook(r,byId.get(r.book_id))).filter(b=>b.externalId);localStorage.setItem('booklyi_books',JSON.stringify(books));shelfDbReady=true;}catch(e){shelfDbReady=false;console.error('Booklyi: não foi possível carregar a estante do Supabase',e);}}
+async function saveShelfBookToSupabase(book){if(!supabaseClient||!authUser)return true;try{const bookId=await ensureSupabaseBook(book);if(!bookId)throw new Error('Não foi possível criar/localizar o livro no catálogo.');const row={user_id:authUser.id,book_id:bookId,status:book.status||'Quero ler',progress:Number(book.progress||0),current_page:Number(book.page||0),total_pages:Number(book.pageCount||0)||null,rating:book.rating?Number(book.rating):null,started_at:book.startedAt||null,finished_at:book.finishedAt||null,updated_at:new Date().toISOString()};const {error}=await supabaseClient.from('shelf_items').upsert(row,{onConflict:'user_id,book_id'});if(error)throw error;shelfDbReady=true;return true;}catch(e){console.error('Booklyi: erro ao salvar livro na estante',e);alert(`Não consegui salvar este livro na estante agora.\n\n${e?.message||'Erro desconhecido'}${e?.code?`\nCódigo: ${e.code}`:''}`);return false;}}
+async function removeShelfBookFromSupabase(book){if(!supabaseClient||!authUser)return true;try{const {data:bookRow,error:findError}=await supabaseClient.from('books').select('id').eq('external_id',String(book.externalId||'')).maybeSingle();if(findError)throw findError;if(bookRow?.id){const {error}=await supabaseClient.from('shelf_items').delete().eq('user_id',authUser.id).eq('book_id',bookRow.id);if(error)throw error;}return true;}catch(e){console.error('Booklyi: erro ao remover livro da estante',e);alert(`Não consegui remover este livro da estante agora.\n\n${e?.message||'Erro desconhecido'}`);return false;}}
+
 async function persistProfileToSupabase(){
   if(!supabaseClient||!authUser)return true;
   const username=slugUsername(String(profile.handle||'').replace(/^@/,''));
   const payload={username,display_name:profile.name||'Leitor',bio:profile.bio||'',avatar_url:profile.avatar||null,updated_at:new Date().toISOString()};
   try{
     // O perfil já é criado automaticamente pelo trigger do Supabase quando a conta nasce.
-    // Por isso, para editar o perfil usamos UPDATE em vez de UPSERT. Isso evita que o RLS
-    // exija uma política de INSERT durante uma simples edição do próprio perfil.
+    // Para editar, verificamos primeiro se o @usuário já pertence a outra conta e então usamos UPDATE.
+    const {data:usernameOwner,error:usernameError}=await supabaseClient.from('profiles').select('id').eq('username',username).neq('id',authUser.id).maybeSingle();
+    if(usernameError)throw usernameError;
+    if(usernameOwner){const duplicate=new Error('Esse @usuário já está sendo usado. Escolha outro.');duplicate.code='23505';throw duplicate;}
     const {error}=await supabaseClient.from('profiles').update(payload).eq('id',authUser.id);
     if(error)throw error;
     profile.handle='@'+username;
@@ -637,7 +649,7 @@ function openEditBook(i){
   document.getElementById('editPageCount').value=Number(b.pageCount||0);
   openModal('editBookModal');
 }
-function saveEditedBook(){
+async function saveEditedBook(){
   const i=window.editingBookIndex,b=books[i];if(!b)return;
   const status=document.getElementById('editBookStatus').value;
   b.title=document.getElementById('editBookTitle').value.trim()||b.title;
@@ -651,11 +663,11 @@ function saveEditedBook(){
   if(status==='Lendo'&&!b.startedAt)b.startedAt=new Date().toISOString().slice(0,10);
   if(status==='Lido'&&!b.finishedAt)b.finishedAt=new Date().toISOString().slice(0,10);
   if(b.pageCount)b.progress=status==='Lido'?100:Math.min(100,Math.round(b.page/b.pageCount*100));
-  save();closeModal('editBookModal');renderShelf();
+  save();const ok=await saveShelfBookToSupabase(b);if(!ok)return;closeModal('editBookModal');renderShelf();
 }
-function removeEditedBook(){
+async function removeEditedBook(){
   const i=window.editingBookIndex;if(i==null||!books[i])return;
-  if(confirm(`Remover "${books[i].title}" da sua estante?`)){books.splice(i,1);save();closeModal('editBookModal');renderShelf();}
+  if(confirm(`Remover "${books[i].title}" da sua estante?`)){const b=books[i];const ok=await removeShelfBookFromSupabase(b);if(!ok)return;books.splice(i,1);save();closeModal('editBookModal');renderShelf();}
 }
 function openShelfBook(i){
   const b=books[i];if(!b)return;
@@ -751,27 +763,31 @@ function openRealBook(index){
   const editBtn=detail.querySelector('#detailEditBtn'); if(editBtn)editBtn.addEventListener('click',()=>{const idx=books.findIndex(x=>x.externalId===b.id);if(idx>=0)openEditBook(idx)});
   openModal('realBookModal');
 }
-function addRealBook(b,status){
+async function addRealBook(b,status){
   const existing=books.findIndex(x=>x.externalId===b.id);
   const previous=existing>=0?books[existing]:{};
-  const item={...previous,title:b.title,author:b.author||'Autor desconhecido',status,externalId:b.id,cover:b.cover||'',publisher:b.publisher,publishedDate:b.publishedDate,pageCount:b.pageCount,isbn:b.isbn||[],rating:previous.rating||0,progress:status==='Lido'?100:(status==='Lendo'?(previous.progress||0):0),page:status==='Lendo'?(previous.page||0):0,startedAt:previous.startedAt||'',finishedAt:status==='Lido'?(previous.finishedAt||new Date().toISOString().slice(0,10)):(previous.finishedAt||'')};
+  const item={...previous,title:b.title,author:b.author||'Autor desconhecido',status,externalId:b.id,cover:b.cover||'',publisher:b.publisher,publishedDate:b.publishedDate,pageCount:b.pageCount,isbn:b.isbn||[],categories:b.categories||[],description:b.description||'',rating:previous.rating||0,progress:status==='Lido'?100:(status==='Lendo'?(previous.progress||0):0),page:status==='Lendo'?(previous.page||0):0,startedAt:previous.startedAt||'',finishedAt:status==='Lido'?(previous.finishedAt||new Date().toISOString().slice(0,10)):(previous.finishedAt||'')};
   if(existing>=0)books[existing]=item;else books.unshift(item);
-  save();renderShelf();closeModal('realBookModal');
+  save();
+  const ok=await saveShelfBookToSupabase(item);
+  if(!ok)return;
+  renderShelf();closeModal('realBookModal');
   document.getElementById('realSearchStatus').textContent=`✓ ${b.title} foi adicionado à sua estante como "${status}".`;
 }
 
 
-function rateRealBookById(id,n){
+async function rateRealBookById(id,n){
   const b=window.booklyiSearchResults.find(x=>x.id===id); if(!b)return;
   let i=books.findIndex(x=>x.externalId===id);
-  if(i<0){addRealBook(b,'Quero ler');i=books.findIndex(x=>x.externalId===id);}
-  books[i].rating=n; save(); openRealBook(window.booklyiSearchResults.findIndex(x=>x.id===id));
+  if(i<0){await addRealBook(b,'Quero ler');i=books.findIndex(x=>x.externalId===id);}
+  if(i<0)return;
+  books[i].rating=n; save(); const ok=await saveShelfBookToSupabase(books[i]); if(ok)openRealBook(window.booklyiSearchResults.findIndex(x=>x.id===id));
 }
-function updateRealProgress(id,value){
+async function updateRealProgress(id,value){
   const i=books.findIndex(x=>x.externalId===id); if(i<0)return;
   books[i].progress=Number(value); books[i].page=books[i].pageCount?Math.round(books[i].pageCount*Number(value)/100):0; if(!books[i].startedAt)books[i].startedAt=new Date().toISOString().slice(0,10); if(Number(value)>=100){books[i].status='Lido';books[i].finishedAt=books[i].finishedAt||new Date().toISOString().slice(0,10);}
   const v=document.getElementById('progressValue'),bar=document.getElementById('detailProgressBar'); if(v)v.textContent=Number(value)+'%'; if(bar)bar.style.width=value+'%';
-  save(); renderHomeReading();
+  save(); await saveShelfBookToSupabase(books[i]); renderHomeReading();
 }
 let shareBook=null,shareStyle='soft';
 const shareStyles={soft:'🌸 Soft',cozy:'🤎 Cozy',dark:'🖤 Dark Academia',botanical:'🌿 Botanical',dreamy:'💜 Dreamy',minimal:'🤍 Minimal'};
@@ -901,8 +917,8 @@ let postRating=0,postSelectedBook=null,postSearchTimer=null;
 function renderPostStars(){const el=document.getElementById('postStars');if(!el)return;el.innerHTML=[1,2,3,4,5].map(n=>`<button type="button" aria-label="${n} estrelas">${n<=postRating?'★':'☆'}</button>`).join('');el.querySelectorAll('button').forEach((btn,i)=>btn.addEventListener('click',()=>{postRating=i+1;renderPostStars()}));}
 async function searchPostBooks(){const q=document.getElementById('postBook').value.trim(),box=document.getElementById('postBookSuggestions');if(!box)return;if(!q){box.innerHTML='';postSelectedBook=null;return;}box.innerHTML='<div style="color:var(--muted);font-size:12px;padding:4px">Procurando no catálogo…</div>';try{const r=await fetch('/api/books?q='+encodeURIComponent(q),{headers:{Accept:'application/json'},cache:'no-store'});if(!r.ok)throw new Error('search '+r.status);const data=await r.json();const items=(data.items||[]).slice(0,5);box.innerHTML=items.length?items.map((b,i)=>`<div class="book-suggestion" data-post-index="${i}">${b.cover?`<img src="${escapeHTML(coverSrc(b.cover))}" alt="" onerror="this.onerror=null;this.style.display='none'">`:'<div style="width:34px;height:50px;border-radius:5px;background:var(--soft)"></div>'}<div><b>${escapeHTML(b.title)}</b><div style="font-size:12px;color:var(--muted)">${escapeHTML(b.author||'Autor desconhecido')}</div></div></div>`).join(''):'<div style="color:var(--muted);font-size:12px;padding:4px">Não encontrei esse livro. Você ainda pode publicar pelo nome digitado.</div>';box.querySelectorAll('[data-post-index]').forEach(el=>el.addEventListener('click',()=>{postSelectedBook=items[Number(el.dataset.postIndex)];document.getElementById('postBook').value=postSelectedBook.title;box.innerHTML=`<div style="font-size:12px;color:var(--accent);font-weight:700">✓ ${escapeHTML(postSelectedBook.title)} · ${escapeHTML(postSelectedBook.author||'')}</div>`;}));}catch(e){box.innerHTML='<div style="color:var(--muted);font-size:12px;padding:4px">Não consegui consultar o catálogo agora.</div>';}}
 function addPost(){let book=document.getElementById('postBook').value.trim(),text=document.getElementById('postText').value.trim(),spoiler=document.getElementById('postSpoiler').checked;if(!book||!text)return alert('Preencha o livro e o que você está achando da leitura.');posts.unshift({user:profile.name||'Carol',book,text,stars:postRating,spoiler,bookData:postSelectedBook||null});save();renderFeed();closeModal('postModal');document.getElementById('postBook').value='';document.getElementById('postText').value='';document.getElementById('postSpoiler').checked=false;postRating=0;postSelectedBook=null;document.getElementById('postBookSuggestions').innerHTML='';renderPostStars();go('home')}
-function addBook(){let title=document.getElementById('bookTitle').value.trim(),author=document.getElementById('bookAuthor').value.trim(),status=document.getElementById('bookStatus').value;if(!title||!author)return alert('Preencha título e autor.');books.unshift({title,author,status,externalId:'local-'+Date.now(),rating:0,progress:status==='Lido'?100:0,page:0,pageCount:0,startedAt:status==='Lendo'?new Date().toISOString().slice(0,10):'',finishedAt:status==='Lido'?new Date().toISOString().slice(0,10):''});save();renderShelf();closeModal('bookModal');document.getElementById('bookTitle').value='';document.getElementById('bookAuthor').value='';go('shelf')}
-function removeBook(i){if(i<0||!books[i])return;if(confirm(`Remover "${books[i].title}" da estante?`)){books.splice(i,1);save();renderShelf();renderProfile();}}
+async function addBook(){let title=document.getElementById('bookTitle').value.trim(),author=document.getElementById('bookAuthor').value.trim(),status=document.getElementById('bookStatus').value;if(!title||!author)return alert('Preencha título e autor.');const item={title,author,status,externalId:'local-'+Date.now(),rating:0,progress:status==='Lido'?100:0,page:0,pageCount:0,startedAt:status==='Lendo'?new Date().toISOString().slice(0,10):'',finishedAt:status==='Lido'?new Date().toISOString().slice(0,10):''};books.unshift(item);save();const ok=await saveShelfBookToSupabase(item);if(!ok){books.shift();save();return;}renderShelf();closeModal('bookModal');document.getElementById('bookTitle').value='';document.getElementById('bookAuthor').value='';go('shelf')}
+async function removeBook(i){if(i<0||!books[i])return;if(confirm(`Remover "${books[i].title}" da estante?`)){const b=books[i];const ok=await removeShelfBookFromSupabase(b);if(!ok)return;books.splice(i,1);save();renderShelf();renderProfile();}}
 function addClub(){let name=document.getElementById('clubName').value.trim(),desc=document.getElementById('clubDesc').value.trim(),privacy=document.getElementById('clubPrivacy').value;if(!name)return alert('Dê um nome ao clube.');clubs.unshift({name,desc:desc||'Um novo clube de leitura.',members:1,privacy});save();renderClubs();closeModal('clubModal');document.getElementById('clubName').value='';document.getElementById('clubDesc').value='';go('clubs')}
 
 const realSearchBtn=document.getElementById('realSearchBtn');
@@ -916,6 +932,6 @@ renderPostStars();
 
 const saved=localStorage.getItem('booklyi_theme') || localStorage.getItem('lumi_theme');if(saved&&themes[saved])setTheme(saved);else setTheme('rosa');renderFeed();renderShelf();renderDiscover();renderClubs();renderProfile();
 initSupabase();
-if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=20260929-v12-2-profile');
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=20260929-v12-4-shelf-username');
 </script>
 </body></html>
