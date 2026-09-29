@@ -26,3 +26,10 @@ Ele:
 Mantém as mesmas variáveis:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+
+
+## V12.5 — Estante polida
+- Botões Livro/Instagram ajustados para caberem nos cards.
+- Avaliação por estrelas com atualização otimista, sem esperar o banco para atualizar a interface.
+- Progresso com atualização imediata e salvamento com pequeno debounce para evitar várias requisições enquanto o slider é arrastado.
+- Campo de página atual e porcentagem na página de detalhes da leitura, sincronizados entre si.

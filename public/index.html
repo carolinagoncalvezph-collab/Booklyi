@@ -153,7 +153,7 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .rating-picker{display:flex;gap:3px;margin:7px 0 2px}
 .rating-picker button{font-size:27px;padding:0 2px;background:none;color:#d7b05b;border:0;line-height:1}
 .reading-progress{margin-top:16px;padding:14px;border-radius:18px;background:rgba(255,255,255,.40);border:1px solid var(--glass-line)}
-.reading-progress .progress{margin:9px 0 5px}
+.reading-progress .progress{margin:9px 0 5px}.detail-page-edit{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}.detail-page-edit label{font-size:12px;color:var(--muted)}.detail-page-edit .input{margin-top:5px;padding:9px 10px}@media(max-width:600px){.detail-page-edit{grid-template-columns:1fr 1fr}}
 .progress-row{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted)}
 .share-preview{display:flex;justify-content:center;margin:8px 0 14px}
 .share-card{width:min(100%,360px);aspect-ratio:4/5;border-radius:25px;padding:24px;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 20px 45px rgba(64,30,48,.16)}
@@ -172,7 +172,7 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 @media(max-width:600px){.share-card{width:min(100%,330px)}.share-style-grid{grid-template-columns:repeat(2,1fr)}}
 
 
-.social-actions{display:flex;gap:16px;align-items:center;margin-top:12px;flex-wrap:wrap}.social-btn{border:0;background:none;padding:5px 0;color:var(--muted);font:inherit;cursor:pointer}.social-btn.liked{color:#d85d7b;font-weight:800}.comments-box{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:grid;gap:10px}.comment{padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.38);border:1px solid var(--line)}.comment-head{display:flex;gap:8px;align-items:center}.comment-avatar{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--soft);font-size:12px;font-weight:800}.comment-meta{font-size:11px;color:var(--muted)}.comment-text{margin:7px 0 4px;line-height:1.45}.reply-list{margin:8px 0 0 34px;display:grid;gap:7px}.reply{padding:8px 10px;border-radius:11px;background:rgba(255,255,255,.32)}.comment-compose{display:flex;gap:8px}.comment-compose .input{flex:1;min-width:0}.mini-btn{padding:9px 11px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-weight:700;cursor:pointer}.danger-inline{margin-top:8px;width:100%;padding:8px;border:1px solid #e7b9c1;background:transparent;color:#b34d5a;border-radius:11px;font-weight:700;cursor:pointer}.catalog-badge{display:inline-flex;align-items:center;gap:5px;margin-top:6px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.55);border:1px solid var(--line);font-size:10px;color:var(--muted)}
+.social-actions{display:flex;gap:16px;align-items:center;margin-top:12px;flex-wrap:wrap}.social-btn{border:0;background:none;padding:5px 0;color:var(--muted);font:inherit;cursor:pointer}.social-btn.liked{color:#d85d7b;font-weight:800}.comments-box{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:grid;gap:10px}.comment{padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.38);border:1px solid var(--line)}.comment-head{display:flex;gap:8px;align-items:center}.comment-avatar{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--soft);font-size:12px;font-weight:800}.comment-meta{font-size:11px;color:var(--muted)}.comment-text{margin:7px 0 4px;line-height:1.45}.reply-list{margin:8px 0 0 34px;display:grid;gap:7px}.reply{padding:8px 10px;border-radius:11px;background:rgba(255,255,255,.32)}.comment-compose{display:flex;gap:8px}.comment-compose .input{flex:1;min-width:0}.mini-btn{padding:9px 11px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-weight:700;cursor:pointer}.shelf-actions{display:flex;gap:7px;margin-top:8px}.shelf-actions .secondary{flex:1;min-width:0;padding:10px 6px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.danger-inline{margin-top:8px;width:100%;padding:8px;border:1px solid #e7b9c1;background:transparent;color:#b34d5a;border-radius:11px;font-weight:700;cursor:pointer}.catalog-badge{display:inline-flex;align-items:center;gap:5px;margin-top:6px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.55);border:1px solid var(--line);font-size:10px;color:var(--muted)}
 </style>
 
 <style>
@@ -614,9 +614,9 @@ function renderShelf(){
         ${pageCount?`<small>📖 ${page} de ${pageCount} páginas</small>`:''}
         ${dates?`<small class="shelf-dates">${escapeHTML(dates)}</small>`:''}
       </div>
-      <div style="display:flex;gap:7px;margin-top:8px">
-        <button class="secondary" type="button" style="flex:1" onclick="event.stopPropagation();openShelfBook(${i})">📖 Livro</button>
-        <button class="secondary" type="button" style="flex:1" onclick="event.stopPropagation();openShelfShare(${i})">📸 Instagram</button>
+      <div class="shelf-actions">
+        <button class="secondary" type="button" onclick="event.stopPropagation();openShelfBook(${i})">📖 Livro</button>
+        <button class="secondary" type="button" onclick="event.stopPropagation();openShelfShare(${i})">📸 Instagram</button>
       </div>
       <button class="danger-inline" type="button" onclick="event.stopPropagation();removeBook(${i})">🗑️ Remover da estante</button>
     </article>`;
@@ -744,7 +744,7 @@ function openRealBook(index){
         ${b.rating?`<div class="stars" style="margin-top:9px">★ ${Number(b.rating).toFixed(1)} · ${b.ratingsCount||0} avaliações</div>`:''}
         <p class="real-detail-description">${escapeHTML(b.description||'Sinopse não disponível.')}</p>
         <div style="margin-top:12px"><b>Minha avaliação</b><div class="rating-picker" id="ratingPicker">${[1,2,3,4,5].map(n=>`<button aria-label="${n} estrelas" data-rating="${n}">${(shelf?.rating||0)>=n?'★':'☆'}</button>`).join('')}</div></div>
-        ${shelf?.status==='Lendo'?`<div class="reading-progress"><div style="display:flex;justify-content:space-between;gap:10px"><b>Meu progresso</b><b id="progressValue">${Number(shelf.progress||0)}%</b></div><input id="progressInput" type="range" min="0" max="100" value="${Number(shelf.progress||0)}" style="width:100%;accent-color:var(--accent)"><div class="progress"><i id="detailProgressBar" style="width:${Number(shelf.progress||0)}%"></i></div><div class="progress-row"><span>${Number(shelf.page||0)} de ${Number(b.pageCount||0)} páginas</span><span>arraste para atualizar</span></div></div>`:''}
+        ${shelf?`<div class="reading-progress"><div style="display:flex;justify-content:space-between;gap:10px"><b>Meu progresso</b><b id="progressValue">${Number(shelf.progress||0)}%</b></div><input id="progressInput" type="range" min="0" max="100" value="${Number(shelf.progress||0)}" style="width:100%;accent-color:var(--accent)"><div class="progress"><i id="detailProgressBar" style="width:${Number(shelf.progress||0)}%"></i></div><div class="progress-row"><span>📖 <b id="detailPageValue">${Number(shelf.page||0)}</b> de ${Number(b.pageCount||0)||'—'} páginas</span><span id="progressSaveStatus">pronto</span></div><div class="detail-page-edit"><label>Página atual<input id="detailPageInput" class="input" type="number" min="0" max="${Number(b.pageCount||0)||''}" value="${Number(shelf.page||0)}" inputmode="numeric" placeholder="0"></label><label>Porcentagem<input id="detailProgressNumber" class="input" type="number" min="0" max="100" value="${Number(shelf.progress||0)}" inputmode="numeric"></label></div></div>`:''}
         <div class="status-row">
           ${['Quero ler','Lendo','Lido','Pausado','Abandonei'].map(s=>`<button type="button" data-status="${escapeHTML(s)}">${s}</button>`).join('')}
         </div>
@@ -757,7 +757,11 @@ function openRealBook(index){
   detail.querySelectorAll('[data-rating]').forEach(btn=>btn.addEventListener('click',()=>rateRealBookById(b.id,Number(btn.dataset.rating))));
   detail.querySelectorAll('[data-status]').forEach(btn=>btn.addEventListener('click',()=>addRealBook(b,btn.dataset.status)));
   const progressInput=detail.querySelector('#progressInput');
-  if(progressInput)progressInput.addEventListener('input',e=>updateRealProgress(b.id,e.target.value));
+  if(progressInput)progressInput.addEventListener('input',e=>updateRealProgress(b.id,e.target.value,{source:'percent'}));
+  const progressNumber=detail.querySelector('#detailProgressNumber');
+  if(progressNumber)progressNumber.addEventListener('input',e=>updateRealProgress(b.id,e.target.value,{source:'percent-number'}));
+  const pageInput=detail.querySelector('#detailPageInput');
+  if(pageInput)pageInput.addEventListener('input',e=>updateRealPage(b.id,e.target.value));
   const addBtn=detail.querySelector('#detailAddBtn'); if(addBtn)addBtn.addEventListener('click',()=>addRealBook(b,shelf?.status||'Quero ler'));
   const shareBtn=detail.querySelector('#detailShareBtn'); if(shareBtn)shareBtn.addEventListener('click',()=>openShareForBook(b));
   const editBtn=detail.querySelector('#detailEditBtn'); if(editBtn)editBtn.addEventListener('click',()=>{const idx=books.findIndex(x=>x.externalId===b.id);if(idx>=0)openEditBook(idx)});
@@ -781,7 +785,53 @@ async function rateRealBookById(id,n){
   let i=books.findIndex(x=>x.externalId===id);
   if(i<0){await addRealBook(b,'Quero ler');i=books.findIndex(x=>x.externalId===id);}
   if(i<0)return;
-  books[i].rating=n; save(); const ok=await saveShelfBookToSupabase(books[i]); if(ok)openRealBook(window.booklyiSearchResults.findIndex(x=>x.id===id));
+  books[i].rating=n; save();
+  // Atualização otimista: a estrela muda imediatamente, sem esperar o banco.
+  const detail=document.getElementById('realBookDetail');
+  if(detail){
+    const picker=detail.querySelector('#ratingPicker');
+    if(picker)picker.querySelectorAll('[data-rating]').forEach(btn=>{btn.textContent=Number(btn.dataset.rating)<=n?'★':'☆';});
+    let status=detail.querySelector('#progressSaveStatus');
+    if(status)status.textContent='salvando…';
+  }
+  const ok=await saveShelfBookToSupabase(books[i]);
+  if(detail){const status=detail.querySelector('#progressSaveStatus');if(status)status.textContent=ok?'salvo ✓':'não salvo';}
+  renderShelf();
+}
+let progressSaveTimers={};
+function syncDetailProgressUI(book){
+  const value=Math.max(0,Math.min(100,Number(book.progress||0)));
+  const page=Math.max(0,Number(book.page||0));
+  const v=document.getElementById('progressValue'),bar=document.getElementById('detailProgressBar'),num=document.getElementById('detailProgressNumber'),slider=document.getElementById('progressInput'),pageEl=document.getElementById('detailPageValue'),pageInput=document.getElementById('detailPageInput');
+  if(v)v.textContent=value+'%'; if(bar)bar.style.width=value+'%'; if(num)num.value=value; if(slider)slider.value=value; if(pageEl)pageEl.textContent=page; if(pageInput)pageInput.value=page;
+}
+function queueShelfSave(book,delay=450){
+  clearTimeout(progressSaveTimers[book.externalId]);
+  const status=document.getElementById('progressSaveStatus'); if(status)status.textContent='salvando…';
+  progressSaveTimers[book.externalId]=setTimeout(async()=>{const ok=await saveShelfBookToSupabase(book);const s=document.getElementById('progressSaveStatus');if(s)s.textContent=ok?'salvo ✓':'não salvo';},delay);
+}
+async function updateRealProgress(id,value,opts={}){
+  const i=books.findIndex(x=>x.externalId===id); if(i<0)return;
+  const v=Math.max(0,Math.min(100,Number(value)||0));
+  books[i].progress=v;
+  if(books[i].pageCount && opts.source!=='page')books[i].page=Math.round(books[i].pageCount*v/100);
+  if(!books[i].startedAt)books[i].startedAt=new Date().toISOString().slice(0,10);
+  if(v>=100){books[i].status='Lido';books[i].finishedAt=books[i].finishedAt||new Date().toISOString().slice(0,10);}
+  syncDetailProgressUI(books[i]);
+  save(); renderShelf();
+  queueShelfSave(books[i]);
+}
+async function updateRealPage(id,value){
+  const i=books.findIndex(x=>x.externalId===id); if(i<0)return;
+  const max=Number(books[i].pageCount||0);
+  let page=Math.max(0,Number(value)||0); if(max)page=Math.min(max,page);
+  books[i].page=page;
+  if(max)books[i].progress=Math.round(page/max*100);
+  if(!books[i].startedAt)books[i].startedAt=new Date().toISOString().slice(0,10);
+  if(max && page>=max){books[i].progress=100;books[i].status='Lido';books[i].finishedAt=books[i].finishedAt||new Date().toISOString().slice(0,10);}
+  syncDetailProgressUI(books[i]);
+  save(); renderShelf();
+  queueShelfSave(books[i]);
 }
 async function updateRealProgress(id,value){
   const i=books.findIndex(x=>x.externalId===id); if(i<0)return;
@@ -932,6 +982,6 @@ renderPostStars();
 
 const saved=localStorage.getItem('booklyi_theme') || localStorage.getItem('lumi_theme');if(saved&&themes[saved])setTheme(saved);else setTheme('rosa');renderFeed();renderShelf();renderDiscover();renderClubs();renderProfile();
 initSupabase();
-if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=20260929-v12-4-shelf-username');
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=20260929-v12-5-shelf-polish');
 </script>
 </body></html>
