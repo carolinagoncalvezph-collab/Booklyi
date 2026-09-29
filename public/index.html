@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e85d8e">
-<link rel="manifest" href="manifest.json?v=20260929-v12-8-3-rating">
+<link rel="manifest" href="manifest.json?v=20260929-v12-8-5-rating">
 <title>Booklyi — seu cantinho literário</title>
 <style>
 :root{--accent:#e85d8e;--accent2:#f7b2c9;--bg:#fff8fb;--card:#fff;--text:#342a30;--muted:#8a7c83;--line:#f0dfe6;--soft:#fdeaf1}
@@ -178,6 +178,23 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 /* Booklyi V12.8 — feed social conectado */
 .feed-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:5px;background:rgba(255,255,255,.36);border:1px solid var(--line);border-radius:15px;margin:10px 0 12px}.feed-tab{border:0;background:transparent;color:var(--muted);padding:10px;border-radius:11px;font:inherit;font-weight:800;cursor:pointer}.feed-tab.active{background:var(--card);color:var(--text);box-shadow:0 3px 12px rgba(50,30,45,.06)}.feed-status{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:2px 0 10px;color:var(--muted);font-size:11px}.feed-refresh{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:6px 10px;font:inherit;font-weight:750;cursor:pointer}.feed-loading{padding:18px;text-align:center;color:var(--muted)}.post-book-cover{width:54px;height:78px;border-radius:8px;overflow:hidden;flex:none;background:var(--soft);display:grid;place-items:center}.post-book-cover img{width:100%;height:100%;object-fit:cover}.post-book-cover .generated-cover{width:100%;height:100%;padding:5px;font-size:7px}.post-book-cover .generated-cover-title{font-size:8px}.post-book-cover .generated-cover-author{font-size:6px}.post-book-info{min-width:0;flex:1}.post-book-info b{display:block;line-height:1.25}.post-book-info .meta{margin-top:3px}.post-book-info .progress{margin-top:8px}
 
+
+/* V12.8.5 — avaliacao: layout estavel + toque preciso em 0,5 */
+.rating-picker{display:inline-flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:flex-start!important;gap:4px!important;width:auto!important;max-width:100%!important;min-width:0!important;overflow:visible!important;padding:2px 0!important;vertical-align:middle!important;}
+.rating-picker .rating-star-shell{position:relative!important;width:40px!important;height:40px!important;flex:0 0 40px!important;display:block!important;margin:0!important;padding:0!important;}
+.rating-picker .rating-star-display{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-family:Arial,sans-serif!important;font-size:36px!important;line-height:1!important;font-style:normal!important;pointer-events:none!important;user-select:none!important;}
+.rating-picker .rating-star-display.full{color:#e7a529!important;background:none!important;-webkit-text-fill-color:#e7a529!important;}
+.rating-picker .rating-star-display.empty{color:#c7b8bf!important;background:none!important;-webkit-text-fill-color:#c7b8bf!important;}
+.rating-picker .rating-star-display.half{background:linear-gradient(90deg,#e7a529 50%,#c7b8bf 50%)!important;-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent!important;color:transparent!important;}
+.rating-picker .rating-half-hit{position:absolute!important;top:0!important;bottom:0!important;width:50%!important;height:100%!important;padding:0!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;z-index:3!important;cursor:pointer!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;box-shadow:none!important;appearance:none!important;}
+.rating-picker .rating-half-hit.left{left:0!important;}
+.rating-picker .rating-half-hit.right{right:0!important;}
+.rating-picker .rating-half-hit:hover,.rating-picker .rating-half-hit:focus-visible{background:rgba(232,93,142,.08)!important;outline:none!important;}
+.rating-picker .rating-star-control{position:relative!important;width:40px!important;height:40px!important;flex:0 0 40px!important;display:block!important;margin:0!important;padding:0!important;border:0!important;border-radius:10px!important;background:transparent!important;cursor:pointer!important;}
+.rating-picker .rating-star-control .star-display{display:none!important;}
+@media(max-width:600px){.rating-picker{gap:2px!important}.rating-picker .rating-star-shell{width:38px!important;height:38px!important;flex-basis:38px!important}.rating-picker .rating-star-display{font-size:34px!important;}}
+.post-rating-row{display:flex!important;align-items:center!important;gap:8px!important;flex-wrap:wrap!important;min-width:0!important;}
+.post-rating-row>span{white-space:nowrap!important;}
 </style>
 
 <style>
@@ -389,7 +406,7 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 <div class="modal" id="communityProfileModal" onclick="if(event.target===this)closeModal('communityProfileModal')"><div class="sheet"><button class="close" onclick="closeModal('communityProfileModal')">×</button><div id="communityProfileDetail"></div></div></div>
 <div class="modal" id="themeModal" onclick="if(event.target===this)closeModal('themeModal')"><div class="sheet"><button class="close" onclick="closeModal('themeModal')">×</button><h2>Personalize seu tema</h2><p style="color:var(--muted)">Seu aplicativo, do seu jeitinho.</p><div class="theme-grid" id="themes"></div></div></div>
 
-<div class="modal" id="postModal" onclick="if(event.target===this)closeModal('postModal')"><div class="sheet"><button class="close" onclick="closeModal('postModal')">×</button><h2>✍️ Nova publicação</h2><div class="form-card"><div class="post-book-search"><input class="input" id="postBook" placeholder="Comece a digitar o nome do livro…" autocomplete="off"><div id="postBookSuggestions"></div><small style="color:var(--muted)">O Booklyi procura automaticamente no catálogo real.</small></div><textarea class="textarea" id="postText" placeholder="O que você está achando da leitura?"></textarea><label style="display:flex;gap:9px;align-items:center;color:var(--muted);font-size:13px"><input id="postSpoiler" type="checkbox"> Contém spoiler</label><div><span>Minha avaliação: </span><span id="postStars" class="rating-picker"></span></div><button class="primary" onclick="addPost()">Publicar</button></div></div></div></div>
+<div class="modal" id="postModal" onclick="if(event.target===this)closeModal('postModal')"><div class="sheet"><button class="close" onclick="closeModal('postModal')">×</button><h2>✍️ Nova publicação</h2><div class="form-card"><div class="post-book-search"><input class="input" id="postBook" placeholder="Comece a digitar o nome do livro…" autocomplete="off"><div id="postBookSuggestions"></div><small style="color:var(--muted)">O Booklyi procura automaticamente no catálogo real.</small></div><textarea class="textarea" id="postText" placeholder="O que você está achando da leitura?"></textarea><label style="display:flex;gap:9px;align-items:center;color:var(--muted);font-size:13px"><input id="postSpoiler" type="checkbox"> Contém spoiler</label><div class="post-rating-row"><span>Minha avaliação: </span><div id="postStars" class="rating-picker" aria-label="Minha avaliação"></div></div><button class="primary" onclick="addPost()">Publicar</button></div></div></div></div>
 
 <div class="modal" id="bookModal" onclick="if(event.target===this)closeModal('bookModal')"><div class="sheet"><button class="close" onclick="closeModal('bookModal')">×</button><h2>📚 Adicionar livro</h2><div class="form-card"><input class="input" id="bookTitle" placeholder="Título"><input class="input" id="bookAuthor" placeholder="Autor"><select class="input" id="bookStatus"><option>Quero ler</option><option>Lendo</option><option>Lido</option><option>Abandonei</option></select><button class="primary" onclick="addBook()">Adicionar à estante</button></div></div></div>
 
@@ -516,13 +533,23 @@ function save(){localStorage.setItem('booklyi_books',JSON.stringify(books));loca
 function normalizeRating(value){const n=Number(value||0);return Math.max(0,Math.min(5,Math.round(n*2)/2));}
 function stars(n){const value=normalizeRating(n);return Array.from({length:5},(_,i)=>{const slot=i+1;const cls=value>=slot?'full':value>=slot-.5?'half':'empty';const glyph=cls==='empty'?'☆':'★';return `<span class="star-glyph ${cls}" aria-hidden="true">${glyph}</span>`;}).join('')}
 function starsText(n){const value=normalizeRating(n);return Array.from({length:5},(_,i)=>value>=i+1?'★':value>=i+.5?'⯨':'☆').join('')}
-function renderRatingPicker(id,value,onChange){const el=document.getElementById(id);if(!el)return;const current=normalizeRating(value);el.innerHTML=Array.from({length:5},(_,i)=>{const slot=i+1;const cls=current>=slot?'full':current>=slot-.5?'half':'empty';const glyph=cls==='empty'?'☆':'★';return `<span class="rating-star-control"><span class="star-display ${cls}">${glyph}</span><button type="button" class="rating-hit left" aria-label="${(slot-.5).toLocaleString('pt-BR')} estrelas" data-star-value="${slot-.5}"></button><button type="button" class="rating-hit right" aria-label="${slot} estrelas" data-star-value="${slot}"></button></span>`;}).join('');el.querySelectorAll('[data-star-value]').forEach(btn=>btn.addEventListener('click',()=>onChange(normalizeRating(btn.dataset.starValue))));}
-
-function coverSrc(url){
-  if(!url) return '';
-  const u=String(url);
-  if(u.startsWith('/api/cover?')) return u;
-  return '/api/cover?url='+encodeURIComponent(u);
+function renderRatingPicker(id,value,onChange){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const current=normalizeRating(value);
+  el.innerHTML=Array.from({length:5},(_,i)=>{
+    const slot=i+1;
+    const cls=current>=slot?'full':current>=slot-.5?'half':'empty';
+    const glyph=cls==='empty'?'☆':'★';
+    return `<span class="rating-star-shell" role="group" aria-label="${slot} estrela${slot===1?'':'s'}">
+      <span class="rating-star-display ${cls}" aria-hidden="true">${glyph}</span>
+      <button type="button" class="rating-half-hit left" data-rating-value="${slot-.5}" aria-label="${slot-.5} estrelas"></button>
+      <button type="button" class="rating-half-hit right" data-rating-value="${slot}" aria-label="${slot} estrelas"></button>
+    </span>`;
+  }).join('');
+  el.querySelectorAll('.rating-half-hit').forEach(btn=>{
+    btn.addEventListener('click',()=>onChange(normalizeRating(btn.dataset.ratingValue)));
+  });
 }
 function coverHue(title){
   let h=0; for(const ch of String(title||'')) h=(h*31+ch.charCodeAt(0))%360;
@@ -1233,6 +1260,6 @@ renderStats();
 
 const saved=localStorage.getItem('booklyi_theme') || localStorage.getItem('lumi_theme');if(saved&&themes[saved])setTheme(saved);else setTheme('rosa');renderFeed();renderShelf();renderDiscover();renderClubs();renderProfile();
 initSupabase();
-if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=20260929-v12-8-3-rating');
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=20260929-v12-8-5-rating');
 </script>
 </body></html>
