@@ -416,10 +416,6 @@ async function persistProfileToSupabase(){
     // exija uma política de INSERT durante uma simples edição do próprio perfil.
     const {error}=await supabaseClient.from('profiles').update(payload).eq('id',authUser.id);
     if(error)throw error;
-    if(!data){
-      const ins=await supabaseClient.from('profiles').insert({id:authUser.id,...payload}).select('id,username,display_name,bio,avatar_url').single();
-      if(ins.error)throw ins.error;
-    }
     profile.handle='@'+username;
     saveProfileLocalOnly();
     return true;
