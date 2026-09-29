@@ -9,3 +9,10 @@ Correção incremental da V12.8 para a publicação do feed.
 
 ## Supabase
 Execute `BOOKLYI_V12_8_1_Feed_Supabase.sql` no SQL Editor. O script é idempotente.
+
+
+## V12.8.2 — Avaliações com meia estrela
+- Média das estrelas passa a ser calculada apenas com livros realmente avaliados.
+- Sem avaliações, a média aparece como "—".
+- Avaliações aceitam incrementos de 0,5 a 5,0 estrelas na estante e em novas publicações.
+- O cache do PWA foi atualizado para carregar a nova interface.
