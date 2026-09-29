@@ -201,6 +201,20 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .profile-clean{background:transparent;padding:10px 2px 0}.profile-clean-top{display:flex;gap:18px;align-items:flex-start}.profile-clean-avatar-wrap{flex:none}.profile-clean-avatar{width:88px;height:88px;border-radius:50%;object-fit:cover;background:var(--soft);display:grid;place-items:center;color:var(--accent);font-size:30px;font-weight:800;border:1px solid var(--line)}.profile-clean-main{flex:1;min-width:0}.profile-clean-name-row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.profile-clean-name-row h2{margin:2px 0 2px;font-size:22px;letter-spacing:-.5px}.profile-clean-handle{font-size:13px;color:var(--muted)}.profile-more{background:none;color:var(--muted);font-size:18px;letter-spacing:2px;padding:4px 0}.profile-clean-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:17px}.profile-clean-stats div{text-align:left}.profile-clean-stats b{display:block;font-size:16px;line-height:1.1}.profile-clean-stats span{display:block;font-size:10px;color:var(--muted);margin-top:4px}.profile-clean-bio{margin:14px 0 10px;font-size:14px;line-height:1.45;max-width:620px;color:var(--text)}.profile-clean-actions{display:flex;gap:8px}.profile-edit-btn{flex:1;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 14px;font-weight:750;color:var(--text)}.profile-share-btn{width:42px;background:var(--card);border:1px solid var(--line);border-radius:11px;font-size:18px}.profile-reading-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:15px;overflow:hidden;margin:22px 0 12px}.profile-reading-strip button{background:var(--card);padding:11px 5px 10px;display:grid;grid-template-columns:auto auto;column-gap:6px;align-items:center;text-align:left}.profile-reading-strip span{grid-row:span 2;font-size:16px}.profile-reading-strip b{font-size:15px}.profile-reading-strip small{font-size:10px;color:var(--muted)}.profile-tabs-clean{display:grid;grid-template-columns:repeat(2,1fr);border-bottom:1px solid var(--line);margin:4px 0 0}.profile-tab-clean{background:none;padding:12px 6px 11px;color:var(--muted);font-weight:700;border-bottom:2px solid transparent}.profile-tab-clean.active{color:var(--text);border-bottom-color:var(--accent)}.clean-head{margin:14px 0 9px}.clean-head h3{font-size:15px;font-weight:750}.clean-head button{font-size:20px}.profile-feed-clean .profile-post-mini{border-radius:14px;border-left:0;border-right:0;box-shadow:none;padding:14px 2px;background:transparent}.profile-favorites-clean{grid-template-columns:repeat(4,1fr);gap:7px}.profile-favorites-clean .book{border:0;border-radius:0;padding:0;background:transparent;box-shadow:none}.profile-favorites-clean .cover{height:170px;border-radius:8px;padding:7px;font-size:11px}.profile-favorites-clean .book b,.profile-favorites-clean .book small,.profile-favorites-clean .stars{padding-left:2px}.profile-favorites-clean .book b{display:block;margin-top:6px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.profile-favorites-clean .book small{font-size:10px}.profile-favorites-clean .stars{font-size:10px}@media(max-width:600px){.profile-clean-top{gap:14px}.profile-clean-avatar{width:82px;height:82px}.profile-clean-stats{margin-top:14px;gap:5px}.profile-clean-stats span{font-size:9px}.profile-clean-stats b{font-size:15px}.profile-clean-bio{font-size:13px}.profile-favorites-clean{grid-template-columns:repeat(3,1fr)}.profile-favorites-clean .cover{height:155px}}
 </style>
 </style>
+
+<style>
+/* Booklyi V11 — seguidores */
+.follow-stats-btn{background:none;border:0;padding:0;text-align:left;cursor:pointer;color:inherit;font:inherit}
+.follow-stats-btn:hover b{color:var(--accent)}
+.people-grid{display:grid;gap:10px;margin-bottom:18px}
+.person-row{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.48);box-shadow:0 8px 24px rgba(64,30,48,.05)}
+.person-avatar{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--soft);color:var(--accent);font-weight:900;overflow:hidden}
+.person-avatar img{width:100%;height:100%;object-fit:cover}
+.person-info{min-width:0;flex:1}.person-info b{display:block}.person-info small{display:block;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.follow-btn{min-width:94px;padding:9px 13px;border-radius:11px;background:var(--accent);color:#fff;font-weight:800}.follow-btn.following{background:var(--card);color:var(--text);border:1px solid var(--line)}
+.post-head-main{min-width:0;flex:1}.post-follow{margin-left:auto;flex:none}.followers-modal-tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line);margin:0 -22px 14px;padding:0 22px}.followers-modal-tabs button{background:none;padding:12px;color:var(--muted);font-weight:800;border-bottom:2px solid transparent}.followers-modal-tabs button.active{color:var(--text);border-bottom-color:var(--accent)}
+@media(max-width:600px){.person-row{padding:11px}.follow-btn{min-width:84px;padding:8px 10px;font-size:12px}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -235,6 +249,8 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 </div>
 <div class="section-title"><h2>📚 Resultados</h2></div>
 <div class="grid" id="discoverGrid"></div>
+<div class="section-title"><h2>👤 Pessoas para seguir</h2><button onclick="openFollowersModal('suggested')">Ver todas</button></div>
+<div class="people-grid" id="discoverPeople"></div>
 <div class="section-title"><h2>👥 Clubes para conhecer</h2></div>
 <div class="clubs" id="discoverClubs"></div>
 </section>
@@ -260,8 +276,8 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
       </div>
       <div class="profile-clean-stats">
         <div><b id="profilePostsCount">0</b><span>publicações</span></div>
-        <div><b id="profileFollowers">0</b><span>seguidores</span></div>
-        <div><b id="profileFollowing">0</b><span>seguindo</span></div>
+        <button class="follow-stats-btn" onclick="openFollowersModal('followers')"><b id="profileFollowers">0</b><span>seguidores</span></button>
+        <button class="follow-stats-btn" onclick="openFollowersModal('following')"><b id="profileFollowing">0</b><span>seguindo</span></button>
         <div><b id="profileBooksCount">0</b><span>lidos</span></div>
       </div>
     </div>
@@ -335,6 +351,7 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 <div class="avatar-file"><img id="profilePreview" class="avatar-file-preview" alt="Prévia" style="display:none"><div id="profilePreviewFallback" class="avatar-file-preview">C</div><div style="flex:1"><b>Foto de perfil</b><div style="font-size:12px;color:var(--muted);margin:3px 0 8px">Escolha uma foto do seu celular.</div><input id="profilePhotoInput" type="file" accept="image/*"></div></div>
 <button class="primary" onclick="saveProfile()">Salvar perfil</button>
 </div></div></div>
+<div class="modal" id="followersModal" onclick="if(event.target===this)closeModal('followersModal')"><div class="sheet"><button class="close" onclick="closeModal('followersModal')">×</button><h2>👥 Pessoas</h2><div class="followers-modal-tabs"><button id="followersTabBtn" onclick="renderFollowersModal('followers')">Seguidores</button><button id="followingTabBtn" onclick="renderFollowersModal('following')">Seguindo</button></div><div id="followersModalList" class="people-grid"></div></div></div>
 <div class="modal" id="themeModal" onclick="if(event.target===this)closeModal('themeModal')"><div class="sheet"><button class="close" onclick="closeModal('themeModal')">×</button><h2>Personalize seu tema</h2><p style="color:var(--muted)">Seu aplicativo, do seu jeitinho.</p><div class="theme-grid" id="themes"></div></div></div>
 
 <div class="modal" id="postModal" onclick="if(event.target===this)closeModal('postModal')"><div class="sheet"><button class="close" onclick="closeModal('postModal')">×</button><h2>✍️ Nova publicação</h2><div class="form-card"><div class="post-book-search"><input class="input" id="postBook" placeholder="Comece a digitar o nome do livro…" autocomplete="off"><div id="postBookSuggestions"></div><small style="color:var(--muted)">O Booklyi procura automaticamente no catálogo real.</small></div><textarea class="textarea" id="postText" placeholder="O que você está achando da leitura?"></textarea><label style="display:flex;gap:9px;align-items:center;color:var(--muted);font-size:13px"><input id="postSpoiler" type="checkbox"> Contém spoiler</label><div><span>Minha avaliação: </span><span id="postStars" class="rating-picker"></span></div><button class="primary" onclick="addPost()">Publicar</button></div></div></div></div>
@@ -356,9 +373,13 @@ preto:{accent:'#5b5360',accent2:'#aaa3ad',bg:'#f5f4f6',soft:'#e6e4e8'}
 };
 
 let profile=JSON.parse(localStorage.getItem('booklyi_profile')||'null')||{
-  name:'Carol',handle:'@carol.le',bio:'Amo histórias que me fazem perder a noção do tempo. ☕📚',avatar:'',followers:0,following:0
+  name:'Carol',handle:'@carol.le',bio:'Amo histórias que me fazem perder a noção do tempo. ☕📚',avatar:'',followers:0,following:0,followersUsers:[],followingUsers:[]
 };
-function saveProfileData(){localStorage.setItem('booklyi_profile',JSON.stringify(profile))}
+profile.followersUsers=Array.isArray(profile.followersUsers)?profile.followersUsers:[];
+profile.followingUsers=Array.isArray(profile.followingUsers)?profile.followingUsers:[];
+profile.followers=profile.followersUsers.length;
+profile.following=profile.followingUsers.length;
+function saveProfileData(){profile.followers=profile.followersUsers.length;profile.following=profile.followingUsers.length;localStorage.setItem('booklyi_profile',JSON.stringify(profile))}
 let books=JSON.parse(localStorage.getItem('booklyi_books') || localStorage.getItem('lumi_books')||'null')||[
 {title:'A Hipótese do Amor',author:'Ali Hazelwood',status:'Lendo'},
 {title:'Os Sete Maridos de Evelyn Hugo',author:'Taylor Jenkins Reid',status:'Lido'},
@@ -373,6 +394,24 @@ let clubs=JSON.parse(localStorage.getItem('booklyi_clubs') || localStorage.getIt
 {name:'Romances que destroem nosso psicológico 💔',desc:'Para quem gosta de sofrer por personagens fictícios.',members:128,privacy:'Público'},
 {name:'Café, livros & surtos ☕',desc:'Leituras variadas e muita conversa.',members:74,privacy:'Público'}
 ];
+const communityUsers=[
+{name:'Marina',handle:'@marina.livros',bio:'Romance, fantasia e livros que viram a noite.',avatar:''},
+{name:'Bia',handle:'@bia.leitora',bio:'Um capítulo por vez. Café sempre. ☕',avatar:''},
+{name:'Júlia',handle:'@juliacompaginas',bio:'Romances sáficos, clássicos e muita anotação.',avatar:''},
+{name:'Rafa',handle:'@rafa.le',bio:'Literatura brasileira, suspense e surtos literários.',avatar:''},
+{name:'Nicole',handle:'@nicole.lendo',bio:'Fantasia, YA e histórias que ficam na cabeça.',avatar:''},
+{name:'Lívia',handle:'@liviasampaio',bio:'Leituras diversas e conversas sem spoiler.',avatar:''}
+];
+function userKey(user){return (user?.handle||user?.name||'').toLowerCase();}
+function findCommunityUser(nameOrHandle){const key=String(nameOrHandle||'').toLowerCase();return communityUsers.find(u=>userKey(u)===key||String(u.name).toLowerCase()===key||String(u.handle).toLowerCase()===key)||null;}
+function isFollowing(nameOrHandle){const u=findCommunityUser(nameOrHandle);return !!u && profile.followingUsers.includes(userKey(u));}
+function personAvatar(u){if(u?.avatar)return `<img src="${escapeHTML(u.avatar)}" alt="">`;return escapeHTML((u?.name||'C')[0].toUpperCase());}
+function personRow(u,mode='follow'){if(!u)return '';const following=isFollowing(u.handle);const isSelf=userKey(u)===userKey(profile);const button=mode==='followers'&&!isSelf?`<button class="follow-btn ${following?'following':''}" onclick="toggleFollow('${escapeHTML(u.handle)}')">${following?'Seguindo':'Seguir'}</button>`:mode==='following'&&!isSelf?`<button class="follow-btn following" onclick="toggleFollow('${escapeHTML(u.handle)}')">Seguindo</button>`:mode==='suggested'&&!isSelf?`<button class="follow-btn ${following?'following':''}" onclick="toggleFollow('${escapeHTML(u.handle)}')">${following?'Seguindo':'Seguir'}</button>`:'';return `<div class="person-row"><div class="person-avatar">${personAvatar(u)}</div><div class="person-info"><b>${escapeHTML(u.name)}</b><small>${escapeHTML(u.handle)} · ${escapeHTML(u.bio||'')}</small></div>${button}</div>`;}
+function renderPeople(){const box=document.getElementById('discoverPeople');if(!box)return;const people=communityUsers.filter(u=>userKey(u)!==userKey(profile));box.innerHTML=people.slice(0,4).map(u=>personRow(u,'suggested')).join('');}
+function toggleFollow(nameOrHandle){const u=findCommunityUser(nameOrHandle);if(!u)return;const key=userKey(u);const idx=profile.followingUsers.indexOf(key);if(idx>=0)profile.followingUsers.splice(idx,1);else profile.followingUsers.push(key);saveProfileData();renderProfile();renderFeed();renderPeople();if(document.getElementById('followersModal')?.classList.contains('show'))renderFollowersModal(window.followersModalMode||'following');}
+function openFollowersModal(mode='followers'){openModal('followersModal');renderFollowersModal(mode);}
+function renderFollowersModal(mode='followers'){window.followersModalMode=mode;const fb=document.getElementById('followersTabBtn'),fg=document.getElementById('followingTabBtn');if(fb)fb.classList.toggle('active',mode==='followers');if(fg)fg.classList.toggle('active',mode==='following');const box=document.getElementById('followersModalList');if(!box)return;let users=[];if(mode==='following'){users=profile.followingUsers.map(k=>findCommunityUser(k)).filter(Boolean);}else{users=profile.followersUsers.map(k=>findCommunityUser(k)).filter(Boolean);}box.innerHTML=users.length?users.map(u=>personRow(u,mode)).join(''):`<div class="profile-empty">${mode==='following'?'Você ainda não está seguindo ninguém. Explore a comunidade e encontre seus próximos perfis favoritos. ✨':'Você ainda não tem seguidores. Quando outras pessoas seguirem seu perfil, elas aparecerão aqui. 💗'}</div>`;}
+
 function save(){localStorage.setItem('booklyi_books',JSON.stringify(books));localStorage.setItem('booklyi_posts',JSON.stringify(posts));localStorage.setItem('booklyi_clubs',JSON.stringify(clubs));saveProfileData()}
 function stars(n){return '★'.repeat(n)+'☆'.repeat(5-n)}
 
@@ -412,7 +451,7 @@ function renderFeed(){
     const liked=p.likes.includes(currentUserKey());
     const comments=p.comments||[];
     return `<article class="post">
-      <div class="post-head"><div class="avatar">${escapeHTML((p.user||'C')[0])}</div><div><h3>${escapeHTML(p.user||'Leitor')}</h3><div class="meta">está lendo <b>${escapeHTML(p.book||'Livro')}</b></div></div></div>
+      <div class="post-head"><div class="avatar">${escapeHTML((p.user||'C')[0])}</div><div class="post-head-main"><h3>${escapeHTML(p.user||'Leitor')}</h3><div class="meta">está lendo <b>${escapeHTML(p.book||'Livro')}</b></div></div>${findCommunityUser(p.user)&&userKey(findCommunityUser(p.user))!==userKey(profile)?`<button class="follow-btn post-follow ${isFollowing(p.user)?'following':''}" data-follow-user="${escapeHTML(findCommunityUser(p.user).handle)}">${isFollowing(p.user)?'Seguindo':'Seguir'}</button>`:''}</div>
       ${p.spoiler?`<div class="spoiler-box" data-spoiler="${i}"><div class="spoiler-warning">⚠️ Contém spoiler · toque para revelar</div><p class="spoiler-text">${escapeHTML(p.text||'')}</p></div>`:`<p>${escapeHTML(p.text||'')}</p>`}
       ${p.stars?`<div class="stars">${stars(Number(p.stars||0))}</div>`:''}
       <div class="social-actions">
@@ -441,6 +480,7 @@ function renderFeed(){
   document.querySelectorAll('[data-add-reply]').forEach(el=>el.addEventListener('click',()=>addReply(Number(el.dataset.addReply),Number(el.dataset.commentIndex))));
   document.querySelectorAll('[data-like-reply]').forEach(el=>el.addEventListener('click',()=>toggleReplyLike(Number(el.dataset.likeReply),Number(el.dataset.commentIndex),Number(el.dataset.replyIndex))));
   document.querySelectorAll('[data-share-post]').forEach(el=>el.addEventListener('click',()=>sharePost(Number(el.dataset.sharePost))));
+  document.querySelectorAll('[data-follow-user]').forEach(el=>el.addEventListener('click',()=>toggleFollow(el.dataset.followUser)));
 }
 function togglePostLike(i){ensureSocialData();const key=currentUserKey();const arr=posts[i].likes;const n=arr.indexOf(key);if(n>=0)arr.splice(n,1);else arr.push(key);save();renderFeed()}
 function toggleComments(i){const box=document.getElementById('comments-'+i);if(!box)return;box.style.display=box.style.display==='none'?'grid':'none';if(box.style.display==='grid'){const input=document.getElementById('comment-input-'+i);if(input)input.focus()}}
@@ -580,6 +620,7 @@ function renderDiscover(data){
   const local=[...books].slice(0,6);
   grid.innerHTML=local.map(b=>`<article class="book"><div class="cover">${cover(b.title)}</div><b>${escapeHTML(b.title)}</b><small>${escapeHTML(b.author)}</small><small>${escapeHTML(b.status)}</small></article>`).join('');
   document.getElementById('discoverClubs').innerHTML=clubs.map(c=>`<div class="club"><div class="members">👥 ${c.members} membros</div><h3>${escapeHTML(c.name)}</h3><p>${escapeHTML(c.desc)}</p><button class="secondary">Entrar no clube</button></div>`).join('');
+  renderPeople();
 }
 
 window.booklyiSearchResults=[];
@@ -731,8 +772,10 @@ function renderProfile(){
   else{avatar.style.display='none';fallback.style.display='grid';fallback.textContent=(name[0]||'C').toUpperCase();}
   const ownPosts=posts.filter(x=>(x.user||'').toLowerCase()===name.toLowerCase());
   document.getElementById('profilePostsCount').textContent=ownPosts.length;
-  document.getElementById('profileFollowers').textContent=Number(p.followers||0);
-  document.getElementById('profileFollowing').textContent=Number(p.following||0);
+  profile.followers=profile.followersUsers.length;
+  profile.following=profile.followingUsers.length;
+  document.getElementById('profileFollowers').textContent=profile.followers;
+  document.getElementById('profileFollowing').textContent=profile.following;
   document.getElementById('profileBooksCount').textContent=books.filter(b=>b.status==='Lido').length;
   document.getElementById('profileReading').textContent=books.filter(b=>b.status==='Lendo').length;
   document.getElementById('profileRead').textContent=books.filter(b=>b.status==='Lido').length;
@@ -773,7 +816,7 @@ function saveProfile(){
   let handle=document.getElementById('editProfileHandle').value.trim()||'@carol.le';if(!handle.startsWith('@'))handle='@'+handle.replace(/\s+/g,'').toLowerCase();
   const bio=document.getElementById('editProfileBio').value.trim();
   const file=document.getElementById('profilePhotoInput').files[0];
-  const finish=(avatar)=>{profile={...profile,name,handle,bio,avatar:avatar||profile.avatar||'',followers:Number(profile.followers||0),following:Number(profile.following||0)};saveProfileData();closeModal('editProfileModal');renderProfile();renderFeed();};
+  const finish=(avatar)=>{profile={...profile,name,handle,bio,avatar:avatar||profile.avatar||'',followersUsers:Array.isArray(profile.followersUsers)?profile.followersUsers:[],followingUsers:Array.isArray(profile.followingUsers)?profile.followingUsers:[]};saveProfileData();closeModal('editProfileModal');renderProfile();renderFeed();renderPeople();};
   if(file)prepareProfilePhoto(file).then(finish).catch(()=>finish(''));else finish('');
 }
 function shareProfile(){
@@ -803,6 +846,6 @@ if(postBookInput)postBookInput.addEventListener('input',()=>{clearTimeout(postSe
 renderPostStars();
 
 const saved=localStorage.getItem('booklyi_theme') || localStorage.getItem('lumi_theme');if(saved&&themes[saved])setTheme(saved);else setTheme('rosa');renderFeed();renderShelf();renderDiscover();renderClubs();renderProfile();
-if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=20260929-v10-3-4-home');
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=20260929-v11-followers');
 </script>
 </body></html>
